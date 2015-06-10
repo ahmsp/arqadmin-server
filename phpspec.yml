@@ -1,0 +1,5 @@
+suites:
+    main:
+        namespace: ArqAdmin
+        psr4_prefix: ArqAdmin
+        src_path: app
