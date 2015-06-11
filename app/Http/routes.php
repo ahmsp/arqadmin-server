@@ -15,12 +15,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::controllers([
-    'auth' => 'Auth\AuthController',
-    'password' => 'Auth\PasswordController',
-]);
+Route::post('auth/login', 'AuthController@login');
+Route::get('auth/logout', 'AuthController@logout');
 
 Route::group(['prefix' => 'api'], function () {
+
+    /**
+     * User
+     */
+    Route::get('user', 'UserController@create');
 
     /**
      * Documentos

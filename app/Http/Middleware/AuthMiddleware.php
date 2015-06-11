@@ -5,7 +5,7 @@ namespace ArqAdmin\Http\Middleware;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 
-class Authenticate
+class AuthMiddleware
 {
     /**
      * The Guard implementation.
@@ -35,11 +35,7 @@ class Authenticate
     public function handle($request, Closure $next)
     {
         if ($this->auth->guest()) {
-            if ($request->ajax()) {
-                return response('Unauthorized.', 401);
-            } else {
-                return redirect()->guest('auth/login');
-            }
+            return response('Unauthorized.', 401);
         }
 
         return $next($request);

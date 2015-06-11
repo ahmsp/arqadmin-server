@@ -9,6 +9,11 @@ use ArqAdmin\Http\Controllers\Controller;
 
 class DocumentoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function findAll(Request $request)
     {
         $params = $request->all();
