@@ -14,3 +14,21 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::controllers([
+    'auth' => 'Auth\AuthController',
+    'password' => 'Auth\PasswordController',
+]);
+
+Route::group(['prefix' => 'api'], function () {
+
+    /**
+     * Documentos
+     */
+    Route::match(['get', 'post'], 'documentos', 'DocumentoController@findAll');
+    Route::post('documento', 'DocumentoController@add');
+    Route::put('documento/{id}', 'DocumentoController@update');
+    Route::delete('documento/{id}', 'DocumentoController@destroy');
+    Route::get('documentos/auxiliartable/{tableName}', 'DocumentoController@fetchAuxiliarTable');
+
+});
