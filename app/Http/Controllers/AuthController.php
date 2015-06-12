@@ -15,8 +15,7 @@ class AuthController extends Controller
     {
         $credentials = $request->only('username', 'password', 'remember');
 
-//dd($credentials);
-        if (Auth::check() ) {
+        if (Auth::check()) {
             return response('Usuário já autenticado', 400);
         }
 

@@ -2,16 +2,19 @@
 
 namespace ArqAdmin\Http\Controllers;
 
+use ArqAdmin\Models\Repositories\DocumentoRepositoryInterface;
 use Illuminate\Http\Request;
-
 use ArqAdmin\Http\Requests;
 use ArqAdmin\Http\Controllers\Controller;
 
 class DocumentoController extends Controller
 {
-    public function __construct()
+    protected $documentoRepository;
+
+    public function __construct(DocumentoRepositoryInterface $documentoRepository)
     {
-        $this->middleware('auth');
+        $this->documentoRepository = $documentoRepository;
+        $this->middleware('auth.ldap');
     }
 
     public function findAll(Request $request)

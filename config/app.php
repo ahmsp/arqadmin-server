@@ -144,6 +144,10 @@ return [
         ArqAdmin\Providers\EventServiceProvider::class,
         ArqAdmin\Providers\RouteServiceProvider::class,
 
+        /*
+         * Helpers Service Providers...
+         */
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     ],
 
     /*
