@@ -2,39 +2,64 @@
 
 namespace ArqAdmin\Http\Controllers;
 
+use ArqAdmin\Http\Controllers\Controller;
+use ArqAdmin\Models\User;
+use Illuminate\Auth\Guard;
 use Illuminate\Http\Request;
-
 use ArqAdmin\Http\Requests;
-//use ArqAdmin\Http\Controllers\Controller;
-use Auth;
 
 
 class AuthController extends Controller
 {
+    private $auth;
+
+    public function __construct(Guard $auth)
+    {
+        $this->auth = $auth;
+    }
+
     public function login(Request $request)
     {
-        $credentials = $request->only('username', 'password', 'remember');
-
-        if (Auth::check()) {
+        if ($this->auth->check()) {
             return response('Usuário já autenticado', 400);
         }
 
-        if(Auth::validate($credentials)) {
+        if ('ldap' === $request->input('login_type')) {
 
-            $remember = ($credentials['remember']) ?: 'false';
+            $this->ldapLogin($request);
+        }
 
-            if (Auth::Attempt($credentials, $remember)) {
-                return "usuário" . Auth::user()->name;
+        $credentials = $request->only('username', 'password');
+
+        if($this->auth->validate($credentials)) {
+
+            $remember = ($request->input('remember')) ?: 'false';
+
+            if ($this->auth->attempt($credentials, $remember)) {
+                return "usuário" . $request->user()->name;
             }
         }
 
-        // else check ldap
+        // check ldap
 
         return 'credenciais não válidas';
     }
 
+    public function appLogin()
+    {
+
+    }
+
+    public function ldapLogin(Request $request)
+    {
+        $user = User::where('username', $request->input('username'))->first();
+        if ($user) {
+            dd($user);
+        }
+    }
+
     public function logout()
     {
-        Auth::logout();
+        $this->auth->logout();
     }
 }

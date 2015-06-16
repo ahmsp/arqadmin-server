@@ -29,6 +29,5 @@ class Kernel extends HttpKernel
         'auth' => \ArqAdmin\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \ArqAdmin\Http\Middleware\RedirectIfAuthenticated::class,
-        'auth.ldap' => \ArqAdmin\Http\Middleware\AuthMiddleware::class,
     ];
 }

@@ -14,7 +14,7 @@ class DocumentoController extends Controller
     public function __construct(DocumentoRepositoryInterface $documentoRepository)
     {
         $this->documentoRepository = $documentoRepository;
-        $this->middleware('auth.ldap');
+        $this->middleware('auth');
     }
 
     public function findAll(Request $request)

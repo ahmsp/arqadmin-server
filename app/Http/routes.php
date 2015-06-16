@@ -11,6 +11,8 @@
 |
 */
 
+Route::pattern('id', '[0-9]+');
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -32,6 +34,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('documento', 'DocumentoController@add');
     Route::put('documento/{id}', 'DocumentoController@update');
     Route::delete('documento/{id}', 'DocumentoController@destroy');
+
     Route::get('documentos/auxiliartable/{tableName}', 'DocumentoController@fetchAuxiliarTable');
 
 });
