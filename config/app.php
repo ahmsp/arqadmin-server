@@ -148,6 +148,7 @@ return [
          * Helpers Service Providers...
          */
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        Stevebauman\Corp\CorpServiceProvider::class,
     ],
 
     /*
@@ -195,6 +196,8 @@ return [
         'URL'       => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
+
+        'Corp'      => Stevebauman\Corp\Facades\Corp::class,
 
     ],
 

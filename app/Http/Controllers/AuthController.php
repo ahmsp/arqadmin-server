@@ -7,6 +7,7 @@ use ArqAdmin\Models\User;
 use Illuminate\Auth\Guard;
 use Illuminate\Http\Request;
 use ArqAdmin\Http\Requests;
+use Stevebauman\Corp\Facades\Corp;
 
 
 class AuthController extends Controller
@@ -24,42 +25,33 @@ class AuthController extends Controller
             return response('Usuário já autenticado', 400);
         }
 
-        if ('ldap' === $request->input('login_type')) {
-
-            $this->ldapLogin($request);
-        }
-
         $credentials = $request->only('username', 'password');
 
-        if($this->auth->validate($credentials)) {
+        if (null === $user = User::where('username', $credentials['username'])->first()) {
+            return response('Usuário não cadastrado', 400);
+        }
 
-            $remember = ($request->input('remember')) ?: 'false';
+        if ('app' === $request->input('login_type')) {
 
-            if ($this->auth->attempt($credentials, $remember)) {
-                return "usuário" . $request->user()->name;
+            if ($this->auth->attempt($credentials, $request->input('remember'))) {
+                return response('Logado', 200);
+            }
+
+        } else {
+
+            if (Corp::auth($credentials['username'], $credentials['password'])) {
+                $this->auth->login($user, $request->input('remember'));
+                return response('Logado', 200);
             }
         }
 
-        // check ldap
-
-        return 'credenciais não válidas';
-    }
-
-    public function appLogin()
-    {
-
-    }
-
-    public function ldapLogin(Request $request)
-    {
-        $user = User::where('username', $request->input('username'))->first();
-        if ($user) {
-            dd($user);
-        }
+        return response('Credenciais inválidas', 400);
     }
 
     public function logout()
     {
         $this->auth->logout();
+        return response('Logout', 200);
     }
+
 }

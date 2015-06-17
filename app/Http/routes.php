@@ -20,6 +20,8 @@ Route::get('/', function () {
 Route::post('auth/login', 'AuthController@login');
 Route::get('auth/logout', 'AuthController@logout');
 
+Route::get('auth/ldap', 'AuthController@ldapTest');
+
 Route::group(['prefix' => 'api'], function () {
 
     /**
@@ -38,3 +40,4 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('documentos/auxiliartable/{tableName}', 'DocumentoController@fetchAuxiliarTable');
 
 });
+
