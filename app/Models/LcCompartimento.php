@@ -8,7 +8,7 @@ class LcCompartimento extends Model {
 
     protected $table = 'lc_compartimento';
 
-    ublic $timestamps = false;
+    public $timestamps = false;
 
     protected $fillable = ['compartimento'];
 

@@ -25,4 +25,23 @@ class UserController extends Controller
             'password' => bcrypt($request->input('password')),
         ]);
     }
+
+    /**
+     * Update the password for the user.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function updatePassword(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        // Validate the new password length...
+
+        $user->fill([
+            'password' => Hash::make($request->newPassword)
+        ])->save();
+    }
+
 }

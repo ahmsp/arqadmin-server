@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subgrupo extends Model {
 
-	protected $table = 'sub_grupo';
+	protected $table = 'subgrupo';
 
     public $timestamps = false;
 

@@ -5,6 +5,10 @@
 
     RewriteEngine On
 
+    # Exclude directory from rewriting
+    RewriteRule ^(app) - [L]
+    RewriteRule ^(app2) - [L]
+
     # Redirect Trailing Slashes...
     RewriteRule ^(.*)/$ /$1 [L,R=301]
 

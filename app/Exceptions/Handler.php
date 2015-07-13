@@ -38,6 +38,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+//        if ($e instanceof CustomException) {
+//            return response('errors.custom', 500);
+//        }
+//dd($e);
         return parent::render($request, $e);
     }
 }

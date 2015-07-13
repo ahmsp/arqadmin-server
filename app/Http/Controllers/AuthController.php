@@ -7,6 +7,7 @@ use ArqAdmin\Models\User;
 use Illuminate\Auth\Guard;
 use Illuminate\Http\Request;
 use ArqAdmin\Http\Requests;
+use Illuminate\Support\Facades\Hash;
 use Stevebauman\Corp\Facades\Corp;
 
 
@@ -22,36 +23,56 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         if ($this->auth->check()) {
-            return response('Usuário já autenticado', 400);
+            $this->auth->logout();
+//            return ['success' => false, 'message' => 'Usuário já autenticado'];
         }
 
         $credentials = $request->only('username', 'password');
 
         if (null === $user = User::where('username', $credentials['username'])->first()) {
-            return response('Usuário não cadastrado', 400);
+            return [
+                'success' => false,
+                'message' => 'Usuário não cadastrado'
+            ];
         }
 
-        if ('app' === $request->input('login_type')) {
-
-            if ($this->auth->attempt($credentials, $request->input('remember'))) {
-                return response('Logado', 200);
-            }
-
-        } else {
-
-            if (Corp::auth($credentials['username'], $credentials['password'])) {
-                $this->auth->login($user, $request->input('remember'));
-                return response('Logado', 200);
-            }
+        // application auth
+        if ($this->auth->attempt($credentials)) {
+            return [
+                'success' => true,
+                'message' => 'Autenticado',
+                'data'  => '',
+            ];
         }
 
-        return response('Credenciais inválidas', 400);
+        // adldap auth
+        if (Corp::auth($credentials['username'], $credentials['password'])) {
+
+            $this->auth->login($user);
+            $user->password = Hash::make($credentials['password']);
+            $user->save();
+
+            return [
+                'success' => true,
+                'message' => 'Autenticado',
+                'data'  => '',
+            ];
+        }
+
+        return [
+            'success' => false,
+            'message' => 'Credenciais inválidas'
+        ];
     }
 
     public function logout()
     {
         $this->auth->logout();
-        return response('Logout', 200);
+
+        return [
+            'success' => true,
+            'message' => 'Sessão finalizada'
+        ];
     }
 
 }

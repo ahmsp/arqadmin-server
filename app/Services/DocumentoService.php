@@ -1,0 +1,46 @@
+<?php
+
+namespace ArqAdmin\Services;
+
+
+use ArqAdmin\Repositories\Contracts\DocumentoRepositoryInterface;
+use Illuminate\Support\Facades\DB;
+
+class DocumentoService
+{
+    private $repo;
+
+    public function __construct(DocumentoRepositoryInterface $documentoRepository)
+    {
+        $this->repo = $documentoRepository;
+    }
+
+    public function findAll(array $params = null)
+    {
+//        // remove extra spaces and empty elements in array $params
+//        $params = array_filter(array_map('trim', preg_replace("/\s+/", ' ', $params)), 'strlen');
+
+        $result = $this->repo->findAll($params);
+
+        return $result;
+    }
+
+    public function fetchAuxiliarTable($modelName)
+    {
+        $result = $this->repo->fetchAuxiliarTable($modelName);
+        return $result;
+    }
+
+    public function pregReplaceArray($pattern, $replacement, $subject, $limit=-1)
+    {
+        if (is_array($subject)) {
+            foreach ($subject as &$value){
+                $value = $this->pregReplaceArray($pattern, $replacement, $value, $limit);
+            }
+            return $subject;
+        } else {
+            return preg_replace($pattern, $replacement, $subject, $limit);
+        }
+    }
+
+}

@@ -48,77 +48,88 @@ class Documento extends Model
         'dt_notas'
     ];
 
+//    protected $hidden = ['dt_construtor'];
+
     protected $guarded = [];
 
 
-    public function fundos()
+    public function fundo()
     {
         return $this->belongsTo('ArqAdmin\Models\Fundo', 'fundo_id');
     }
 
-    public function subfundos()
+    public function subfundo()
     {
         return $this->belongsTo('ArqAdmin\Models\Subfundo', 'subfundo_id');
     }
 
-    public function grupos()
+    public function grupo()
     {
         return $this->belongsTo('ArqAdmin\Models\Grupo', 'grupo_id');
     }
 
-    public function subgrupos()
+    public function subgrupo()
     {
         return $this->belongsTo('ArqAdmin\Models\Subgrupo', 'subgrupo_id');
     }
 
-    public function series()
+    public function serie()
     {
         return $this->belongsTo('ArqAdmin\Models\Serie', 'serie_id');
     }
 
-    public function subseries()
+    public function subserie()
     {
         return $this->belongsTo('ArqAdmin\Models\Subserie', 'subserie_id');
     }
 
-    public function dossies()
+    public function dossie()
     {
         return $this->belongsTo('ArqAdmin\Models\Dossie', 'dossie_id');
     }
 
-    public function EspeciesDocumental()
+    public function especieDocumental()
     {
         return $this->belongsTo('ArqAdmin\Models\Especiedocumental', 'especiedocumental_id');
     }
 
-    public function lcSalas()
+    public function lcSala()
     {
         return $this->belongsTo('ArqAdmin\Models\LcSala', 'lc_sala_id');
     }
 
-    public function lcMoveis()
+    public function lcMovel()
     {
         return $this->belongsTo('ArqAdmin\Models\LcMovel', 'lc_movel_id');
     }
 
-    public function lcCompartimentos()
+    public function lcCompartimento()
     {
         return $this->belongsTo('ArqAdmin\Models\LcCompartimento', 'lc_compartimento_id');
     }
 
-    public function lcAcondicionamentos()
+    public function lcAcondicionamento()
     {
         return $this->belongsTo('ArqAdmin\Models\LcAcondicionamento', 'lc_acondicionamento_id');
     }
 
-    public function conservacoes()
+    public function conservacao()
     {
         return $this->belongsTo('ArqAdmin\Models\Conservacao', 'conservacao_id');
     }
 
-    public function dtUsos()
+    public function dtUso()
     {
         return $this->belongsTo('ArqAdmin\Models\Dtuso', 'dt_uso_id');
+    }
+
+    public function desenhosTecnicos()
+    {
+        return $this->hasMany('ArqAdmin\Models\DesenhoTecnico');
+    }
+
+    public function getTableColumns() {
+        return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
     }
 
 }
