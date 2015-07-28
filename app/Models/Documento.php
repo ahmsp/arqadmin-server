@@ -3,6 +3,7 @@
 namespace ArqAdmin\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Documento extends Model
 {
@@ -130,6 +131,16 @@ class Documento extends Model
 
     public function getTableColumns() {
         return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
+    }
+
+    public function scopeStatistic($query)
+    {
+        return $query->select(DB::raw('count(*) as qtd, ano'))
+            ->whereBetween('ano', [1000, 2000])
+            ->groupBy('ano')
+            ->having('qtd', '>', 3)
+            ->orderBy('ano', 'asc')
+            ->get();
     }
 
 }

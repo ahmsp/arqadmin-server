@@ -45,4 +45,9 @@ class DocumentoController extends Controller
         $result = $this->documentoService->fetchAuxiliarTable($modelName);
         return $result;
     }
+
+    public function statistic()
+    {
+        return \ArqAdmin\Models\Documento::statistic();
+    }
 }

@@ -4,7 +4,6 @@ namespace ArqAdmin\Services;
 
 
 use ArqAdmin\Repositories\Contracts\DocumentoRepositoryInterface;
-use Illuminate\Support\Facades\DB;
 
 class DocumentoService
 {

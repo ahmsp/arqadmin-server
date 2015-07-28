@@ -43,6 +43,12 @@ Route::group(['prefix' => 'api'], function () {
      */
     Route::get('/documento/auxtable/{modelName}', 'DocumentoController@fetchAuxiliarTable');
 
+    /**
+     * Statistics
+     */
+    Route::get('/documento/estatisticas', 'DocumentoController@statistic');
+
+
     /** Auxiliar Tables */
 
     /**

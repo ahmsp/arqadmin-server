@@ -89,7 +89,7 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
                 };
             }
         } else {
-            $docs->orderBy('id', 'ASC');
+            $docs->orderBy('id', 'DESC');
         }
 
         $limit = (isset($params['limit'])) ? $params['limit'] : '50';
@@ -217,7 +217,7 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
             ],
             'subfundo_id' => [
                 'entity' => 'Documento',
-                'column' => 'id',
+                'column' => 'subfundo_id',
                 'type' => '=',
                 'sort' => 'subfundo_nome',
             ],
@@ -228,7 +228,7 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
             ],
             'grupo_id' => [
                 'entity' => 'Documento',
-                'column' => 'id',
+                'column' => 'grupo_id',
                 'type' => 'number',
                 'sort' => 'grupo_nome',
             ],
@@ -239,7 +239,7 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
             ],
             'subgrupo_id' => [
                 'entity' => 'Documento',
-                'column' => 'id',
+                'column' => 'subgrupo_id',
                 'type' => 'number',
                 'sort' => 'subgrupo_nome',
             ],
@@ -250,7 +250,7 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
             ],
             'serie_id' => [
                 'entity' => 'Documento',
-                'column' => 'id',
+                'column' => 'serie_id',
                 'type' => 'number',
                 'sort' => 'serie_nome',
             ],
@@ -261,7 +261,7 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
             ],
             'subserie_id' => [
                 'entity' => 'Documento',
-                'column' => 'id',
+                'column' => 'subserie_id',
                 'type' => 'number',
                 'sort' => 'subserie_nome',
             ],
@@ -324,7 +324,7 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
             ],
             'conservacao_id' => [
                 'entity' => 'Documento',
-                'column' => 'id',
+                'column' => 'conservacao_id',
                 'type' => 'number',
                 'sort' => 'conservacao_estado',
             ],
@@ -350,7 +350,7 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
             ],
             'lc_sala_id' => [
                 'entity' => 'Documento',
-                'column' => 'id',
+                'column' => 'lc_sala_id',
                 'type' => 'number',
                 'sort' => 'sala',
             ],
@@ -361,7 +361,7 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
             ],
             'lc_movel_id' => [
                 'entity' => 'Documento',
-                'column' => 'id',
+                'column' => 'lc_movel_id',
                 'type' => 'number',
                 'sort' => 'movel',
             ],
@@ -377,7 +377,7 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
             ],
             'lc_compartimento_id' => [
                 'entity' => 'Documento',
-                'column' => 'id',
+                'column' => 'lc_compartimento_id',
                 'type' => 'number',
                 'sort' => 'compartimento',
             ],
@@ -393,7 +393,7 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
             ],
             'lc_acondicionamento_id' => [
                 'entity' => 'Documento',
-                'column' => 'id',
+                'column' => 'lc_acondicionamento_id',
                 'type' => 'number',
                 'sort' => 'acondicionamento',
             ],
@@ -414,7 +414,7 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
             ],
             'dt_uso_id' => [
                 'entity' => 'Documento',
-                'column' => 'id',
+                'column' => 'dt_uso_id',
                 'type' => 'number',
                 'sort' => 'uso',
             ],
