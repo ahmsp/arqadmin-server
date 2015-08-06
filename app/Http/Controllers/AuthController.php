@@ -41,7 +41,7 @@ class AuthController extends Controller
             return [
                 'success' => true,
                 'message' => 'Autenticado',
-                'data'  => '',
+                'data'  => $this->auth->user(),
             ];
         }
 
@@ -55,7 +55,7 @@ class AuthController extends Controller
             return [
                 'success' => true,
                 'message' => 'Autenticado',
-                'data'  => '',
+                'data'  => $this->auth->user(),
             ];
         }
 
