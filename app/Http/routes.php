@@ -24,6 +24,7 @@ Route::get('auth/ldap', 'AuthController@ldapTest');
 
 Route::group(['prefix' => 'api'], function () {
 
+    Route::get('test', 'DocumentoController@findFilter');
     /**
      * User
      */
@@ -32,6 +33,9 @@ Route::group(['prefix' => 'api'], function () {
     /**
      * Documentos
      */
+
+//    // ver code.edu -> laravel c/ angular -> Relacionando Models -> Criando API ProjectNote
+//    Route::get('documento/{id}/imagens', 'DocumentoController@findAll');
     Route::get('documento', 'DocumentoController@findAll');
     Route::post('documento', 'DocumentoController@add');
     Route::put('documento/{id}', 'DocumentoController@update');

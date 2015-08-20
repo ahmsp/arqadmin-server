@@ -149,6 +149,7 @@ return [
          */
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Stevebauman\Corp\CorpServiceProvider::class,
+        Prettus\Repository\Providers\RepositoryServiceProvider::class,
     ],
 
     /*

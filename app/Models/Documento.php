@@ -116,7 +116,8 @@ class Documento extends Model
 
     public function conservacao()
     {
-        return $this->belongsTo('ArqAdmin\Models\Conservacao', 'conservacao_id');
+//        return $this->belongsTo('ArqAdmin\Models\Conservacao', 'conservacao_id');
+        return $this->belongsTo(Conservacao::class, 'conservacao_id');
     }
 
     public function dtUso()

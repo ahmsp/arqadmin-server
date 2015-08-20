@@ -25,6 +25,14 @@ class DocumentoController extends Controller
         return $data;
     }
 
+    public function findFilter(Request $request)
+    {
+        $params = $request->all();
+        $data = $this->documentoService->findFilter($params);
+
+        return $data;
+    }
+
     public function add()
     {
         //

@@ -24,6 +24,12 @@ class DocumentoService
         return $result;
     }
 
+    public function findFilter(array $params = null)
+    {
+        $result = $this->repo->findFilter($params);
+        return $result;
+    }
+
     public function fetchAuxiliarTable($modelName)
     {
         $result = $this->repo->fetchAuxiliarTable($modelName);

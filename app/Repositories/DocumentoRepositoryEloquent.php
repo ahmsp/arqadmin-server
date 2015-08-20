@@ -28,6 +28,8 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
                 'dossie', 'especieDocumental', 'conservacao', 'lcSala', 'lcMovel',
                 'lcCompartimento', 'lcAcondicionamento', 'dtUso', 'desenhosTecnicos');
 
+        $docs->select('documento.*');
+
         $mapFilterFields = $this->mapFilterFields();
 
         if (isset($params['filter'])) {
@@ -65,32 +67,67 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
             });
         }
 
-        if (isset($params['sort']) && is_array($params['sort'])) {
-
-//            if (!is_array($params['sort'])) {
-//                $sort = ($params['sort']) ? $params['sort'] : 'id';
-//                $dir = (isset($params['dir']) && $params['dir'] == 'asc') ? 'ASC' : 'DESC';
-//                $docs->orderBy("{$mapFields[$sort]['entity']}.{$mapFields[$sort]['field']}", $dir);
-//            }
+        if (isset($params['sort'])) {
 
             $sorters = json_decode($params['sort'], true); // Decode the filter
 
             foreach ($sorters as $sort) {
 
                 if ('_id' === substr($sort['property'], -3)) {
-                    $sort['column'] = $mapFilterFields[$sort['property']]['sort'];
 
-                    $docs->whereHas($mapFilterFields[$sort['column']]['entity'], function ($query) use ($sort) {
-                        $query->orderBy("{$sort['column']}",  $sort['direction']);
-                    });
+                    $sortParamColumn = $sort['property'];
+                    $sortRealColumn = $mapFilterFields[$sortParamColumn]['sort'];
+                    $sortDirection = $sort['direction'];
+                    $sortEntityName = $mapFilterFields[$sortRealColumn]['entity'];
+
+                    $sortEntityRoot = '\ArqAdmin\Models\\' . $sortEntityName;
+                    $ent = new $sortEntityRoot;
+                    $sortTableName = $ent->getTable();
+
+                    $docs->leftJoin($sortTableName, $sortTableName . '.id', '=', 'documento.' . $sortParamColumn)
+                         ->orderBy($sortTableName . '.' . $sortRealColumn, $sortDirection);
 
                 } else {
-                    $docs->orderBy("{$mapFilterFields[$sort['property']]['column']}",  $sort['direction']);
+                    $docs->orderBy($mapFilterFields[$sort['property']]['column'],  $sort['direction']);
                 };
             }
         } else {
             $docs->orderBy('id', 'DESC');
         }
+
+        $limit = (isset($params['limit'])) ? $params['limit'] : '50';
+
+//dd($docs->toSql());
+
+        $result = $docs->paginate($limit);
+//dd($result);
+        return $result;
+    }
+
+    public function findFilter(array $params = null)
+    {
+        $docs = $this->documento
+            ->leftJoin('fundo', 'documento.fundo_id', '=', 'fundo.id')
+            ->leftJoin('subfundo', 'documento.subfundo_id', '=', 'subfundo.id')
+            ->leftJoin('grupo', 'documento.grupo_id', '=', 'grupo.id')
+            ->leftJoin('subgrupo', 'documento.subgrupo_id', '=', 'subgrupo.id')
+            ->leftJoin('serie', 'documento.serie_id', '=', 'serie.id')
+            ->leftJoin('subserie', 'documento.subserie_id', '=', 'subserie.id')
+            ->leftJoin('dossie', 'documento.dossie_id', '=', 'dossie.id')
+            ->leftJoin('especiedocumental', 'documento.especiedocumental_id', '=', 'especiedocumental.id')
+            ->leftJoin('conservacao', 'documento.conservacao_id', '=', 'conservacao.id')
+            ->leftJoin('lc_sala', 'documento.lc_sala_id', '=', 'lc_sala.id')
+            ->leftJoin('lc_movel', 'documento.lc_movel_id', '=', 'lc_movel.id')
+            ->leftJoin('lc_compartimento', 'documento.lc_compartimento_id', '=', 'lc_compartimento.id')
+            ->leftJoin('lc_acondicionamento', 'documento.lc_acondicionamento_id', '=', 'lc_acondicionamento.id')
+            ->leftJoin('dt_uso', 'documento.dt_uso_id', '=', 'dt_uso.id')
+            //->leftJoin('desenhosTecnicos', 'documento._id', '=', '.id')
+
+            ->select('documento.*', 'fundo.fundo_nome', 'subfundo.subfundo_nome', 'grupo.grupo_nome',
+                'subgrupo.subgrupo_nome', 'serie.serie_nome', 'subserie.subserie_nome', 'dossie.dossie_nome',
+                'especiedocumental.especiedocumental_nome', 'conservacao.conservacao_estado', 'lc_sala.sala',
+                'lc_movel.movel', 'lc_compartimento.compartimento', 'lc_acondicionamento.acondicionamento',
+                'dt_uso.uso');
 
         $limit = (isset($params['limit'])) ? $params['limit'] : '50';
 
