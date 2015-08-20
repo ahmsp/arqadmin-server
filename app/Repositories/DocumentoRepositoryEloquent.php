@@ -196,7 +196,7 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
     }
 
 
-    public function fetchAuxiliarTable($modelName)
+    public function fetchAuxiliarTable($modelName, array $params = null)
     {
         $models = [
             'Acervo',
@@ -223,7 +223,12 @@ class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
 
         $model = '\\ArqAdmin\\Models\\' . $modelName;
 
-        $data = $model::all();
+        if (isset($params['sort'])) {
+            $sorters = json_decode($params['sort'], true);
+            $data = $model::orderBy($sorters[0]['property'], $sorters[0]['direction'])->get();
+        } else {
+            $data = $model::get();
+        }
 
         $result = [
             'total' => count($data),

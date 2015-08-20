@@ -48,9 +48,10 @@ class DocumentoController extends Controller
         //
     }
 
-    public function fetchAuxiliarTable($modelName)
+    public function fetchAuxiliarTable(Request $request, $modelName)
     {
-        $result = $this->documentoService->fetchAuxiliarTable($modelName);
+        $params = $request->all();
+        $result = $this->documentoService->fetchAuxiliarTable($modelName, $params);
         return $result;
     }
 

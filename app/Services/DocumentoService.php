@@ -30,9 +30,9 @@ class DocumentoService
         return $result;
     }
 
-    public function fetchAuxiliarTable($modelName)
+    public function fetchAuxiliarTable($modelName, array $params = null)
     {
-        $result = $this->repo->fetchAuxiliarTable($modelName);
+        $result = $this->repo->fetchAuxiliarTable($modelName, $params);
         return $result;
     }
 
