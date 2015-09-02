@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f76c1e94e9215c36917f06b46dba55cc",
+    "hash": "d7b992dc65a18faa22300e4285640ab1",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -900,12 +900,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/prettus/l5-repository.git",
-                "reference": "10b641825ca24c8d824cd1de3e19f84080c8395b"
+                "reference": "2a4517c55cf55d4aa79d5eb0663c16257ba3bebc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/prettus/l5-repository/zipball/10b641825ca24c8d824cd1de3e19f84080c8395b",
-                "reference": "10b641825ca24c8d824cd1de3e19f84080c8395b",
+                "url": "https://api.github.com/repos/prettus/l5-repository/zipball/2a4517c55cf55d4aa79d5eb0663c16257ba3bebc",
+                "reference": "2a4517c55cf55d4aa79d5eb0663c16257ba3bebc",
                 "shasum": ""
             },
             "require": {
@@ -952,7 +952,47 @@
                 "model",
                 "repository"
             ],
-            "time": "2015-08-06 17:16:48"
+            "time": "2015-09-01 12:23:52"
+        },
+        {
+            "name": "prettus/laravel-validation",
+            "version": "1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/prettus/laravel-validator.git",
+                "reference": "c3501ba6b6312b8e98098783901060c0aff2b29d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/prettus/laravel-validator/zipball/c3501ba6b6312b8e98098783901060c0aff2b29d",
+                "reference": "c3501ba6b6312b8e98098783901060c0aff2b29d",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.0|~5.1",
+                "illuminate/validation": "~5.0|~5.1",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Prettus\\Validator\\": "src/Prettus/Validator/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Anderson Andrade",
+                    "email": "contato@andersonandra.de"
+                }
+            ],
+            "description": "Laravel Validation Service",
+            "keywords": [
+                "laravel",
+                "service",
+                "validation"
+            ],
+            "time": "2015-06-08 23:53:46"
         },
         {
             "name": "psr/log",

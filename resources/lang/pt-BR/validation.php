@@ -14,12 +14,12 @@ return [
     */
 
     "accepted"         => "O campo :attribute deve ser aceito.",
-    "active_url"       => "O campo :attribute não contém um URL válido.",
+    "active_url"       => "O campo :attribute não contém uma URL válida.",
     "after"            => "O campo :attribute deverá conter uma data posterior a :date.",
     "alpha"            => "O campo :attribute deverá conter apenas letras.",
     "alpha_dash"       => "O campo :attribute deverá conter apenas letras, números e traços.",
     "alpha_num"        => "O campo :attribute deverá conter apenas letras e números .",
-    "array"            => "O campo :attribute precisa ser um conjunto.",
+    "array"            => "O campo :attribute precisa ser um 'Array'.",
     "before"           => "O campo :attribute deverá conter uma data anterior a :date.",
     "between"          => [
         "numeric" => "O campo :attribute deverá ter um valor entre :min - :max.",
@@ -72,7 +72,7 @@ return [
     ],
     "string"           => "O campo :attribute deve ser uma string.",
     "timezone"         => "O campo :attribute deverá ter um fuso horário válido.",
-    "unique"           => "O valor indicado para o campo :attribute já se encontra utilizado.",
+    "unique"           => "O valor indicado para o campo :attribute já foi utilizado.",
     "url"              => "O formato do URL indicado para o campo :attribute é inválido.",
 
     /*

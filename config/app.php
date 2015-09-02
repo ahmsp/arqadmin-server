@@ -143,6 +143,7 @@ return [
         ArqAdmin\Providers\AppServiceProvider::class,
         ArqAdmin\Providers\EventServiceProvider::class,
         ArqAdmin\Providers\RouteServiceProvider::class,
+        ArqAdmin\Providers\ArqAdminRepositoryProvider::class,
 
         /*
          * Helpers Service Providers...

@@ -1,16 +1,5 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
-
 Route::pattern('id', '[0-9]+');
 
 Route::get('/', function () {
@@ -46,6 +35,7 @@ Route::group(['prefix' => 'api'], function () {
      * RelatedTables
      */
     Route::get('/documento/auxtable/{modelName}', 'DocumentoController@fetchAuxiliarTable');
+    Route::get('/classificacao/{modelName}', 'DocumentoController@fetchAuxiliarTable');
 
     /**
      * Statistics
@@ -55,13 +45,15 @@ Route::group(['prefix' => 'api'], function () {
 
     /** Auxiliar Tables */
 
+    Route::resource('fundos', 'FundoController');
+
     /**
      * Acervo
      */
-    Route::get('acervo', 'AcervoController@findAll');
-    Route::post('acervo', 'AcervoController@add');
-    Route::put('acervo/{id}', 'AcervoController@update');
-    Route::delete('acervo/{id}', 'AcervoController@destroy');
+    Route::get('classificacao/acervo', 'AcervoController@findAll');
+    Route::post('classificacao/acervo', 'AcervoController@add');
+    Route::put('classificacao/acervo/{id}', 'AcervoController@update');
+    Route::delete('classificacao/acervo/{id}', 'AcervoController@destroy');
 
     /**
      * Fundo

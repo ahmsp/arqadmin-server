@@ -9,7 +9,8 @@
         "laravel/framework": "5.1.*",
         "barryvdh/laravel-ide-helper": "^2.0@dev",
         "stevebauman/corp": "1.0.*",
-        "prettus/l5-repository": "dev-master"
+        "prettus/l5-repository": "dev-master",
+        "prettus/laravel-validation": "1.1.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
