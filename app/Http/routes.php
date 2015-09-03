@@ -46,7 +46,7 @@ Route::group(['prefix' => 'api'], function () {
      * Auxiliar Tables
      */
     Route::resource('acervos', 'AcervoController');
-    
+
     Route::resource('fundos', 'FundoController');
     Route::resource('subfundos', 'SubfundoController');
     Route::resource('grupos', 'GrupoController');
@@ -54,6 +54,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::resource('series', 'SerieController');
     Route::resource('subseries', 'SubserieController');
     Route::resource('dossies', 'DossieController');
+
+    Route::resource('conservacoes', 'ConservacaoController');
 
 });
 
