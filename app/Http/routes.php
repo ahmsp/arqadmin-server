@@ -51,6 +51,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::resource('subgrupos', 'SubgrupoController');
     Route::resource('series', 'SerieController');
     Route::resource('subseries', 'SubserieController');
+    Route::resource('dossies', 'DossieController');
 
 });
 
