@@ -57,7 +57,8 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::resource('conservacao', 'ConservacaoController');
 
-    Route::resource('lcacondicionamento', 'LcAcondicionamentoController');
+    Route::resource('lcacondicionamento', 'LcCompartimentoController');
+    Route::resource('lcacompartimento', 'LcCompartimentoController');
 
 });
 

@@ -1,10 +1,14 @@
 <?php
 
-namespace ArqAdmin\Models;
+namespace ArqAdmin\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Prettus\Repository\Contracts\Transformable;
+use Prettus\Repository\Traits\TransformableTrait;
 
-class LcCompartimento extends Model {
+class LcCompartimento extends Model implements Transformable
+{
+    use TransformableTrait;
 
     protected $table = 'lc_compartimento';
 
