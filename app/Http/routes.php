@@ -60,5 +60,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::resource('lcacondicionamento', 'LcCompartimentoController');
     Route::resource('lcacompartimento', 'LcCompartimentoController');
 
+    Route::resource('especiedocumental', 'EspeciedocumentalController');
+
 });
 
