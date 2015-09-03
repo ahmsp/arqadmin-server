@@ -68,5 +68,10 @@ class ArqAdminRepositoryProvider extends ServiceProvider
             \ArqAdmin\Repositories\ConservacaoRepositoryEloquent::class
         );
 
+        $this->app->bind(
+            \ArqAdmin\Repositories\LcAcondicionamentoRepository::class,
+            \ArqAdmin\Repositories\LcAcondicionamentoRepositoryEloquent::class
+        );
+
     }
 }

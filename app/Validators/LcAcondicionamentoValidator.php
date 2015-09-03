@@ -6,16 +6,16 @@ namespace ArqAdmin\Validators;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\LaravelValidator;
 
-class ConservacaoValidator extends LaravelValidator
+class LcAcondicionamentoValidator extends LaravelValidator
 {
     protected $rules = [
 
         ValidatorInterface::RULE_CREATE => [
-            'conservacao_estado' => 'required|min:3|max:15|unique:conservacao,conservacao_estado'
+            'acondicionamento' => 'required|min:3|max:45|unique:lc_acondicionamento,acondicionamento'
         ],
 
         ValidatorInterface::RULE_UPDATE => [
-            'conservacao_estado' => 'sometimes|required|min:3|max:15|unique:conservacao,conservacao_estado'
+            'acondicionamento' => 'sometimes|required|min:3|max:45|unique:lc_acondicionamento,acondicionamento'
         ]
     ];
 

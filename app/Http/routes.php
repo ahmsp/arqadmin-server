@@ -45,17 +45,19 @@ Route::group(['prefix' => 'api'], function () {
     /**
      * Auxiliar Tables
      */
-    Route::resource('acervos', 'AcervoController');
+    Route::resource('acervo', 'AcervoController');
 
-    Route::resource('fundos', 'FundoController');
-    Route::resource('subfundos', 'SubfundoController');
-    Route::resource('grupos', 'GrupoController');
-    Route::resource('subgrupos', 'SubgrupoController');
-    Route::resource('series', 'SerieController');
-    Route::resource('subseries', 'SubserieController');
-    Route::resource('dossies', 'DossieController');
+    Route::resource('fundo', 'FundoController');
+    Route::resource('subfundo', 'SubfundoController');
+    Route::resource('grupo', 'GrupoController');
+    Route::resource('subgrupo', 'SubgrupoController');
+    Route::resource('serie', 'SerieController');
+    Route::resource('subserie', 'SubserieController');
+    Route::resource('dossie', 'DossieController');
 
-    Route::resource('conservacoes', 'ConservacaoController');
+    Route::resource('conservacao', 'ConservacaoController');
+
+    Route::resource('lcacondicionamento', 'LcAcondicionamentoController');
 
 });
 
