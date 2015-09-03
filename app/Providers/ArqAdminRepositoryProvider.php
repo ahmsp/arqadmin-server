@@ -28,5 +28,15 @@ class ArqAdminRepositoryProvider extends ServiceProvider
             \ArqAdmin\Repositories\FundoRepositoryEloquent::class
         );
 
+        $this->app->bind(
+            \ArqAdmin\Repositories\SubfundoRepository::class,
+            \ArqAdmin\Repositories\SubfundoRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\GrupoRepository::class,
+            \ArqAdmin\Repositories\GrupoRepositoryEloquent::class
+        );
+
     }
 }

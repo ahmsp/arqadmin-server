@@ -14,6 +14,7 @@ Route::get('auth/ldap', 'AuthController@ldapTest');
 Route::group(['prefix' => 'api'], function () {
 
     Route::get('test', 'DocumentoController@findFilter');
+
     /**
      * User
      */
@@ -22,14 +23,12 @@ Route::group(['prefix' => 'api'], function () {
     /**
      * Documentos
      */
-
 //    // ver code.edu -> laravel c/ angular -> Relacionando Models -> Criando API ProjectNote
 //    Route::get('documento/{id}/imagens', 'DocumentoController@findAll');
     Route::get('documento', 'DocumentoController@findAll');
     Route::post('documento', 'DocumentoController@add');
     Route::put('documento/{id}', 'DocumentoController@update');
     Route::delete('documento/{id}', 'DocumentoController@destroy');
-
 
     /**
      * RelatedTables
@@ -43,34 +42,12 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('/documento/estatisticas', 'DocumentoController@statistic');
 
 
-    /** Auxiliar Tables */
-
+    /**
+     * Auxiliar Tables
+     */
     Route::resource('fundos', 'FundoController');
-
-    /**
-     * Acervo
-     */
-    Route::get('classificacao/acervo', 'AcervoController@findAll');
-    Route::post('classificacao/acervo', 'AcervoController@add');
-    Route::put('classificacao/acervo/{id}', 'AcervoController@update');
-    Route::delete('classificacao/acervo/{id}', 'AcervoController@destroy');
-
-    /**
-     * Fundo
-     */
-    Route::get('fundo', 'FundoController@findAll');
-    Route::post('fundo', 'FundoController@add');
-    Route::put('fundo/{id}', 'FundoController@update');
-    Route::delete('fundo/{id}', 'FundoController@destroy');
-
-    /**
-     * Conservacao
-     */
-    Route::get('conservacao', 'ConservacaoController@findAll');
-    Route::post('conservacao', 'ConservacaoController@add');
-    Route::put('conservacao/{id}', 'ConservacaoController@update');
-    Route::delete('conservacao/{id}', 'ConservacaoController@destroy');
-
+    Route::resource('subfundos', 'SubfundoController');
+    Route::resource('grupos', 'GrupoController');
 
 });
 
