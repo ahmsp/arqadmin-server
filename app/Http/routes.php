@@ -45,6 +45,8 @@ Route::group(['prefix' => 'api'], function () {
     /**
      * Auxiliar Tables
      */
+    Route::resource('acervos', 'AcervoController');
+    
     Route::resource('fundos', 'FundoController');
     Route::resource('subfundos', 'SubfundoController');
     Route::resource('grupos', 'GrupoController');

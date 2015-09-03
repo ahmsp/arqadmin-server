@@ -58,5 +58,10 @@ class ArqAdminRepositoryProvider extends ServiceProvider
             \ArqAdmin\Repositories\DossieRepositoryEloquent::class
         );
 
+        $this->app->bind(
+            \ArqAdmin\Repositories\AcervoRepository::class,
+            \ArqAdmin\Repositories\AcervoRepositoryEloquent::class
+        );
+
     }
 }
