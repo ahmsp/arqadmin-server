@@ -50,6 +50,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::resource('grupos', 'GrupoController');
     Route::resource('subgrupos', 'SubgrupoController');
     Route::resource('series', 'SerieController');
+    Route::resource('subseries', 'SubserieController');
 
 });
 
