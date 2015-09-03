@@ -48,6 +48,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::resource('fundos', 'FundoController');
     Route::resource('subfundos', 'SubfundoController');
     Route::resource('grupos', 'GrupoController');
+    Route::resource('subgrupos', 'SubgrupoController');
 
 });
 
