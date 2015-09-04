@@ -1,16 +1,20 @@
 <?php
 
-namespace ArqAdmin\Models;
+namespace ArqAdmin\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Prettus\Repository\Contracts\Transformable;
+use Prettus\Repository\Traits\TransformableTrait;
 
-class LcMovel extends Model {
+class LcSala extends Model implements Transformable
+{
+    use TransformableTrait;
 
-    protected $table = 'lc_movel';
+    protected $table = 'lc_sala';
 
     public $timestamps = false;
 
-    protected $fillable = ['movel'];
+    protected $fillable = ['sala'];
 
 
     public function documentos()

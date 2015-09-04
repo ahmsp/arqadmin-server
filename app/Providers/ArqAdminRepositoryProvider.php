@@ -88,5 +88,10 @@ class ArqAdminRepositoryProvider extends ServiceProvider
             \ArqAdmin\Repositories\LcMovelRepositoryEloquent::class
         );
 
+        $this->app->bind(
+            \ArqAdmin\Repositories\LcSalaRepository::class,
+            \ArqAdmin\Repositories\LcSalaRepositoryEloquent::class
+        );
+
     }
 }
