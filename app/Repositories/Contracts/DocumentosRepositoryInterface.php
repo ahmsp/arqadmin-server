@@ -3,7 +3,7 @@
 namespace ArqAdmin\Repositories\Contracts;
 
 
-interface DocumentoRepositoryInterface
+interface DocumentosRepositoryInterface
 {
     public function find($id);
     public function findAll(array $params);

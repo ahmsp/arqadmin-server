@@ -5,22 +5,22 @@ namespace ArqAdmin\Http\Controllers;
 use Illuminate\Http\Request;
 use ArqAdmin\Http\Requests;
 use ArqAdmin\Http\Controllers\Controller;
-use ArqAdmin\Services\DocumentoService;
+use ArqAdmin\Services\DocumentosService;
 
-class DocumentoController extends Controller
+class DocumentosController extends Controller
 {
-    protected $documentoService;
+    protected $documentosService;
 
-    public function __construct(DocumentoService $documentoService)
+    public function __construct(DocumentosService $documentosService)
     {
-        $this->documentoService = $documentoService;
+        $this->documentosService = $documentosService;
 //        $this->middleware('auth');
     }
 
     public function findAll(Request $request)
     {
         $params = $request->all();
-        $data = $this->documentoService->findAll($params);
+        $data = $this->documentosService->findAll($params);
 
         return $data;
     }
@@ -28,7 +28,7 @@ class DocumentoController extends Controller
     public function findFilter(Request $request)
     {
         $params = $request->all();
-        $data = $this->documentoService->findFilter($params);
+        $data = $this->documentosService->findFilter($params);
 
         return $data;
     }
@@ -51,7 +51,7 @@ class DocumentoController extends Controller
     public function fetchAuxiliarTable(Request $request, $modelName)
     {
         $params = $request->all();
-        $result = $this->documentoService->fetchAuxiliarTable($modelName, $params);
+        $result = $this->documentosService->fetchAuxiliarTable($modelName, $params);
         return $result;
     }
 

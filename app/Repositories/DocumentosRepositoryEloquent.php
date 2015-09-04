@@ -4,9 +4,9 @@ namespace ArqAdmin\Repositories;
 
 
 use ArqAdmin\Models\Documento;
-use ArqAdmin\Repositories\Contracts\DocumentoRepositoryInterface;
+use ArqAdmin\Repositories\Contracts\DocumentosRepositoryInterface;
 
-class DocumentoRepositoryEloquent implements DocumentoRepositoryInterface
+class DocumentosRepositoryEloquent implements DocumentosRepositoryInterface
 {
     protected $documento;
 

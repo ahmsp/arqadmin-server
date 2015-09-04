@@ -56,73 +56,73 @@ class Documento extends Model
 
     public function fundo()
     {
-        return $this->belongsTo('ArqAdmin\Models\Fundo', 'fundo_id');
+        return $this->belongsTo('ArqAdmin\Entities\Fundo', 'fundo_id');
     }
 
     public function subfundo()
     {
-        return $this->belongsTo('ArqAdmin\Models\Subfundo', 'subfundo_id');
+        return $this->belongsTo('ArqAdmin\Entities\Subfundo', 'subfundo_id');
     }
 
     public function grupo()
     {
-        return $this->belongsTo('ArqAdmin\Models\Grupo', 'grupo_id');
+        return $this->belongsTo('ArqAdmin\Entities\Grupo', 'grupo_id');
     }
 
     public function subgrupo()
     {
-        return $this->belongsTo('ArqAdmin\Models\Subgrupo', 'subgrupo_id');
+        return $this->belongsTo('ArqAdmin\Entities\Subgrupo', 'subgrupo_id');
     }
 
     public function serie()
     {
-        return $this->belongsTo('ArqAdmin\Models\Serie', 'serie_id');
+        return $this->belongsTo('ArqAdmin\Entities\Serie', 'serie_id');
     }
 
     public function subserie()
     {
-        return $this->belongsTo('ArqAdmin\Models\Subserie', 'subserie_id');
+        return $this->belongsTo('ArqAdmin\Entities\Subserie', 'subserie_id');
     }
 
     public function dossie()
     {
-        return $this->belongsTo('ArqAdmin\Models\Dossie', 'dossie_id');
+        return $this->belongsTo('ArqAdmin\Entities\Dossie', 'dossie_id');
     }
 
     public function especieDocumental()
     {
-        return $this->belongsTo('ArqAdmin\Models\Especiedocumental', 'especiedocumental_id');
+        return $this->belongsTo('ArqAdmin\Entities\Especiedocumental', 'especiedocumental_id');
     }
 
     public function lcSala()
     {
-        return $this->belongsTo('ArqAdmin\Models\LcSala', 'lc_sala_id');
+        return $this->belongsTo('ArqAdmin\Entities\LcSala', 'lc_sala_id');
     }
 
     public function lcMovel()
     {
-        return $this->belongsTo('ArqAdmin\Models\LcMovel', 'lc_movel_id');
+        return $this->belongsTo('ArqAdmin\Entities\LcMovel', 'lc_movel_id');
     }
 
     public function lcCompartimento()
     {
-        return $this->belongsTo('ArqAdmin\Models\LcCompartimento', 'lc_compartimento_id');
+        return $this->belongsTo('ArqAdmin\Entities\LcCompartimento', 'lc_compartimento_id');
     }
 
     public function lcAcondicionamento()
     {
-        return $this->belongsTo('ArqAdmin\Models\LcAcondicionamento', 'lc_acondicionamento_id');
+        return $this->belongsTo('ArqAdmin\Entities\LcAcondicionamento', 'lc_acondicionamento_id');
     }
 
     public function conservacao()
     {
 //        return $this->belongsTo('ArqAdmin\Models\Conservacao', 'conservacao_id');
-        return $this->belongsTo(Conservacao::class, 'conservacao_id');
+        return $this->belongsTo(\ArqAdmin\Entities\Conservacao::class, 'conservacao_id');
     }
 
     public function dtUso()
     {
-        return $this->belongsTo('ArqAdmin\Models\Dtuso', 'dt_uso_id');
+        return $this->belongsTo('ArqAdmin\Entities\Dtuso', 'dt_uso_id');
     }
 
     public function desenhosTecnicos()

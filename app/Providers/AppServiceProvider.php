@@ -24,8 +24,8 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
-            'ArqAdmin\Repositories\Contracts\DocumentoRepositoryInterface',
-            'ArqAdmin\Repositories\DocumentoRepositoryEloquent'
+            'ArqAdmin\Repositories\Contracts\DocumentosRepositoryInterface',
+            'ArqAdmin\Repositories\DocumentosRepositoryEloquent'
         );
     }
 }

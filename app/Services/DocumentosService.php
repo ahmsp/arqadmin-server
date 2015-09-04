@@ -3,15 +3,15 @@
 namespace ArqAdmin\Services;
 
 
-use ArqAdmin\Repositories\Contracts\DocumentoRepositoryInterface;
+use ArqAdmin\Repositories\Contracts\DocumentosRepositoryInterface;
 
-class DocumentoService
+class DocumentosService
 {
     private $repo;
 
-    public function __construct(DocumentoRepositoryInterface $documentoRepository)
+    public function __construct(DocumentosRepositoryInterface $DocumentosRepository)
     {
-        $this->repo = $documentoRepository;
+        $this->repo = $DocumentosRepository;
     }
 
     public function findAll(array $params = null)

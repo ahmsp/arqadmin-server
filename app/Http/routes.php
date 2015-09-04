@@ -13,7 +13,7 @@ Route::get('auth/ldap', 'AuthController@ldapTest');
 
 Route::group(['prefix' => 'api'], function () {
 
-    Route::get('test', 'DocumentoController@findFilter');
+    Route::get('test', 'DocumentosController@findFilter');
 
     /**
      * User
@@ -24,22 +24,22 @@ Route::group(['prefix' => 'api'], function () {
      * Documentos
      */
 //    // ver code.edu -> laravel c/ angular -> Relacionando Models -> Criando API ProjectNote
-//    Route::get('documento/{id}/imagens', 'DocumentoController@findAll');
-    Route::get('documento', 'DocumentoController@findAll');
-    Route::post('documento', 'DocumentoController@add');
-    Route::put('documento/{id}', 'DocumentoController@update');
-    Route::delete('documento/{id}', 'DocumentoController@destroy');
+//    Route::get('documento/{id}/imagens', 'DocumentosController@findAll');
+    Route::get('documento', 'DocumentosController@findAll');
+    Route::post('documento', 'DocumentosController@add');
+    Route::put('documento/{id}', 'DocumentosController@update');
+    Route::delete('documento/{id}', 'DocumentosController@destroy');
 
     /**
      * RelatedTables
      */
-    Route::get('/documento/auxtable/{modelName}', 'DocumentoController@fetchAuxiliarTable');
-    Route::get('/classificacao/{modelName}', 'DocumentoController@fetchAuxiliarTable');
+    Route::get('/documento/auxtable/{modelName}', 'DocumentosController@fetchAuxiliarTable');
+    Route::get('/classificacao/{modelName}', 'DocumentosController@fetchAuxiliarTable');
 
     /**
      * Statistics
      */
-    Route::get('/documento/estatisticas', 'DocumentoController@statistic');
+    Route::get('/documento/estatisticas', 'DocumentosController@statistic');
 
 
     /**
