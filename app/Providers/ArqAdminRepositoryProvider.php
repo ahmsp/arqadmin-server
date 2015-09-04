@@ -93,5 +93,10 @@ class ArqAdminRepositoryProvider extends ServiceProvider
             \ArqAdmin\Repositories\LcSalaRepositoryEloquent::class
         );
 
+        $this->app->bind(
+            \ArqAdmin\Repositories\DtUsoRepository::class,
+            \ArqAdmin\Repositories\DtUsoRepositoryEloquent::class
+        );
+
     }
 }
