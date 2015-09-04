@@ -46,7 +46,6 @@ Route::group(['prefix' => 'api'], function () {
      * Auxiliar Tables
      */
     Route::resource('acervo', 'AcervoController');
-
     Route::resource('fundo', 'FundoController');
     Route::resource('subfundo', 'SubfundoController');
     Route::resource('grupo', 'GrupoController');
@@ -54,13 +53,11 @@ Route::group(['prefix' => 'api'], function () {
     Route::resource('serie', 'SerieController');
     Route::resource('subserie', 'SubserieController');
     Route::resource('dossie', 'DossieController');
-
+    Route::resource('especiedocumental', 'EspeciedocumentalController');
     Route::resource('conservacao', 'ConservacaoController');
-
     Route::resource('lcacondicionamento', 'LcCompartimentoController');
     Route::resource('lcacompartimento', 'LcCompartimentoController');
-
-    Route::resource('especiedocumental', 'EspeciedocumentalController');
+    Route::resource('lcmovel', 'LcMovelController');
 
 });
 
