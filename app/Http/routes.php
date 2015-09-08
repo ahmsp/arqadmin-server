@@ -23,28 +23,25 @@ Route::group(['prefix' => 'api'], function () {
     /**
      * Documentos
      */
+    Route::resource('documento', 'DocumentoController');
 //    // ver code.edu -> laravel c/ angular -> Relacionando Models -> Criando API ProjectNote
-//    Route::get('documento/{id}/imagens', 'DocumentosController@findAll');
-    Route::get('documento', 'DocumentosController@findAll');
-    Route::post('documento', 'DocumentosController@add');
-    Route::put('documento/{id}', 'DocumentosController@update');
-    Route::delete('documento/{id}', 'DocumentosController@destroy');
+//    Route::get('documentos/{id}/imagens', 'DocumentosController@findAll');
+//    Route::get('documentos', 'DocumentosController@findAll');
+//    Route::post('documentos', 'DocumentosController@add');
+//    Route::put('documentos/{id}', 'DocumentosController@update');
+//    Route::delete('documentos/{id}', 'DocumentosController@destroy');
 
     /**
-     * RelatedTables
+     * Desenho Tecnico
      */
-    Route::get('/documento/auxtable/{modelName}', 'DocumentosController@fetchAuxiliarTable');
-    Route::get('/classificacao/{modelName}', 'DocumentosController@fetchAuxiliarTable');
-
-    /**
-     * Statistics
-     */
-    Route::get('/documento/estatisticas', 'DocumentosController@statistic');
-
+    Route::resource('desenhotecnico', '');
 
     /**
      * Auxiliar Tables
      */
+//    Route::get('/documentos/auxtable/{modelName}', 'DocumentosController@fetchAuxiliarTable');
+//    Route::get('/classificacao/{modelName}', 'DocumentosController@fetchAuxiliarTable');
+
     Route::resource('acervo', 'AcervoController');
     Route::resource('fundo', 'FundoController');
     Route::resource('subfundo', 'SubfundoController');
@@ -56,10 +53,15 @@ Route::group(['prefix' => 'api'], function () {
     Route::resource('especiedocumental', 'EspeciedocumentalController');
     Route::resource('conservacao', 'ConservacaoController');
     Route::resource('lcacondicionamento', 'LcCompartimentoController');
-    Route::resource('lcacompartimento', 'LcCompartimentoController');
+    Route::resource('lccompartimento', 'LcCompartimentoController');
     Route::resource('lcmovel', 'LcMovelController');
     Route::resource('lcsala', 'LcSalaController');
     Route::resource('dtuso', 'DtUsoController');
+
+    /**
+     * Statistics
+     */
+    Route::get('/estatisticas', 'DocumentosController@statistic');
 
 });
 
