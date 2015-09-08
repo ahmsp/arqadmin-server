@@ -23,13 +23,9 @@ Route::group(['prefix' => 'api'], function () {
     /**
      * Documentos
      */
+    // ver code.edu -> laravel c/ angular -> Relacionando Models -> Criando API ProjectNote
+    // Route::get('documentos/{id}/imagens', 'DocumentosController@findAll');
     Route::resource('documento', 'DocumentoController');
-//    // ver code.edu -> laravel c/ angular -> Relacionando Models -> Criando API ProjectNote
-//    Route::get('documentos/{id}/imagens', 'DocumentosController@findAll');
-//    Route::get('documentos', 'DocumentosController@findAll');
-//    Route::post('documentos', 'DocumentosController@add');
-//    Route::put('documentos/{id}', 'DocumentosController@update');
-//    Route::delete('documentos/{id}', 'DocumentosController@destroy');
 
     /**
      * Desenho Tecnico
@@ -39,9 +35,6 @@ Route::group(['prefix' => 'api'], function () {
     /**
      * Auxiliar Tables
      */
-//    Route::get('/documentos/auxtable/{modelName}', 'DocumentosController@fetchAuxiliarTable');
-//    Route::get('/classificacao/{modelName}', 'DocumentosController@fetchAuxiliarTable');
-
     Route::resource('acervo', 'AcervoController');
     Route::resource('fundo', 'FundoController');
     Route::resource('subfundo', 'SubfundoController');
@@ -51,7 +44,9 @@ Route::group(['prefix' => 'api'], function () {
     Route::resource('subserie', 'SubserieController');
     Route::resource('dossie', 'DossieController');
     Route::resource('especiedocumental', 'EspeciedocumentalController');
+
     Route::resource('conservacao', 'ConservacaoController');
+
     Route::resource('lcacondicionamento', 'LcCompartimentoController');
     Route::resource('lccompartimento', 'LcCompartimentoController');
     Route::resource('lcmovel', 'LcMovelController');

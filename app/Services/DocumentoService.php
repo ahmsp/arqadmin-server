@@ -37,4 +37,16 @@ class DocumentoService extends BaseService
 
     }
 
+//    public function pregReplaceArray($pattern, $replacement, $subject, $limit=-1)
+//    {
+//        if (is_array($subject)) {
+//            foreach ($subject as &$value){
+//                $value = $this->pregReplaceArray($pattern, $replacement, $value, $limit);
+//            }
+//            return $subject;
+//        } else {
+//            return preg_replace($pattern, $replacement, $subject, $limit);
+//        }
+//    }
+
 }
