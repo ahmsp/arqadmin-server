@@ -123,5 +123,15 @@ class ArqAdminRepositoryProvider extends ServiceProvider
             \ArqAdmin\Repositories\DtSuporteRepositoryEloquent::class
         );
 
+        $this->app->bind(
+            \ArqAdmin\Repositories\DtTecnicaRepository::class,
+            \ArqAdmin\Repositories\DtTecnicaRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\DtTipoRepository::class,
+            \ArqAdmin\Repositories\DtTipoRepositoryEloquent::class
+        );
+
     }
 }

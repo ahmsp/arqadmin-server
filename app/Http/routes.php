@@ -56,6 +56,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::resource('dtconservacao', 'DtConservacaoController');
     Route::resource('dtescala', 'DtEscalaController');
     Route::resource('dtsuporte', 'DtSuporteController');
+    Route::resource('dttecnica', 'DtTecnicaController');
+    Route::resource('dttipo', 'DtTipoController');
 
     /**
      * Statistics
