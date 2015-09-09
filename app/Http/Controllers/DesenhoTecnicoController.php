@@ -3,27 +3,27 @@
 namespace ArqAdmin\Http\Controllers;
 
 use ArqAdmin\Http\Requests;
-use ArqAdmin\Repositories\SubfundoRepository;
-use ArqAdmin\Services\SubfundoService;
+use ArqAdmin\Repositories\DesenhoTecnicoRepository;
+use ArqAdmin\Services\DesenhoTecnicoService;
 use Illuminate\Http\Request;
 
-class SubfundoController extends Controller
+class DesenhoTecnicoController extends Controller
 {
     /**
-     * @var SubfundoRepository
+     * @var DesenhoTecnicoRepository
      */
     protected $repository;
 
     /**
-     * @var SubfundoService
+     * @var DesenhoTecnicoService
      */
     protected $service;
 
     /**
-     * @param SubfundoRepository $repository
-     * @param SubfundoService $service
+     * @param DesenhoTecnicoRepository $repository
+     * @param DesenhoTecnicoService $service
      */
-    public function __construct(SubfundoRepository $repository, SubfundoService $service)
+    public function __construct(DesenhoTecnicoRepository $repository, DesenhoTecnicoService $service)
     {
         $this->repository = $repository;
         $this->service = $service;
@@ -34,9 +34,11 @@ class SubfundoController extends Controller
      *
      * @return array
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = $this->repository->paginate(500);
+        $params = $request->all();
+        $data = $this->service->findAll($params);
+
         return $data;
     }
 
@@ -84,4 +86,5 @@ class SubfundoController extends Controller
     {
         return $this->service->delete($id);
     }
+
 }

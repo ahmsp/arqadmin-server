@@ -30,7 +30,7 @@ Route::group(['prefix' => 'api'], function () {
     /**
      * Desenho Tecnico
      */
-    Route::resource('desenhotecnico', '');
+    Route::resource('desenhotecnico', 'DesenhoTecnicoController');
 
     /**
      * Auxiliar Tables
@@ -52,6 +52,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::resource('lcmovel', 'LcMovelController');
     Route::resource('lcsala', 'LcSalaController');
     Route::resource('dtuso', 'DtUsoController');
+
+    Route::resource('dtconservacao', 'DtConservacaoController');
 
     /**
      * Statistics

@@ -130,7 +130,7 @@ class Documento extends Model implements Transformable
 
     public function desenhosTecnicos()
     {
-        return $this->hasMany('ArqAdmin\Models\DesenhoTecnico');
+        return $this->hasMany('ArqAdmin\Entities\DesenhoTecnico');
     }
 
     public function getTableColumns() {

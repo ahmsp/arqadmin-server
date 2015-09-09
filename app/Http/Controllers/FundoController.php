@@ -2,18 +2,27 @@
 
 namespace ArqAdmin\Http\Controllers;
 
+use ArqAdmin\Http\Requests;
 use ArqAdmin\Repositories\FundoRepository;
 use ArqAdmin\Services\FundoService;
 use Illuminate\Http\Request;
 
-use ArqAdmin\Http\Requests;
-use ArqAdmin\Http\Controllers\Controller;
-
 class FundoController extends Controller
 {
+    /**
+     * @var FundoRepository
+     */
     protected $repository;
+
+    /**
+     * @var FundoService
+     */
     protected $service;
 
+    /**
+     * @param FundoRepository $repository
+     * @param FundoService $service
+     */
     public function __construct(FundoRepository $repository, FundoService $service)
     {
         $this->repository = $repository;

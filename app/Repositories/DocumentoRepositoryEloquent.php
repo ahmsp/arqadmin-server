@@ -14,6 +14,20 @@ use ArqAdmin\Entities\Documento;
 class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRepository
 {
     /**
+     * @var array
+     */
+//    protected $fieldSearchable = [
+//        'instituicao' => 'like',
+//        'divisao' => 'like',
+//        'subdivisao' => 'like',
+//        'area' => 'like',
+//        'nome' => 'like',
+//        'email',
+//        'telefone' => 'like',
+//        'ramal' => 'like',
+//    ];
+
+    /**
      * Specify Model class name
      *
      * @return string
@@ -22,6 +36,14 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
     {
         return Documento::class;
     }
+
+    /**
+     * Boot up the repository, pushing criteria
+     */
+//    public function boot()
+//    {
+//        $this->pushCriteria(app(RequestCriteria::class));
+//    }
 
     public function findAllWhere(array $params = null)
     {

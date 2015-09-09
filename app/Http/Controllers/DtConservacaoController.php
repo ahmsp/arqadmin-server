@@ -3,27 +3,27 @@
 namespace ArqAdmin\Http\Controllers;
 
 use ArqAdmin\Http\Requests;
-use ArqAdmin\Repositories\SubfundoRepository;
-use ArqAdmin\Services\SubfundoService;
+use ArqAdmin\Repositories\DtConservacaoRepository;
+use ArqAdmin\Services\DtConservacaoService;
 use Illuminate\Http\Request;
 
-class SubfundoController extends Controller
+class DtConservacaoController extends Controller
 {
     /**
-     * @var SubfundoRepository
+     * @var DtConservacaoRepository
      */
     protected $repository;
 
     /**
-     * @var SubfundoService
+     * @var DtConservacaoService
      */
     protected $service;
 
     /**
-     * @param SubfundoRepository $repository
-     * @param SubfundoService $service
+     * @param DtConservacaoRepository $repository
+     * @param DtConservacaoService $service
      */
-    public function __construct(SubfundoRepository $repository, SubfundoService $service)
+    public function __construct(DtConservacaoRepository $repository, DtConservacaoService $service)
     {
         $this->repository = $repository;
         $this->service = $service;
