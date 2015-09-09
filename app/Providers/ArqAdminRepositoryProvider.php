@@ -113,5 +113,10 @@ class ArqAdminRepositoryProvider extends ServiceProvider
             \ArqAdmin\Repositories\DtConservacaoRepositoryEloquent::class
         );
 
+        $this->app->bind(
+            \ArqAdmin\Repositories\DtEscalaRepository::class,
+            \ArqAdmin\Repositories\DtEscalaRepositoryEloquent::class
+        );
+
     }
 }
