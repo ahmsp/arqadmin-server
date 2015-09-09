@@ -6,16 +6,16 @@ namespace ArqAdmin\Validators;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\LaravelValidator;
 
-class DtEscalaValidator extends LaravelValidator
+class DtSuporteValidator extends LaravelValidator
 {
     protected $rules = [
 
         ValidatorInterface::RULE_CREATE => [
-            'escala' => 'required|min:3|max:25|unique:dt_escala,escala'
+            'suporte' => 'required|min:3|max:45|unique:dt_suporte,suporte'
         ],
 
         ValidatorInterface::RULE_UPDATE => [
-            'escala' => 'sometimes|required|min:3|max:25|unique:dt_escala,escala'
+            'suporte' => 'sometimes|required|min:3|max:45|unique:dt_suporte,suporte'
         ]
     ];
 
