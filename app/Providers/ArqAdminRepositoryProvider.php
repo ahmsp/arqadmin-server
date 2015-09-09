@@ -133,5 +133,40 @@ class ArqAdminRepositoryProvider extends ServiceProvider
             \ArqAdmin\Repositories\DtTipoRepositoryEloquent::class
         );
 
+        $this->app->bind(
+            \ArqAdmin\Repositories\RegistroSepultamentoRepository::class,
+            \ArqAdmin\Repositories\RegistroSepultamentoRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\SfmCartorioRepository::class,
+            \ArqAdmin\Repositories\SfmCartorioRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\SfmCausamortisRepository::class,
+            \ArqAdmin\Repositories\SfmCausamortisRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\SfmCemiterioRepository::class,
+            \ArqAdmin\Repositories\SfmCemiterioRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\SfmEstadocivilRepository::class,
+            \ArqAdmin\Repositories\SfmEstadocivilRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\SfmNacionalidadeRepository::class,
+            \ArqAdmin\Repositories\SfmNacionalidadeRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\SfmNaturalidadeRepository::class,
+            \ArqAdmin\Repositories\SfmNaturalidadeRepositoryEloquent::class
+        );
+
     }
 }

@@ -33,8 +33,9 @@ class DesenhoTecnicoRepositoryEloquent extends BaseRepository implements Desenho
 
     public function findAllWhere()
     {
-//        $data = $this->with('dtTipo', 'dtSuporte', 'dtEscala', 'dtTecnica', 'dtConservacao')->paginate(500);
-        $data = $this->paginate(500);
+        $data = $this->model
+            ->with('dtTipo', 'dtSuporte', 'dtEscala', 'dtTecnica', 'dtConservacao', 'documento')
+            ->paginate(100);
 
         return $data;
     }

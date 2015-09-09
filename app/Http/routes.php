@@ -33,6 +33,11 @@ Route::group(['prefix' => 'api'], function () {
     Route::resource('desenhotecnico', 'DesenhoTecnicoController');
 
     /**
+     * Registro de Sepultamento
+     */
+    Route::resource('registrosepultamento', 'RegistroSepultamentoController');
+
+    /**
      * Auxiliar Tables
      */
     Route::resource('acervo', 'AcervoController');
@@ -58,6 +63,13 @@ Route::group(['prefix' => 'api'], function () {
     Route::resource('dtsuporte', 'DtSuporteController');
     Route::resource('dttecnica', 'DtTecnicaController');
     Route::resource('dttipo', 'DtTipoController');
+
+    Route::resource('sfmcartorio', 'SfmCartorioController');
+    Route::resource('sfmcausamortis', 'SfmCausamortisController');
+    Route::resource('sfmcemiterio', 'SfmCemiterioController');
+    Route::resource('sfmestadocivil', 'SfmEstadocivilController');
+    Route::resource('sfmnacionalidade', 'SfmNacionalidadeController');
+    Route::resource('sfmnaturalidade', 'SfmNaturalidadeController');
 
     /**
      * Statistics
