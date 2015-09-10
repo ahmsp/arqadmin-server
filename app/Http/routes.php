@@ -9,7 +9,7 @@ Route::get('/', function () {
 Route::post('auth/login', 'AuthController@login');
 Route::get('auth/logout', 'AuthController@logout');
 
-Route::get('auth/ldap', 'AuthController@ldapTest');
+//Route::get('auth/ldap', 'AuthController@ldapTest');
 
 Route::group(['prefix' => 'api'], function () {
 
@@ -74,7 +74,7 @@ Route::group(['prefix' => 'api'], function () {
     /**
      * Statistics
      */
-    Route::get('/estatisticas', 'DocumentosController@statistic');
+    Route::get('/estatisticas', 'DocumentoController@statistic');
 
 });
 

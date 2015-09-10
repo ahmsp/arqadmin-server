@@ -89,7 +89,7 @@ class DocumentoController extends Controller
 
     public function statistic()
     {
-        return \ArqAdmin\Models\Documento::statistic();
+        return \ArqAdmin\Entities\Documento::statistic();
     }
 
 }
