@@ -53,7 +53,7 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'dossie', 'especieDocumental', 'conservacao', 'lcSala', 'lcMovel',
                 'lcCompartimento', 'lcAcondicionamento', 'dtUso', 'desenhosTecnicos');
 
-        $mapFilterFields = $this->mapFilterFields();
+        $mapFields = $this->mapFields();
 
         if (isset($params['filter'])) {
             $filters = json_decode($params['filter'], true);
@@ -96,22 +96,21 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
 
             foreach ($sorters as $sort) {
 
-                if ('_id' === substr($sort['property'], -3)) {
+                $sortProperty = $sort['property'];
 
-                    $sortParamColumn = $sort['property'];
-                    $sortRealColumn = $mapFilterFields[$sortParamColumn]['sort'];
-                    $sortDirection = $sort['direction'];
-                    $sortEntityName = $mapFilterFields[$sortRealColumn]['entity'];
+                if ($mapFields[$sortProperty]['entity'] !== 'Documento') {
 
+                    $sortColumn = $mapFields[$sortProperty]['column'];
+                    $sortEntityName = $mapFields[$sortProperty]['entity'];
                     $sortEntityRoot = '\ArqAdmin\Entities\\' . $sortEntityName;
                     $ent = new $sortEntityRoot;
                     $sortTableName = $ent->getTable();
 
-                    $docs->leftJoin($sortTableName, $sortTableName . '.id', '=', 'documento.' . $sortParamColumn)
-                        ->orderBy($sortTableName . '.' . $sortRealColumn, $sortDirection);
+                    $docs->leftJoin($sortTableName, $sortTableName . '.id', '=', 'documento.' . $sortTableName . '_id')
+                        ->orderBy($sortTableName . '.' . $sortColumn, $sort['direction']);
 
                 } else {
-                    $docs->orderBy($mapFilterFields[$sort['property']]['column'], $sort['direction']);
+                    $docs->orderBy($mapFields[$sort['property']]['column'], $sort['direction']);
                 };
             }
         } else {
@@ -129,15 +128,15 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
 
     public function parseFilter(array $filters)
     {
-        $mapFilterFields = $this->mapFilterFields();
+        $mapFields = $this->mapFields();
 
         foreach ($filters as $filter) {
 
-            if (!isset($filter['property']) && !array_key_exists($filter['property'], $mapFilterFields)) {
+            if (!isset($filter['property']) && !array_key_exists($filter['property'], $mapFields)) {
                 continue;
             }
 
-            $field = $mapFilterFields[$filter['property']];
+            $field = $mapFields[$filter['property']];
             $model = $field['entity'];
             $column = $field['column'];
 
@@ -184,7 +183,7 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
         return $params;
     }
 
-    public function mapFilterFields()
+    public function mapFields()
     {
         return [
             'id' => [
@@ -196,7 +195,6 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'entity' => 'Documento',
                 'column' => 'fundo_id',
                 'type' => 'number',
-                'sort' => 'fundo_nome',
             ],
             'fundo_nome' => [
                 'entity' => 'Fundo',
@@ -206,8 +204,7 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
             'subfundo_id' => [
                 'entity' => 'Documento',
                 'column' => 'subfundo_id',
-                'type' => '=',
-                'sort' => 'subfundo_nome',
+                'type' => 'number',
             ],
             'subfundo_nome' => [
                 'entity' => 'Subfundo',
@@ -217,8 +214,7 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
             'grupo_id' => [
                 'entity' => 'Documento',
                 'column' => 'grupo_id',
-                'type' => 'number',
-                'sort' => 'grupo_nome',
+                'type' => 'number'
             ],
             'grupo_nome' => [
                 'entity' => 'Grupo',
@@ -229,7 +225,6 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'entity' => 'Documento',
                 'column' => 'subgrupo_id',
                 'type' => 'number',
-                'sort' => 'subgrupo_nome',
             ],
             'subgrupo_nome' => [
                 'entity' => 'Subgrupo',
@@ -240,7 +235,6 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'entity' => 'Documento',
                 'column' => 'serie_id',
                 'type' => 'number',
-                'sort' => 'serie_nome',
             ],
             'serie_nome' => [
                 'entity' => 'Serie',
@@ -251,7 +245,6 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'entity' => 'Documento',
                 'column' => 'subserie_id',
                 'type' => 'number',
-                'sort' => 'subserie_nome',
             ],
             'subserie_nome' => [
                 'entity' => 'Subserie',
@@ -262,7 +255,6 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'entity' => 'Documento',
                 'column' => 'dossie_id',
                 'type' => 'number',
-                'sort' => 'dossie_nome',
             ],
             'dossie_nome' => [
                 'entity' => 'Dossie',
@@ -273,7 +265,6 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'entity' => 'Documento',
                 'column' => 'especiedocumental_id',
                 'type' => 'number',
-                'sort' => 'especiedocumental_nome',
             ],
             'especiedocumental_nome' => [
                 'entity' => 'Especiedocumental',
@@ -314,7 +305,6 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'entity' => 'Documento',
                 'column' => 'conservacao_id',
                 'type' => 'number',
-                'sort' => 'conservacao_estado',
             ],
             'conservacao_estado' => [
                 'entity' => 'Conservacao',
@@ -340,7 +330,6 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'entity' => 'Documento',
                 'column' => 'lc_sala_id',
                 'type' => 'number',
-                'sort' => 'sala',
             ],
             'lc_sala_sala' => [
                 'entity' => 'LcSala',
@@ -351,7 +340,6 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'entity' => 'Documento',
                 'column' => 'lc_movel_id',
                 'type' => 'number',
-                'sort' => 'movel',
             ],
             'lc_movel_movel' => [
                 'entity' => 'LcMovel',
@@ -367,7 +355,6 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'entity' => 'Documento',
                 'column' => 'lc_compartimento_id',
                 'type' => 'number',
-                'sort' => 'compartimento',
             ],
             'lc_compartimento_compartimento' => [
                 'entity' => 'LcCompartimento',
@@ -383,7 +370,6 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'entity' => 'Documento',
                 'column' => 'lc_acondicionamento_id',
                 'type' => 'number',
-                'sort' => 'acondicionamento',
             ],
             'lc_acondicionamento_acondicionamento' => [
                 'entity' => 'LcAcondicionamento',
@@ -404,7 +390,6 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'entity' => 'Documento',
                 'column' => 'dt_uso_id',
                 'type' => 'number',
-                'sort' => 'uso',
             ],
             'dt_uso_uso' => [
                 'entity' => 'DtUso',
