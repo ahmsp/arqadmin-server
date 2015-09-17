@@ -13,7 +13,7 @@ class Documento extends Model implements Transformable
 
     protected $table = 'documento';
 
-    public $timestamps = true;
+    public $timestamps = false;
 
     protected $fillable = [
         'fundo_id',

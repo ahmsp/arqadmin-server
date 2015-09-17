@@ -152,8 +152,14 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 case 'lt':
                     $operator = "<";
                     break;
+                case 'lte':
+                    $operator = "<=";
+                    break;
                 case 'gt':
                     $operator = ">";
+                    break;
+                case 'gte':
+                    $operator = ">=";
                     break;
                 case 'eq':
                     $operator = "=";
@@ -282,6 +288,16 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'type' => 'string',
             ],
             'ano' => [
+                'entity' => 'Documento',
+                'column' => 'ano',
+                'type' => 'number',
+            ],
+            'ano_ini' => [
+                'entity' => 'Documento',
+                'column' => 'ano',
+                'type' => 'number',
+            ],
+            'ano_fim' => [
                 'entity' => 'Documento',
                 'column' => 'ano',
                 'type' => 'number',
