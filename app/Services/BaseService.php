@@ -97,6 +97,7 @@ abstract class BaseService
         } catch (ValidatorException $e) {
 
             return [
+                'success' => false,
                 'error' => true,
                 'message' => $e->getMessageBag()
             ];
@@ -117,6 +118,7 @@ abstract class BaseService
                 } catch (ValidatorException $e) {
 
                     return [
+                        'success' => false,
                         'error' => true,
                         'message' => $e->getMessageBag()
                     ];
@@ -126,6 +128,7 @@ abstract class BaseService
         } catch (ModelNotFoundException $e) {
 
             return [
+                'success' => false,
                 'error' => true,
                 'message' => 'Registro não encontrado'
             ];
@@ -143,6 +146,7 @@ abstract class BaseService
                     $this->repository->delete($id);
 
                     return [
+                        'success' => true,
                         'error' => false,
                         'message' => 'Registro removido com sucesso'
                     ];
@@ -150,6 +154,7 @@ abstract class BaseService
                 } catch (ValidatorException $e) {
 
                     return [
+                        'success' => false,
                         'error' => true,
                         'message' => $e->getMessageBag()
                     ];
@@ -159,6 +164,7 @@ abstract class BaseService
         } catch (ModelNotFoundException $e) {
 
             return [
+                'success' => false,
                 'error' => true,
                 'message' => 'Registro não encontrado'
             ];

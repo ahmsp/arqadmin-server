@@ -4,6 +4,7 @@ namespace ArqAdmin\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -38,10 +39,31 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-//        if ($e instanceof CustomException) {
-//            return response('errors.custom', 500);
-//        }
-//dd($e);
+        $debug = config('app.debug', true);
+
+        if (!$debug) {
+
+            if($e instanceof HttpException) {
+
+//                switch ($e->getStatusCode()) {
+//                    case 404:
+//                        $message = $e->getMessage();
+//                        break;
+//                    case 400:
+//                        $message = $e->getMessage();
+//                        break;
+//                    default:
+//                        $message = 'Não foi possível completar a operação. Consulte um admnistrador';
+//                }
+//
+//                return response($message, $e->getStatusCode());
+                return response($e->getMessage(), $e->getStatusCode());
+            }
+
+
+        }
+
         return parent::render($request, $e);
     }
+
 }

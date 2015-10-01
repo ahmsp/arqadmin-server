@@ -2,9 +2,22 @@
 
 Route::pattern('id', '[0-9]+');
 
-Route::get('/', function () {
+Route::get('/app', function () {
     return redirect('app/');
 });
+
+//Route::get('{angular?}', function() {
+//    return File::get(public_path().'/angular.html');
+//})->where('angular', '.*');
+
+//App::missing(function($exception) {
+//    return File::get(public_path() . '/app/index.html');
+//});
+
+//Route::get('/', function() {
+//    return View::make('angular');
+//});
+
 
 Route::post('auth/login', 'AuthController@login');
 Route::get('auth/logout', 'AuthController@logout');

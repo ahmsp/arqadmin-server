@@ -3,6 +3,7 @@
 namespace ArqAdmin\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
@@ -10,6 +11,7 @@ use Prettus\Repository\Traits\TransformableTrait;
 class Documento extends Model implements Transformable
 {
     use TransformableTrait;
+    use SoftDeletes;
 
     protected $table = 'documento';
 
