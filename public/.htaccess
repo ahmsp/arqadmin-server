@@ -5,11 +5,13 @@
 
     RewriteEngine On
 
-    # Exclude directory from rewriting
-    RewriteRule ^(app) - [L]
-
-    # Redirect Trailing Slashes...
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+    # Authorization Headers
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
     # Handle Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d

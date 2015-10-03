@@ -10,7 +10,8 @@
         "barryvdh/laravel-ide-helper": "^2.0@dev",
         "stevebauman/corp": "1.0.*",
         "prettus/l5-repository": "dev-master",
-        "prettus/laravel-validation": "1.1.*"
+        "prettus/laravel-validation": "1.1.*",
+        "barryvdh/laravel-cors": "0.7.x"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

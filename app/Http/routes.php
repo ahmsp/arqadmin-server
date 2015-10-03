@@ -24,7 +24,7 @@ Route::get('auth/logout', 'AuthController@logout');
 
 //Route::get('auth/ldap', 'AuthController@ldapTest');
 
-Route::group(['prefix' => 'api'], function () {
+Route::group(['prefix' => 'api', 'middleware' => ['cors']], function () {
 
     Route::get('test', 'DocumentosController@findFilter');
 
