@@ -18,13 +18,16 @@ Route::get('/app', function () {
 //    return View::make('angular');
 //});
 
+Route::post('oauth/access_token', function(){
+    return Response::json(Authorizer::issueAccessToken());
+});
 
-Route::post('auth/login', 'AuthController@login');
-Route::get('auth/logout', 'AuthController@logout');
+//Route::post('auth/login', 'AuthController@login');
+//Route::get('auth/logout', 'AuthController@logout');
 
 //Route::get('auth/ldap', 'AuthController@ldapTest');
 
-Route::group(['prefix' => 'api', 'middleware' => ['cors']], function () {
+Route::group(['prefix' => 'api', 'middleware' => ['cors', 'oauth']], function () {
 
     Route::get('test', 'DocumentosController@findFilter');
 
