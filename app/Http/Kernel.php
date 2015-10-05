@@ -17,7 +17,7 @@ class Kernel extends HttpKernel
         \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \ArqAdmin\Http\Middleware\OAuthExceptionHandlerMiddleware::class,
+//        \ArqAdmin\Http\Middleware\OAuthExceptionHandlerMiddleware::class,
     ];
 
     /**
@@ -34,11 +34,8 @@ class Kernel extends HttpKernel
         'oauth' => \LucaDegasperi\OAuth2Server\Middleware\OAuthMiddleware::class,
         'oauth-owner' => \LucaDegasperi\OAuth2Server\Middleware\OAuthOwnerMiddleware::class,
         'check-authorization-params' => \LucaDegasperi\OAuth2Server\Middleware\CheckAuthCodeRequestMiddleware::class,
-
-//        'oauth' => \LucaDegasperi\OAuth2Server\Middleware\OAuthMiddleware::class,
 //        'oauth-user' => \LucaDegasperi\OAuth2Server\Middleware\OAuthUserOwnerMiddleware::class,
 //        'oauth-client' => \LucaDegasperi\OAuth2Server\Middleware\OAuthClientOwnerMiddleware::class,
-//        'check-authorization-params' => \LucaDegasperi\OAuth2Server\Middleware\CheckAuthCodeRequestMiddleware::class,
 
     ];
 }
