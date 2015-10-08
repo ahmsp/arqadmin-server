@@ -11,11 +11,6 @@ Route::get('/app', function () {
 //    return View::make('angular');
 //})->where('angular', '.*');
 
-//Route::post('auth/login', 'AuthController@login');
-//Route::get('auth/logout', 'AuthController@logout');
-//Route::get('auth/ldap', 'AuthController@ldapTest');
-
-
 Route::group(['middleware' => 'cors'], function () {
 
     Route::post('authenticate', 'OAuthController@accessToken');
