@@ -80,11 +80,11 @@ class Handler extends ExceptionHandler
                     $message = 'Houve um erro de acesso. Se o problema persistir, consulte um administrador';
                     break;
                 default:
-                    $message = 'Atenção, Se o problema persistir, consulte um administrador.';
+                    $message = 'Atenção, Se o problema persistir, consulte um sadministrador.';
             }
 
             $error = [
-                'error' => $e->errorType,
+                'error_type' => $e->errorType,
                 'error_description' => ($debug) ? $e->getMessage() : $message,
             ];
 

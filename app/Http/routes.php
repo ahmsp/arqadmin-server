@@ -15,16 +15,15 @@ Route::get('/app', function () {
 //Route::get('auth/logout', 'AuthController@logout');
 //Route::get('auth/ldap', 'AuthController@ldapTest');
 
+
 Route::group(['middleware' => 'cors'], function () {
 
     Route::post('authenticate', 'OAuthController@accessToken');
 
     Route::group(['prefix' => 'api', 'middleware' => ['oauth']], function () {
 
-        Route::get('test', function () {
-            return \LucaDegasperi\OAuth2Server\Facades\Authorizer::validateAccessToken($httpHeadersOnly = false, $accessToken = null);
-            return \LucaDegasperi\OAuth2Server\Facades\Authorizer::getResourceOwnerType();
-            return \LucaDegasperi\OAuth2Server\Facades\Authorizer::getResourceOwnerId();
+        Route::get('checktoken', function () {
+            return true;
         });
 
         /**
