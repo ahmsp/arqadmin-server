@@ -30,10 +30,6 @@ class Kernel extends HttpKernel
         'guest' => \ArqAdmin\Http\Middleware\RedirectIfAuthenticated::class,
         'csrf' => \ArqAdmin\Http\Middleware\VerifyCsrfToken::class,
 
-//        'oauth' => \LucaDegasperi\OAuth2Server\Middleware\OAuthMiddleware::class,
-//        'oauth-owner' => \LucaDegasperi\OAuth2Server\Middleware\OAuthOwnerMiddleware::class,
-//        'check-authorization-params' => \LucaDegasperi\OAuth2Server\Middleware\CheckAuthCodeRequestMiddleware::class,
-
         'oauth' => \LucaDegasperi\OAuth2Server\Middleware\OAuthMiddleware::class,
         'oauth-user' => \LucaDegasperi\OAuth2Server\Middleware\OAuthUserOwnerMiddleware::class,
         'oauth-client' => \LucaDegasperi\OAuth2Server\Middleware\OAuthClientOwnerMiddleware::class,

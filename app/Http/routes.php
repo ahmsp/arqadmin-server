@@ -24,7 +24,7 @@ Route::group(['middleware' => 'cors'], function () {
         /**
          * User
          */
-//        Route::get('user', 'UserController@create');
+        Route::get('user', 'UserController@getResourceOwnerUser');
 
         /**
          * Documentos

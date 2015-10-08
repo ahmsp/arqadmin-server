@@ -44,9 +44,8 @@ class OAuthController extends Controller
         return false;
     }
 
-    public function getOwner()
+    public function getResourceOwner()
     {
-//        getResourceOwnerId
-//        $id = Authorizer->getresou
+        return Authorizer::getResourceOwnerId();
     }
 }

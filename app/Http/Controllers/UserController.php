@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use ArqAdmin\Http\Requests;
 use ArqAdmin\Http\Controllers\Controller;
 use ArqAdmin\Models\User;
+use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 
 class UserController extends Controller
 {
@@ -44,4 +45,11 @@ class UserController extends Controller
         ])->save();
     }
 
+    public function getResourceOwnerUser()
+    {
+        $userId = Authorizer::getResourceOwnerId();
+        $user = User::find($userId);
+
+        return $user;
+    }
 }
