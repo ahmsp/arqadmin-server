@@ -42,29 +42,22 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        //debug: remove
-//        return parent::render($request, $e);
-
         if (!$request->is('authenticate', 'api/*')) {
             return parent::render($request, $e);
         }
 
-        $debug = config('app.debug', true);
+//        $debug = config('app.debug', true);
+//        if ($debug) {//...}
 
         if ($e instanceof HttpException) {
 
-            switch ($e->getStatusCode()) {
-                case 404:
-                    $message = 'Recurso não encontrado';
-                    break;
-                case 400:
-                    $message = $e->getMessage();
-                    break;
-                default:
-                    $message = 'Não foi possível completar a operação. Consulte um administrador';
-            }
+            $message = 'Não foi possível completar a operação. Consulte um administrador';
 
-            $error = ($debug) ? $e->getMessage() : $message;
+            $error = [
+                'error_type' => $e->errorType,
+                'error_description' => $e->getMessage(),
+                'user_message' => $message
+            ];
 
             return response($error, $e->getStatusCode());
         }
@@ -73,23 +66,33 @@ class Handler extends ExceptionHandler
 
             switch ($e->errorType) {
                 case "access_denied":
-                    $message = 'Acesso negado.';
+                    $message = 'Acesso negado. O servidor recusou autorização para a requisição.';
                     break;
                 case "invalid_credentials":
                     $message = 'As credenciais estão incorretas ou o usuário não está cadastrado';
                     break;
-                case "invalid_request":
-                case "grant_type":
-                    $message = 'Houve um erro de acesso. Se o problema persistir, consulte um administrador';
-                    break;
                 default:
-                    $message = 'Atenção, Se o problema persistir, consulte um sadministrador.';
+                    $message = 'Acesso negado. O servidor recusou autorização para a requisição.';
             }
 
             $error = [
                 'error_type' => $e->errorType,
-                'error_description' => ($debug) ? $e->getMessage() : $message,
+                'error_description' => $e->getMessage(),
+                'user_message' => $message
             ];
+
+//            $error = [
+//                'code' => '401',
+//                'status' => 'error', // success, error (400-499), failure (500-599)
+//                'message' => 'token is invalid',
+//                'data' => 'UnauthorizedException'
+//                'errors' => [
+//                    'code' => $code,
+//                    'user_message' => 'Não foi possível completar a operação. Consulte um admnistrador',
+//                    'internal_message' => $message,
+//                    'moreInfo' => ''
+//                ]
+//            ];
 
             return response($error, $e->httpStatusCode, $e->getHttpHeaders());
         }
