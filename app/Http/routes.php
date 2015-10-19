@@ -15,6 +15,11 @@ Route::group(['middleware' => 'cors'], function () {
 
     Route::post('authenticate', 'OAuthController@accessToken');
 
+    // public images (restrict size). Template: p|m|g
+    Route::get('imagem/cartografico/{id}/{maxSize?}', 'DesenhoTecnicoController@showPublicImage');
+//    Route::get('imagem/fotografico/{id}/{template}', 'FotograficoController@showImage');
+//    Route::get('imagem/documento/{id}/{template}', 'DocumentoImagemController@showImage');
+
     Route::group(['prefix' => 'api', 'middleware' => ['oauth']], function () {
 
         Route::get('checktoken', function () {
@@ -37,6 +42,8 @@ Route::group(['middleware' => 'cors'], function () {
          * Desenho Tecnico
          */
         Route::resource('desenhotecnico', 'DesenhoTecnicoController');
+        Route::get('desenhotecnico/{id}/imagem/{template}', 'DesenhoTecnicoController@showImage');
+
 
         /**
          * Registro de Sepultamento

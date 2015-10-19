@@ -152,9 +152,11 @@ return [
         Stevebauman\Corp\CorpServiceProvider::class,
         Prettus\Repository\Providers\RepositoryServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
         LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class,
         LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class,
+
 
     ],
 
@@ -206,6 +208,7 @@ return [
 
         'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
         'Corp'      => Stevebauman\Corp\Facades\Corp::class,
+        'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 

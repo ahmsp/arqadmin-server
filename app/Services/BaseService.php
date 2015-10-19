@@ -171,4 +171,31 @@ abstract class BaseService
         }
     }
 
+    public function showPublicImage($id, $maxSize = 300)
+    {
+        $disk = $this->storage->disk('local');
+        $pathDocumental = 'acervos/documental/';
+        $fileName = $this->repository->find($id)->arquivo_nome;
+
+        if (!$exists = $disk->exists($pathDocumental . $fileName)) {
+            abort(404, 'Imagem não encontrada.');
+        }
+
+        $imageFile = $disk->get($pathDocumental . $fileName);
+        $filter = new Small($maxSize);
+        $cache = false;
+
+        if ($cache) {
+            $cacheImage = $this->image->cache(function ($img) use ($imageFile, $filter) {
+                $img->make($imageFile)->filter($filter);
+            }, 10, true);
+            $image = $this->image->make($cacheImage);
+        } else {
+            $image = $this->image->make($imageFile)->filter($filter);
+        }
+
+        return $image;
+//        return $image->response('jpg', 100);
+    }
+
 }

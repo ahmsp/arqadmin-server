@@ -84,10 +84,18 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
             }
         }
 
-        if (isset($params['com_imagem'])) {
-            $docs->whereHas('DesenhosTecnicos', function ($query) {
-                $query->havingRaw('count(id) > 0');
-            });
+        if (isset($filters)) {
+
+            foreach ($filters as $filter) {
+
+                if (isset($filter['property']) && $filter['property'] == 'com_imagem') {
+                    $docs->whereHas('DesenhosTecnicos', function ($query) {
+                        $query->havingRaw('count(id) > 0');
+                    });
+                    break;
+                }
+            }
+
         }
 
         if (isset($params['sort'])) {
@@ -129,10 +137,11 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
     public function parseFilter(array $filters)
     {
         $mapFields = $this->mapFields();
+        $params = [];
 
         foreach ($filters as $filter) {
 
-            if (!isset($filter['property']) && !array_key_exists($filter['property'], $mapFields)) {
+            if (!isset($filter['property']) || !array_key_exists($filter['property'], $mapFields)) {
                 continue;
             }
 

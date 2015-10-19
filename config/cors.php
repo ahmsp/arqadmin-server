@@ -13,6 +13,7 @@ return [
      */
     'supportsCredentials' => false,
     'allowedOrigins' => ['*'],
+//    'allowedOrigins' => ['http://localhost:1841', 'http://127.0.0.1:80'],
     'allowedHeaders' => ['*'],
     'allowedMethods' => ['GET', 'POST', 'PUT',  'DELETE'],
     'exposedHeaders' => [],

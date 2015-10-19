@@ -7,6 +7,7 @@ use ArqAdmin\Repositories\DesenhoTecnicoRepository;
 use ArqAdmin\Services\DesenhoTecnicoService;
 use Illuminate\Http\Request;
 
+
 class DesenhoTecnicoController extends Controller
 {
     /**
@@ -45,7 +46,7 @@ class DesenhoTecnicoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
+     * @param  Request $request
      * @return array
      */
     public function store(Request $request)
@@ -56,7 +57,7 @@ class DesenhoTecnicoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return array
      */
     public function show($id)
@@ -67,8 +68,8 @@ class DesenhoTecnicoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
-     * @param  int  $id
+     * @param  Request $request
+     * @param  int $id
      * @return array
      */
     public function update(Request $request, $id)
@@ -79,12 +80,19 @@ class DesenhoTecnicoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return array
      */
     public function destroy($id)
     {
         return $this->service->delete($id);
+    }
+
+    public function showPublicImage($id, $maxSize = 300)
+    {
+        $image = $this->service->showPublicImage($id, $maxSize);
+
+        return $image->response('jpg', 100);
     }
 
 }
