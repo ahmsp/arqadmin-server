@@ -51,7 +51,9 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
             ->select('documento.*')
             ->with('fundo', 'subfundo', 'grupo', 'subgrupo', 'serie', 'subserie',
                 'dossie', 'especieDocumental', 'conservacao', 'lcSala', 'lcMovel',
-                'lcCompartimento', 'lcAcondicionamento', 'dtUso', 'desenhosTecnicos');
+                'lcCompartimento', 'lcAcondicionamento', 'dtUso', 'desenhosTecnicos',
+                'desenhosTecnicos.dtTipo', 'desenhosTecnicos.dtSuporte', 'desenhosTecnicos.dtEscala',
+                'desenhosTecnicos.dtTecnica', 'desenhosTecnicos.dtConservacao');
 
         $mapFields = $this->mapFields();
 

@@ -38,7 +38,7 @@ class DesenhoTecnicoController extends Controller
     public function index(Request $request)
     {
         $params = $request->all();
-        $data = $this->service->findAll($params);
+        $data = $this->repository->findAllWhere($params);
 
         return $data;
     }
@@ -62,7 +62,9 @@ class DesenhoTecnicoController extends Controller
      */
     public function show($id)
     {
-        return $this->repository->find($id);
+        return $this->repository
+            ->with(['dtTipo', 'dtSuporte', 'dtEscala', 'dtTecnica', 'dtConservacao'])
+            ->find($id);
     }
 
     /**

@@ -32,15 +32,6 @@ class DesenhoTecnicoService extends BaseService
         return DesenhoTecnicoValidator::class;
     }
 
-
-    public function findAll($params = []) {
-
-        $result = $this->repository->findAllWhere($params);
-
-        return $result;
-
-    }
-
     public function showPublicImage($id, $maxSize = 300)
     {
         $disk = Storage::disk('local');

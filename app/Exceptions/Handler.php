@@ -43,7 +43,7 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $e)
     {
         // debug. remove
-        return parent::render($request, $e);
+//        return parent::render($request, $e);
 
         if (!$request->is('authenticate', 'api/*')) {
             return parent::render($request, $e);

@@ -11,7 +11,7 @@ class Small implements FilterInterface
 
     public function __construct($maxSize = 300)
     {
-        if (is_numeric($maxSize) && $maxSize <= 300) {
+        if (is_numeric($maxSize) && $maxSize <= 600) {
             $this->maxSize = intval($maxSize);
         }
     }
