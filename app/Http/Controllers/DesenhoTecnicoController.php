@@ -97,4 +97,11 @@ class DesenhoTecnicoController extends Controller
         return $image->response('jpg', 100);
     }
 
+    public function getImages(Request $request)
+    {
+        $params = $request->all();
+        $file = $this->service->getImages($params);
+
+        return $file;
+    }
 }

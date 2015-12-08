@@ -31,7 +31,7 @@ class DesenhoTecnicoRepositoryEloquent extends BaseRepository implements Desenho
         $this->pushCriteria(app(RequestCriteria::class));
     }
 
-    public function findAllWhere()
+    public function findAllWhere(array $params = null)
     {
         $data = $this->model
             ->with('dtTipo', 'dtSuporte', 'dtEscala', 'dtTecnica', 'dtConservacao', 'documento')

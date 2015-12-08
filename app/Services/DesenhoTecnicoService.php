@@ -59,4 +59,9 @@ class DesenhoTecnicoService extends BaseService
 //        return $image->response('jpg', 100);
     }
 
+    public function getImages($params)
+    {
+
+    }
+
 }
