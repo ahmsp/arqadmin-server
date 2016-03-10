@@ -57,7 +57,7 @@ class Handler extends ExceptionHandler
             $message = 'Não foi possível completar a operação. Consulte um administrador';
 
             $error = [
-                'error_type' => $e->errorType,
+                'error_type' => '', //$e->errorType (property does not exists in HttpException),
                 'error_description' => $e->getMessage(),
                 'user_message' => $message
             ];
@@ -99,6 +99,7 @@ class Handler extends ExceptionHandler
 
             return response($error, $e->httpStatusCode, $e->getHttpHeaders());
         }
+//        dd($e);
 
         return response($e->getMessage(), $e->getStatusCode());
     }

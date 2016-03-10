@@ -6,7 +6,7 @@ use ArqAdmin\Http\Requests;
 use ArqAdmin\Repositories\DesenhoTecnicoRepository;
 use ArqAdmin\Services\DesenhoTecnicoService;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
 
 class DesenhoTecnicoController extends Controller
 {
@@ -93,15 +93,26 @@ class DesenhoTecnicoController extends Controller
     public function showPublicImage($id, $maxSize = 300)
     {
         $image = $this->service->showPublicImage($id, $maxSize);
-
         return $image->response('jpg', 100);
     }
 
-    public function getImages(Request $request)
+    // Size template: medium|standard|large|original
+    public function getImageUrl($id, $size)
     {
-        $params = $request->all();
-        $file = $this->service->getImages($params);
+        $image = $this->service->getImageDownloadUrl($id, $size);
 
-        return $file;
+        return ['url_download' => $image['url_download']];
+    }
+
+    // Size template: medium|standard|large|original
+    public function downloadImage($id, $size, $hash)
+    {
+        if (!$this->service->hashDownload($id . $size, $hash)) {
+            abort(404, 'Link não encontrado ou expirado!');
+        }
+
+        $image = $this->service->downloadImage($id, $size);
+
+        return response()->download($image['file_path'], $image['file_name']);
     }
 }

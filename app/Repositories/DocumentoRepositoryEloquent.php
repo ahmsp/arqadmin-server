@@ -129,10 +129,11 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
 
         $limit = (isset($params['limit'])) ? $params['limit'] : '50';
 
-//dd($docs->toSql());
-
         $result = $docs->paginate($limit);
+
+//dd($docs->toSql());
 //dd($result);
+
         return $result;
     }
 

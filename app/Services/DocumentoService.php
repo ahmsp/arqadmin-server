@@ -31,6 +31,12 @@ class DocumentoService extends BaseService
 
     public function findAll($params = []) {
 
+//$test = serialize($params);
+//dd(unserialize($test));
+
+//dd($params);
+//dd(serialize($params));
+
         $result = $this->repository->findAllWhere($params);
 
         return $result;

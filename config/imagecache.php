@@ -17,6 +17,7 @@ return array(
     */
    
     'route' => null,
+//    'route' => "img",
 //    'route' => "img/cache", // enable dynamic imagecache manipulation
 
     /*

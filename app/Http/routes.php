@@ -24,6 +24,12 @@ Route::group(['middleware' => 'cors'], function () {
 //    Route::get('imagem/fotografico/{id}/{template}', 'FotograficoController@showPublicImage');
 
     /**
+     * Download image.
+     */
+    Route::get('download/imagem/cartografico/{id}/{size}/{hash}', 'DesenhoTecnicoController@downloadImage')
+        ->where('size', 'medium|standard|large|original');
+
+    /**
      * Group 'api'
      */
     Route::group(['prefix' => 'api', 'middleware' => ['oauth']], function () {
@@ -59,12 +65,14 @@ Route::group(['middleware' => 'cors'], function () {
         Route::resource('registrosepultamento', 'RegistroSepultamentoController');
 
         /**
-         * Get Images.
+         * Download image (unlimited size). Size template: medium|standard|large|original
+         * Return new url to download
          */
-        Route::post('imagens/cartografico', 'DesenhoTecnicoController@getImages');
-//    Route::post('imagens/textual', 'DocumentoImagemController@showPublicImage');
-//    Route::post('imagens/sfm', 'RegistroSepultamentoController@showPublicImage
-//    Route::post('imagens/fotografico', 'FotograficoController@showPublicImage');
+        Route::get('imagem/cartografico/{id}/{size}', 'DesenhoTecnicoController@getImageUrl')
+            ->where('size', 'medium|standard|large|original');
+//    Route::get('imagem/textual/{id}/{maxSize?}', 'DocumentoImagemController@showPublicImage');
+//    Route::get('imagem/sfm/{id}/{template}', 'RegistroSepultamentoController@showPublicImage');
+//    Route::get('imagem/fotografico/{id}/{template}', 'FotograficoController@showPublicImage');
 
         /**
          * Static data (Auxiliar tables)
