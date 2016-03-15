@@ -14,7 +14,8 @@
         "lucadegasperi/oauth2-server-laravel": "5.0.*@dev",
         "barryvdh/laravel-cors": "0.7.x",
         "intervention/image": "^2.3@dev",
-        "intervention/imagecache": "dev-master"
+        "intervention/imagecache": "dev-master",
+        "nesbot/carbon": "^1.21"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -97,21 +97,19 @@ class DesenhoTecnicoController extends Controller
     }
 
     // Size template: medium|standard|large|original
-    public function getImageUrl($id, $size)
+    public function getDownloadUrl($id, $size)
     {
-        $image = $this->service->getImageDownloadUrl($id, $size);
+        $image = $this->service->getDownloadImageUrl($id, $size);
 
         return ['url_download' => $image['url_download']];
     }
 
     // Size template: medium|standard|large|original
-    public function downloadImage($id, $size, $hash)
+    public function downloadImage($id, $size, $token)
     {
-        if (!$this->service->hashDownload($id . $size, $hash)) {
+        if (!$image = $this->service->downloadImage($id, $size, $token)) {
             abort(404, 'Link não encontrado ou expirado!');
         }
-
-        $image = $this->service->downloadImage($id, $size);
 
         return response()->download($image['file_path'], $image['file_name']);
     }

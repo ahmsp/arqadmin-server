@@ -168,5 +168,10 @@ class ArqAdminRepositoryProvider extends ServiceProvider
             \ArqAdmin\Repositories\SfmNaturalidadeRepositoryEloquent::class
         );
 
+        $this->app->bind(
+            \ArqAdmin\Repositories\DownloadRepository::class,
+            \ArqAdmin\Repositories\DownloadRepositoryEloquent::class
+        );
+
     }
 }

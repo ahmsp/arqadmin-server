@@ -3,6 +3,7 @@
 namespace ArqAdmin\Exceptions;
 
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use League\OAuth2\Server\Exception\InvalidCredentialsException;
 use League\OAuth2\Server\Exception\InvalidRequestException;
@@ -42,9 +43,6 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        // debug. remove
-//        return parent::render($request, $e);
-
         if (!$request->is('authenticate', 'api/*')) {
             return parent::render($request, $e);
         }
@@ -53,7 +51,7 @@ class Handler extends ExceptionHandler
 //        if ($debug) {//...}
 
         if ($e instanceof HttpException) {
-
+            dd($e);
             $message = 'Não foi possível completar a operação. Consulte um administrador';
 
             $error = [
@@ -99,9 +97,23 @@ class Handler extends ExceptionHandler
 
             return response($error, $e->httpStatusCode, $e->getHttpHeaders());
         }
-//        dd($e);
 
-        return response($e->getMessage(), $e->getStatusCode());
+        if ($e instanceof ModelNotFoundException) {
+
+            $message = 'O item solicitado não foi encontrado';
+
+            $error = [
+                'error_type' => '', //$e->errorType (property does not exists in HttpException),
+                'error_description' => $e->getMessage(),
+                'user_message' => $message
+            ];
+
+            return response($error, 404);
+        }
+
+//        return parent::render($request, $e);
+        return response('Erro: consulte um administrador', 500);
+//        return response($e->getMessage(), $e->getStatusCode());
     }
 
 }

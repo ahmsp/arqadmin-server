@@ -48,8 +48,4 @@ class Download
 
         return 'imagick ok';
     }
-//    public function applyFilter(Image $image)
-//    {
-//        return $image->fit(240, 180);
-//    }
 }
