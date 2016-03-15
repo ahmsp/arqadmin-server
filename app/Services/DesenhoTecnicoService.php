@@ -64,21 +64,21 @@ class DesenhoTecnicoService extends BaseService
         return DesenhoTecnicoValidator::class;
     }
 
-    /**
-     * @param $id
-     * @param int $maxSize
-     * @return mixed
-     */
     public function showPublicImage($id, $maxSize = 300)
     {
         $disk = Storage::disk('local');
+        $pathDocumental = 'acervos/cartografico/';
         $fileName = $this->repository->find($id)->arquivo_nome;
 
-        if (!$exists = $disk->exists($this->imagesPath . $fileName)) {
+        if (!$fileName || 0 === strlen($fileName)) {
             abort(404, 'Imagem não encontrada.');
         }
 
-        $imageFile = $disk->get($this->imagesPath . $fileName);
+        if (!$exists = $disk->exists($pathDocumental . $fileName)) {
+            abort(404, 'Imagem não encontrada.');
+        }
+
+        $imageFile = $disk->get($pathDocumental . $fileName);
         $filter = new Small($maxSize);
         $cache = false;
 
