@@ -51,7 +51,6 @@ class Handler extends ExceptionHandler
 //        if ($debug) {//...}
 
         if ($e instanceof HttpException) {
-            dd($e);
             $message = 'Não foi possível completar a operação. Consulte um administrador';
 
             $error = [
@@ -111,6 +110,7 @@ class Handler extends ExceptionHandler
             return response($error, 404);
         }
 
+//        dd($e);
 //        return parent::render($request, $e);
         return response('Erro: consulte um administrador', 500);
 //        return response($e->getMessage(), $e->getStatusCode());

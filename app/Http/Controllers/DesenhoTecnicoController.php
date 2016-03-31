@@ -51,7 +51,8 @@ class DesenhoTecnicoController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->service->create($request->all());
+        return $this->service->upload($request);
+//        return $this->service->create($request->all());
     }
 
     /**

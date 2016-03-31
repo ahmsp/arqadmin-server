@@ -12,10 +12,11 @@ class DesenhoTecnico extends Model implements Transformable
 
     protected $table = 'desenho_tecnico';
 
-    public $timestamps = true;
+    public $timestamps = false;
 
     protected $fillable = [
         'documento_id',
+        'acervo_tipo',
         'notacao',
         'prancha_num',
         'original_num',
@@ -31,7 +32,8 @@ class DesenhoTecnico extends Model implements Transformable
         'dt_tecnica_id',
         'notas',
         'dt_conservacao_id',
-        'arquivo_nome'
+        'arquivo_nome',
+        'arquivo_original'
     ];
 
     protected $guarded = [];

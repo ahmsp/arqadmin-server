@@ -7,9 +7,10 @@ use ArqAdmin\Image\Filters\Small;
 use ArqAdmin\Repositories\DesenhoTecnicoRepository;
 use ArqAdmin\Validators\DesenhoTecnicoValidator;
 use Carbon\Carbon;
+use Illuminate\Container\Container as Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
-use Illuminate\Container\Container as Application;
 
 /**
  * Class DesenhoTecnicoService
@@ -25,7 +26,12 @@ class DesenhoTecnicoService extends BaseService
     /**
      * @var string
      */
-    private $imagesPath = 'acervos/cartografico_orig/'; // cartografico
+    private $pathCartografico = 'acervos/cartografico_orig/';
+
+    /**
+     * @var string
+     */
+    private $pathTextual = 'acervos/textual/';
 
     /**
      * @var string
@@ -94,6 +100,33 @@ class DesenhoTecnicoService extends BaseService
         return $image;
     }
 
+    public function upload(Request $request)
+    {
+        if (!$request->hasFile('arquivo_original')) {
+            abort(401, 'O campo Imagem não contém um arquivo válido');
+        }
+
+        $file = $request->file('arquivo_original');
+        $filename = $file->getClientOriginalName();
+        $data = $request->all();
+        $data['arquivo_original'] = $filename;
+
+        if (true !== $validate = $this->validate($data)) {
+            return $validate;
+        }
+
+        $pathAcervo = ('cartografico' === $request->input('acervo_tipo')) ?
+            $this->pathCartografico : $this->pathTextual;
+
+        $destination = storage_path('app/') . $pathAcervo;
+
+        if (!$file->move($destination, $filename)) {
+            abort(401, 'O arquivo enviado não pôde ser salvo');
+        }
+
+        return $this->repository->create($data);
+    }
+
     /**
      * @param $id
      * @param string $size
@@ -109,7 +142,7 @@ class DesenhoTecnicoService extends BaseService
         }
 
         $makeImage = $this->downloadService
-            ->makeImage($this->acervo, $this->imagesPath, $originalName, $size);
+            ->makeImage($this->acervo, $this->pathCartografico, $originalName, $size);
 
         $validation = $this->downloadService->generateValidation($makeImage['file_name']);
 
@@ -139,7 +172,7 @@ class DesenhoTecnicoService extends BaseService
         }
 
         $downloadImage = $this->downloadService
-            ->makeImage($this->acervo, $this->imagesPath, $originalName, $size);
+            ->makeImage($this->acervo, $this->pathCartografico, $originalName, $size);
 
         $this->downloadService->repository->update(['download_date' => Carbon::now()], $downloadRow->id);
 

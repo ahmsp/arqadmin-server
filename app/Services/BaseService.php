@@ -87,6 +87,28 @@ abstract class BaseService
         return null;
     }
 
+    public function validate($data, $id = null)
+    {
+        try {
+//            if ($id) {
+//                $this->validator->with($data)->setId($id)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+//            } else {
+                $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
+//            }
+//            dd('$data');
+
+            return true;
+
+        } catch (ValidatorException $e) {
+
+            return [
+                'success' => false,
+                'error' => true,
+                'message' => $e->getMessageBag()
+            ];
+        }
+    }
+
     public function create($data)
     {
         try {
