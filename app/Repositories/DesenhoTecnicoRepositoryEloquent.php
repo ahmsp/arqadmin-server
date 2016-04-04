@@ -26,10 +26,10 @@ class DesenhoTecnicoRepositoryEloquent extends BaseRepository implements Desenho
     /**
      * Boot up the repository, pushing criteria
      */
-    public function boot()
-    {
-        $this->pushCriteria(app(RequestCriteria::class));
-    }
+//    public function boot()
+//    {
+//        $this->pushCriteria(app(RequestCriteria::class));
+//    }
 
     public function findAllWhere(array $params = null)
     {

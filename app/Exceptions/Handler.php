@@ -111,8 +111,10 @@ class Handler extends ExceptionHandler
         }
 
 //        dd($e);
-//        return parent::render($request, $e);
-        return response('Erro: consulte um administrador', 500);
+        return parent::render($request, $e);
+//        return response('Erro: consulte um administrador', 500);
+
+        
 //        return response($e->getMessage(), $e->getStatusCode());
     }
 

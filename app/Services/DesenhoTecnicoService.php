@@ -102,11 +102,11 @@ class DesenhoTecnicoService extends BaseService
 
     public function upload(Request $request)
     {
-        if (!$request->hasFile('arquivo_original')) {
+        if (!$file = $request->hasFile('file')) {
             abort(401, 'O campo Imagem não contém um arquivo válido');
         }
 
-        $file = $request->file('arquivo_original');
+        $file = $request->file('file');
         $filename = $file->getClientOriginalName();
         $data = $request->all();
         $data['arquivo_original'] = $filename;
@@ -136,13 +136,17 @@ class DesenhoTecnicoService extends BaseService
      */
     public function getDownloadImageUrl($id, $size)
     {
-        $originalName = $this->repository->find($id)->arquivo_original;
+        $data = $this->repository->find($id);
+        $originalName = $data->arquivo_original;
+
         if (!$originalName || 0 === strlen($originalName)) {
             abort(404, 'Imagem não encontrada.');
         }
 
+        $pathAcervo = ('cartografico' === $data->acervo_tipo) ? $this->pathCartografico : $this->pathTextual;
+
         $makeImage = $this->downloadService
-            ->makeImage($this->acervo, $this->pathCartografico, $originalName, $size);
+            ->makeImage($this->acervo, $pathAcervo, $originalName, $size);
 
         $validation = $this->downloadService->generateValidation($makeImage['file_name']);
 
@@ -160,7 +164,10 @@ class DesenhoTecnicoService extends BaseService
      */
     public function downloadImage($id, $size, $token)
     {
-        $originalName = $this->repository->find($id)->arquivo_original;
+        $data = $this->repository->find($id);
+        $originalName = $data->arquivo_original;
+        $pathAcervo = ('cartografico' === $data->acervo_tipo) ? $this->pathCartografico : $this->pathTextual;
+
         $outOpts = $this->downloadService->outOptions();
         $outExtension = 'original' === $size ? pathinfo($originalName, PATHINFO_EXTENSION) : $outOpts[$size]['extension'];
 
@@ -172,7 +179,7 @@ class DesenhoTecnicoService extends BaseService
         }
 
         $downloadImage = $this->downloadService
-            ->makeImage($this->acervo, $this->pathCartografico, $originalName, $size);
+            ->makeImage($this->acervo, $pathAcervo, $originalName, $size);
 
         $this->downloadService->repository->update(['download_date' => Carbon::now()], $downloadRow->id);
 
