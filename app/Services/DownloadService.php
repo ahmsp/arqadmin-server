@@ -7,9 +7,8 @@ use ArqAdmin\Models\User;
 use ArqAdmin\Repositories\DownloadRepository;
 use ArqAdmin\Validators\DownloadValidator;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Storage;
-use Imagick;
 use LucaDegasperi\OAuth2Server\Facades\Authorizer;
+use Illuminate\Container\Container as Application;
 
 
 /**
@@ -19,9 +18,21 @@ use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 class DownloadService extends BaseService
 {
     /**
-     * @var string
+     * @var ImagesService
      */
-    private $downloadPath = 'acervos/downloads/';
+    private $imagesService;
+
+    /**
+     * DownloadService constructor.
+     * @param Application $app
+     * @param ImagesService $imagesService
+     */
+    public function __construct(Application $app, ImagesService $imagesService)
+    {
+        parent::__construct($app);
+
+        $this->imagesService = $imagesService;
+    }
 
     /**
      * Specify Repository class name
@@ -45,52 +56,47 @@ class DownloadService extends BaseService
 
     /**
      * @param $acervo
-     * @param $imagePath
      * @param $originalName
      * @param string $size template: medium|standard|large|original
      * @return array
      */
-    public function makeImage($acervo, $imagePath, $originalName, $size)
+    public function makeImage($acervo, $originalName, $size)
     {
-        $disk = Storage::disk('local');
+        $storagePath = $this->imagesService->getDiskLocalPath();
         $outOpts = $this->outOptions();
-        $extension = 'original' === $size ? pathinfo($originalName, PATHINFO_EXTENSION) : $outOpts[$size]['extension'];
+        $extension = ('original' === $size) ? pathinfo($originalName, PATHINFO_EXTENSION) : $outOpts[$size]['extension'];
 
+        $downloadPath = $this->imagesService->getDownloadPath();
         $downloadFileName = $this->formatDownloadFileName($acervo, $originalName, $extension, $size);
 
         // if already exists the download image
-        if ($disk->exists($this->downloadPath . $downloadFileName)) {
+        if ($this->imagesService->imageExists($downloadPath . $downloadFileName)) {
             return [
-                'file_path' => storage_path('app/') . $this->downloadPath . $downloadFileName,
+                'file_path' => $storagePath . $downloadPath . $downloadFileName,
                 'file_name' => $downloadFileName,
             ];
         }
 
+        $originalImagePath = $this->imagesService->getAcervoPathOriginal($acervo);
+
         // if the original image does not exists
-        if (!$disk->exists($imagePath . $originalName)) {
+        if (!$this->imagesService->imageExists($originalImagePath . $originalName)) {
             abort(404, 'Imagem não encontrada.');
         }
 
         if ($size == 'original') {
             return [
-                'file_path' => storage_path('app/') . $imagePath . $originalName,
+                'file_path' => $storagePath . $originalImagePath . $originalName,
                 'file_name' => $downloadFileName,
             ];
         }
 
         $resolution = $outOpts[$size]['resolution'];
         $maxSize = $outOpts[$size]['maxSize'];
+        $imageFile = $originalImagePath . $originalName;
+        $savePath = $storagePath . $downloadPath . $downloadFileName;
 
-        $imageFile = $disk->get($imagePath . $originalName);
-        $im = new Imagick;
-        $im->readImageBlob($imageFile);
-        $im->setImageResolution($resolution, $resolution);
-        $im->resizeImage($maxSize, $maxSize, Imagick::FILTER_CATROM, 1, TRUE);
-        $im->setFormat($extension);
-
-        $savePath = storage_path('app/') . $this->downloadPath;
-
-        $im->writeImage($savePath . $downloadFileName);
+        $this->imagesService->makeImage($imageFile, $resolution, $maxSize, $extension, $savePath);
 
         return [
             'file_path' => $savePath . $downloadFileName,
@@ -133,7 +139,7 @@ class DownloadService extends BaseService
     {
         $fileName = pathinfo($originalName, PATHINFO_FILENAME);
         $prefix = "AHSP_" . strtoupper(substr($acervo, 0, 3)) . "_"; //e.g. AHSP_CAR_
-        $downloadFileName = $prefix . $fileName . "_" . substr($size, 0, 3); //e.g. AHSP_DOC_OP_123123_1231_sta
+        $downloadFileName = $prefix . $fileName . "_" . substr($size, 0, 3); //e.g. AHSP_CAR_OP_123123_1231_sta
 
         return $downloadFileName . "." . $outExtension;
     }
@@ -183,8 +189,8 @@ class DownloadService extends BaseService
      * Validate a URL input
      *
      * @param $downloadFileName
-     * @param string $selector (string, 12 chars)
-     * @return bool
+     * @param string $token (string, 12 chars)
+     * @return mixed
      */
     function validateDownload($downloadFileName, $token)
     {
@@ -202,7 +208,7 @@ class DownloadService extends BaseService
             }
         }
 
-        return false;
+        return null;
     }
 
 }

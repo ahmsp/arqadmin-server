@@ -46,7 +46,7 @@ class Handler extends ExceptionHandler
         if (!$request->is('authenticate', 'api/*')) {
             return parent::render($request, $e);
         }
-
+//dd($e);
 //        $debug = config('app.debug', true);
 //        if ($debug) {//...}
 

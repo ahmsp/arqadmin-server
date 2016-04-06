@@ -24,30 +24,32 @@ class DesenhoTecnicoService extends BaseService
     private $downloadService;
 
     /**
-     * @var string
+     * @var ImagesService
      */
-    private $pathCartografico = 'acervos/cartografico_orig/';
+    private $imagesService;
 
-    /**
-     * @var string
-     */
-    private $pathTextual = 'acervos/textual/';
-
-    /**
-     * @var string
-     */
-    private $acervo = "cartografico";
+//    /**
+//     * @var string
+//     */
+//    private $pathCartografico = 'acervos/cartografico_orig/';
+//
+//    /**
+//     * @var string
+//     */
+//    private $pathTextual = 'acervos/textual/';
 
     /**
      * DesenhoTecnicoService constructor.
      * @param Application $app
      * @param DownloadService $downloadService
+     * @param ImagesService $imagesService
      */
-    public function __construct(Application $app, DownloadService $downloadService)
+    public function __construct(Application $app, DownloadService $downloadService, ImagesService $imagesService)
     {
         parent::__construct($app);
 
         $this->downloadService = $downloadService;
+        $this->imagesService = $imagesService;
     }
 
     /**
@@ -107,23 +109,15 @@ class DesenhoTecnicoService extends BaseService
         }
 
         $file = $request->file('file');
-        $filename = $file->getClientOriginalName();
         $data = $request->all();
-        $data['arquivo_original'] = $filename;
+        $data['arquivo_original'] = $file->getClientOriginalName();
 
         if (true !== $validate = $this->validate($data)) {
             return $validate;
         }
 
-        $pathAcervo = ('cartografico' === $request->input('acervo_tipo')) ?
-            $this->pathCartografico : $this->pathTextual;
-
-        $destination = storage_path('app/') . $pathAcervo;
-
-        if (!$file->move($destination, $filename)) {
-            abort(401, 'O arquivo enviado não pôde ser salvo');
-        }
-
+        $this->imagesService->uploadImage($request);
+        
         return $this->repository->create($data);
     }
 
@@ -138,19 +132,15 @@ class DesenhoTecnicoService extends BaseService
     {
         $data = $this->repository->find($id);
         $originalName = $data->arquivo_original;
+        $acervo = $data->acervo_tipo;
 
         if (!$originalName || 0 === strlen($originalName)) {
             abort(404, 'Imagem não encontrada.');
         }
 
-        $pathAcervo = ('cartografico' === $data->acervo_tipo) ? $this->pathCartografico : $this->pathTextual;
-
-        $makeImage = $this->downloadService
-            ->makeImage($this->acervo, $pathAcervo, $originalName, $size);
-
+        $makeImage = $this->downloadService->makeImage($acervo, $originalName, $size);
         $validation = $this->downloadService->generateValidation($makeImage['file_name']);
-
-        $urlDownload = url("download/imagem/{$this->acervo}/{$id}/{$size}/{$validation->token}");
+        $urlDownload = url("download/imagem/{$acervo}/{$id}/{$size}/{$validation->token}");
 
         return ['url_download' => $urlDownload];
     }
@@ -166,20 +156,20 @@ class DesenhoTecnicoService extends BaseService
     {
         $data = $this->repository->find($id);
         $originalName = $data->arquivo_original;
-        $pathAcervo = ('cartografico' === $data->acervo_tipo) ? $this->pathCartografico : $this->pathTextual;
+        $acervo = $data->acervo_tipo;
 
         $outOpts = $this->downloadService->outOptions();
-        $outExtension = 'original' === $size ? pathinfo($originalName, PATHINFO_EXTENSION) : $outOpts[$size]['extension'];
+        $outExtension = ('original' === $size) ?
+            pathinfo($originalName, PATHINFO_EXTENSION) : $outOpts[$size]['extension'];
 
         $downloadFileName = $this->downloadService
-            ->formatDownloadFileName($this->acervo, $originalName, $outExtension, $size);
+            ->formatDownloadFileName($acervo, $originalName, $outExtension, $size);
 
         if (!$downloadRow = $this->downloadService->validateDownload($downloadFileName, $token)) {
             abort('401', 'Link não encontrado ou expirado!');
         }
 
-        $downloadImage = $this->downloadService
-            ->makeImage($this->acervo, $pathAcervo, $originalName, $size);
+        $downloadImage = $this->downloadService->makeImage($acervo, $originalName, $size);
 
         $this->downloadService->repository->update(['download_date' => Carbon::now()], $downloadRow->id);
 
