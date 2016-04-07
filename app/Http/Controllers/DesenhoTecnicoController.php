@@ -51,8 +51,7 @@ class DesenhoTecnicoController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->service->upload($request);
-//        return $this->service->create($request->all());
+        return $this->service->createWithUpload($request);
     }
 
     /**
@@ -77,7 +76,7 @@ class DesenhoTecnicoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return $this->service->update($request->all(), $id);
+        return $this->service->updateWithUpload($request, $id);
     }
 
     /**
@@ -88,7 +87,7 @@ class DesenhoTecnicoController extends Controller
      */
     public function destroy($id)
     {
-        return $this->service->delete($id);
+        return $this->service->deleteAndRemoveImage($id);
     }
 
     public function showPublicImage($id, $maxSize = 300)

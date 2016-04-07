@@ -3,14 +3,11 @@
 namespace ArqAdmin\Services;
 
 
-use ArqAdmin\Image\Filters\Small;
 use ArqAdmin\Repositories\DesenhoTecnicoRepository;
 use ArqAdmin\Validators\DesenhoTecnicoValidator;
 use Carbon\Carbon;
 use Illuminate\Container\Container as Application;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
 
 /**
  * Class DesenhoTecnicoService
@@ -74,35 +71,17 @@ class DesenhoTecnicoService extends BaseService
 
     public function showPublicImage($id, $maxSize = 300)
     {
-        $disk = Storage::disk('local');
-        $pathDocumental = 'acervos/cartografico/';
-        $fileName = $this->repository->find($id)->arquivo_nome;
+        $data = $this->repository->find($id);
+        $originalName = $data->arquivo_original;
 
-        if (!$fileName || 0 === strlen($fileName)) {
+        if (!$originalName || 0 === strlen($originalName)) {
             abort(404, 'Imagem não encontrada.');
         }
 
-        if (!$exists = $disk->exists($pathDocumental . $fileName)) {
-            abort(404, 'Imagem não encontrada.');
-        }
-
-        $imageFile = $disk->get($pathDocumental . $fileName);
-        $filter = new Small($maxSize);
-        $cache = false;
-
-        if ($cache) {
-            $cacheImage = Image::cache(function ($img) use ($imageFile, $filter) {
-                $img->make($imageFile)->filter($filter);
-            }, 10, true);
-            $image = Image::make($cacheImage);
-        } else {
-            $image = Image::make($imageFile)->filter($filter);
-        }
-
-        return $image;
+        return $this->imagesService->getPublicImage($data->acervo_tipo, $originalName, $maxSize);
     }
 
-    public function upload(Request $request)
+    public function createWithUpload(Request $request)
     {
         if (!$file = $request->hasFile('file')) {
             abort(401, 'O campo Imagem não contém um arquivo válido');
@@ -120,13 +99,55 @@ class DesenhoTecnicoService extends BaseService
         
         return $this->repository->create($data);
     }
+    
+    public function updateWithUpload(Request $request, $id)
+    {
+//        if (!$file = $request->hasFile('file')) {
+//            abort(401, 'O campo Imagem não contém um arquivo válido');
+//        }
+//
+//        $file = $request->file('file');
+//        $data = $request->all();
+//        $data['arquivo_original'] = $file->getClientOriginalName();
+//
+//        if (true !== $validate = $this->validate($data)) {
+//            return $validate;
+//        }
+//
+//        $this->imagesService->uploadImage($request);
+//
+//        return $this->repository->create($data);
+    }
+
+    public function deleteAndRemoveImage($id)
+    {
+        $data = $this->repository->find($id);
+
+        $delete = $this->delete($id);
+
+        $acervoPathOriginal = $this->imagesService->getAcervoPathOriginal($data->acervo_tipo);
+        $originalFileName = $data->arquivo_original;
+        $originalFilePath = $acervoPathOriginal . $originalFileName;
+
+        if ($this->imagesService->imageExists($originalFilePath)) {
+            $this->imagesService->softDelete($originalFilePath);
+        }
+
+        $acervoPath = $this->imagesService->getAcervoPathPublic($data->acervo_tipo);
+        $fileName = pathinfo($originalFileName, PATHINFO_FILENAME) . '.jpg';
+        $filePath = $acervoPath . $fileName;
+
+        if ($this->imagesService->imageExists($filePath)) {
+            $this->imagesService->softDelete($filePath);
+        }
+
+        return $delete;
+    }
 
     /**
      * @param $id
-     * @param string $size
+     * @param $size string Size template: medium|standard|large|original
      * @return array
-     *
-     * Size template: medium|standard|large|original
      */
     public function getDownloadImageUrl($id, $size)
     {

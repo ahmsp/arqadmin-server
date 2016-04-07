@@ -62,7 +62,7 @@ class DownloadService extends BaseService
      */
     public function makeImage($acervo, $originalName, $size)
     {
-        $storagePath = $this->imagesService->getDiskLocalPath();
+        $storagePath = $this->imagesService->getDiskPath();
         $outOpts = $this->outOptions();
         $extension = ('original' === $size) ? pathinfo($originalName, PATHINFO_EXTENSION) : $outOpts[$size]['extension'];
 
@@ -94,7 +94,7 @@ class DownloadService extends BaseService
         $resolution = $outOpts[$size]['resolution'];
         $maxSize = $outOpts[$size]['maxSize'];
         $imageFile = $originalImagePath . $originalName;
-        $savePath = $storagePath . $downloadPath . $downloadFileName;
+        $savePath = $downloadPath . $downloadFileName;
 
         $this->imagesService->makeImage($imageFile, $resolution, $maxSize, $extension, $savePath);
 

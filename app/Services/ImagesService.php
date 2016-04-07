@@ -3,8 +3,11 @@
 namespace ArqAdmin\Services;
 
 
+use ArqAdmin\Image\Filters\Small;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Imagick;
+use Intervention\Image\Facades\Image;
 use Storage;
 
 /**
@@ -16,12 +19,12 @@ class ImagesService
     /**
      * @var \Illuminate\Contracts\Filesystem\Filesystem
      */
-    private $diskLocal;
+    private $disk;
 
     /**
      * @var string
      */
-    private $diskLocalPath;
+    private $diskPath;
 
     /**
      * @var string
@@ -48,30 +51,34 @@ class ImagesService
      */
     private $pathTextualLarge = 'acervos/textual/';
 
+    /**
+     * @var bool
+     */
+    private $cache = false;
 
     /**
      * ImagesService constructor.
      */
     public function __construct()
     {
-        $this->diskLocal = Storage::disk('local');
-        $this->diskLocalPath = storage_path('app/');
+        $this->disk = Storage::disk('local');
+        $this->diskPath = storage_path('app/');
     }
 
     /**
      * @return mixed
      */
-    public function getDiskLocal()
+    public function getDisk()
     {
-        return $this->diskLocal;
+        return $this->disk;
     }
 
     /**
      * @return string
      */
-    public function getDiskLocalPath()
+    public function getDiskPath()
     {
-        return $this->diskLocalPath;
+        return $this->diskPath;
     }
 
     /**
@@ -114,88 +121,156 @@ class ImagesService
         return $this->pathTextualLarge;
     }
 
+    public function getPublicImage($acervo, $originalName, $maxSize)
+    {
+        $storagePath = $this->getDiskPath();
+        $acervoPathOriginal = $this->getAcervoPathOriginal($acervo);
+        $acervoPath = $this->getAcervoPathPublic($acervo);
+        $fileName = pathinfo($originalName, PATHINFO_FILENAME) . '.jpg';
+
+        if (!$this->imageExists($acervoPath . $fileName)) {
+            if (!$this->imageExists($acervoPathOriginal . $originalName)) {
+                abort(404, 'Imagem não encontrada.');
+            }
+            $this->makeImage(
+                $acervoPathOriginal . $originalName, 72, 1024, 'jpg', $acervoPath . $fileName);
+        }
+
+        $imageFile = $this->getDisk()->get($acervoPath . $fileName);
+        $filter = new Small($maxSize);
+
+        if ($this->cache) {
+            $cacheImage = Image::cache(function ($img) use ($imageFile, $filter) {
+                $img->make($imageFile)->filter($filter);
+            }, 10, true);
+            $image = Image::make($cacheImage);
+        } else {
+            $image = Image::make($imageFile)->filter($filter);
+        }
+
+        return $image;
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $storagePath = $this->getDiskPath();
+        $acervo = $request->input('acervo_tipo');
+        $file = $request->file('file');
+        $originalName = $file->getClientOriginalName();
+        $acervoPathOriginal = $this->getAcervoPathOriginal($acervo);
+        $imagePath = $acervoPathOriginal . $originalName;
+
+        if ($this->imageExists($imagePath)) {
+            $this->softDelete($imagePath);
+        }
+
+        if (!$file->move($storagePath . $acervoPathOriginal, $originalName)) {
+            abort(401, 'O arquivo enviado não pôde ser salvo');
+        }
+
+        // make large (public) image
+        $acervoPathLarge = $this->getAcervoPathPublic($acervo);
+        $fileName = pathinfo($originalName, PATHINFO_FILENAME) . '.jpg';
+        if (!$this->imageExists($acervoPathLarge . $originalName)) {
+            $this->makeImage(
+                $imagePath, 72, 1024, 'jpg', $acervoPathLarge . $fileName);
+        }
+
+        return true;
+    }
+
     /**
-     * @param $imageFile
+     * @param $imageFile string Image path into local storage. (e.g., 'images/filename.jpg')
      * @param $resolution
      * @param $maxSize
      * @param $extension
-     * @param $saveFile
+     * @param $saveFile string Image path into local storage. (e.g., 'images/filename.jpg')
      */
     public function makeImage($imageFile, $resolution, $maxSize, $extension, $saveFile)
     {
-        $image = $this->diskLocal->get($imageFile);
+        $image = $this->getDisk()->get($imageFile);
         $im = new Imagick;
         $im->readImageBlob($image);
         $im->setImageResolution($resolution, $resolution);
         $im->resizeImage($maxSize, $maxSize, Imagick::FILTER_CATROM, 1, TRUE);
         $im->setFormat($extension);
 
-        $im->writeImage($saveFile);
+        if ($this->imageExists($saveFile)) {
+            $this->softDelete($saveFile);
+        }
+
+        $storagePath = $this->getDiskPath();
+        $im->writeImage($storagePath . $saveFile);
+    }
+
+    /**
+     * @param $imageFile string Image path into local storage. (e.g., 'images/filename.jpg')
+     * @return bool
+     */
+    public function softDelete($imageFile)
+    {
+        $now = Carbon::now()->format('Y-m-d_His');
+        $pathInfo = pathinfo($imageFile);
+        $destinationPath = $pathInfo['dirname'] . '/removidos/';
+        $destinationName = $pathInfo['filename'] . '_rm_' . $now . '.' . $pathInfo['extension'];
+
+        if (!$this->getDisk()->move($imageFile, $destinationPath . $destinationName)) {
+            abort(401, 'This file already exists and could not be moved to another directory');
+        }
+
+        return true;
     }
 
     public function getAcervoPathOriginal($acervo)
     {
-        switch ($acervo) {
-            case 'cartografico';
-                $acervoPath = $this->getPathCartograficoOriginal();
-                break;
-            case 'textual';
-                $acervoPath = $this->getPathTextualOriginal();
-                break;
-            default;
-                $acervoPath = null;
-                break;
-        }
-
-        return $acervoPath;
+        $paths = $this->getAcervoPath($acervo);
+        return $paths['path_original'];
     }
 
-    public function getAcervoPathLarge($acervo)
+    public function getAcervoPathPublic($acervo)
+    {
+        $paths = $this->getAcervoPath($acervo);
+        return $paths['path'];
+    }
+
+    public function getAcervoPath($acervo)
     {
         switch ($acervo) {
             case 'cartografico';
-                $acervoPath = $this->getPathCartograficoLarge();
+                $pathOriginal = $this->getPathCartograficoOriginal();
+                $path = $this->getPathCartograficoLarge();
                 break;
             case 'textual';
-                $acervoPath = $this->getPathTextualLarge();
+                $pathOriginal = $this->getPathTextualOriginal();
+                $path = $this->getPathTextualLarge();
                 break;
             default;
-                $acervoPath = null;
+                $pathOriginal = $path = null;
                 break;
         }
 
-        return $acervoPath;
+        if (!$pathOriginal) {
+            abort(404, 'Acervo not found');
+        }
+
+        return [
+            'path' => $path,
+            'path_original' => $pathOriginal
+        ];
     }
 
+    /**
+     * @param $imagePath string Image path into local storage. (e.g., 'images/filename.jpg')
+     * @return bool
+     */
     public function imageExists($imagePath)
     {
-        $disk = $this->getDiskLocal();
+        $disk = $this->getDisk();
         if ($disk->exists($imagePath)) {
             return true;
         }
 
         return false;
-    }
-
-    public function uploadImage(Request $request)
-    {
-        $acervo = $request->input('acervo');
-        $file = $request->file('file');
-        $filename = $file->getClientOriginalName();
-        $acervoPathOriginal = $this->getAcervoPathOriginal($acervo);
-        $destination = $this->getDiskLocalPath() . $acervoPathOriginal;
-
-        if (!$file->move($destination, $filename)) {
-            abort(401, 'O arquivo enviado não pôde ser salvo');
-        }
-
-        // make large (public) image
-        $acervoPathLarge = $this->getAcervoPathLarge($acervo);
-        if(!$this->imageExists($acervoPathLarge . $filename)) {
-            $this->makeImage($filename, 72, 1024, 'jpg', $acervoPathLarge . $filename);
-        }
-
-        return true;
     }
 
 }
