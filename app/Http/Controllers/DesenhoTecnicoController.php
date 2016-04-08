@@ -6,7 +6,6 @@ use ArqAdmin\Http\Requests;
 use ArqAdmin\Repositories\DesenhoTecnicoRepository;
 use ArqAdmin\Services\DesenhoTecnicoService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class DesenhoTecnicoController extends Controller
 {
@@ -76,7 +75,7 @@ class DesenhoTecnicoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return $this->service->updateWithUpload($request, $id);
+        return $this->service->preUpdate($request->all(), $id);
     }
 
     /**

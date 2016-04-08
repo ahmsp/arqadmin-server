@@ -25,16 +25,6 @@ class DesenhoTecnicoService extends BaseService
      */
     private $imagesService;
 
-//    /**
-//     * @var string
-//     */
-//    private $pathCartografico = 'acervos/cartografico_orig/';
-//
-//    /**
-//     * @var string
-//     */
-//    private $pathTextual = 'acervos/textual/';
-
     /**
      * DesenhoTecnicoService constructor.
      * @param Application $app
@@ -69,6 +59,11 @@ class DesenhoTecnicoService extends BaseService
         return DesenhoTecnicoValidator::class;
     }
 
+    /**
+     * @param $id
+     * @param int $maxSize Maximum size in pixels
+     * @return mixed
+     */
     public function showPublicImage($id, $maxSize = 300)
     {
         $data = $this->repository->find($id);
@@ -90,33 +85,50 @@ class DesenhoTecnicoService extends BaseService
         $file = $request->file('file');
         $data = $request->all();
         $data['arquivo_original'] = $file->getClientOriginalName();
+        $data['arquivo_nome'] = pathinfo($data['arquivo_original'], PATHINFO_FILENAME) . '.jpg';
 
         if (true !== $validate = $this->validate($data)) {
             return $validate;
         }
 
         $this->imagesService->uploadImage($request);
-        
+
         return $this->repository->create($data);
     }
-    
+
+    public function preUpdate($data, $id)
+    {
+        $oldData = $this->repository->find($id);
+
+        $result = $this->update($data, $id);
+
+        if ($result['success'] === true) {
+            if ($oldData['acervo_tipo'] !== $data['acervo_tipo']) {
+                $this->imagesService->moveOriginalAndRelatedImages(
+                    $oldData['acervo_tipo'], $data['acervo_tipo'], $oldData->arquivo_original);
+            }
+        }
+        
+        return $result;
+    }
+
     public function updateWithUpload(Request $request, $id)
     {
-//        if (!$file = $request->hasFile('file')) {
-//            abort(401, 'O campo Imagem não contém um arquivo válido');
-//        }
-//
-//        $file = $request->file('file');
-//        $data = $request->all();
-//        $data['arquivo_original'] = $file->getClientOriginalName();
-//
-//        if (true !== $validate = $this->validate($data)) {
-//            return $validate;
-//        }
-//
-//        $this->imagesService->uploadImage($request);
-//
-//        return $this->repository->create($data);
+        $newData = $request->all();
+        $file = $request->file('file');
+        $newData['arquivo_original'] = $file->getClientOriginalName();
+        $newData['arquivo_nome'] = pathinfo($newData['arquivo_original'], PATHINFO_FILENAME) . '.jpg';
+
+        if (true !== $validate = $this->validate($newData)) {
+            return $validate;
+        }
+
+        $oldData = $this->repository->find($id);
+        $this->imagesService->removeOriginalAndRelatedImages($oldData->acervo_tipo, $oldData->arquivo_original);
+
+        $this->imagesService->uploadImage($request);
+
+        return $this->repository->update($newData, $id);
     }
 
     public function deleteAndRemoveImage($id)
@@ -125,28 +137,14 @@ class DesenhoTecnicoService extends BaseService
 
         $delete = $this->delete($id);
 
-        $acervoPathOriginal = $this->imagesService->getAcervoPathOriginal($data->acervo_tipo);
-        $originalFileName = $data->arquivo_original;
-        $originalFilePath = $acervoPathOriginal . $originalFileName;
-
-        if ($this->imagesService->imageExists($originalFilePath)) {
-            $this->imagesService->softDelete($originalFilePath);
-        }
-
-        $acervoPath = $this->imagesService->getAcervoPathPublic($data->acervo_tipo);
-        $fileName = pathinfo($originalFileName, PATHINFO_FILENAME) . '.jpg';
-        $filePath = $acervoPath . $fileName;
-
-        if ($this->imagesService->imageExists($filePath)) {
-            $this->imagesService->softDelete($filePath);
-        }
+        $this->imagesService->removeOriginalAndRelatedImages($data->acervo_tipo, $data->arquivo_original);
 
         return $delete;
     }
 
     /**
      * @param $id
-     * @param $size string Size template: medium|standard|large|original
+     * @param string $size Size template parameters: medium|standard|large|original
      * @return array
      */
     public function getDownloadImageUrl($id, $size)
@@ -168,7 +166,7 @@ class DesenhoTecnicoService extends BaseService
 
     /**
      * @param $id
-     * @param string $size
+     * @param string $size Size template parameters: medium|standard|large|original
      * @param string $token
      * @return array
      *

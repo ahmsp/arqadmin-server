@@ -17,7 +17,8 @@ class DesenhoTecnicoValidator extends LaravelValidator
         ],
 
         ValidatorInterface::RULE_UPDATE => [
-            'descricao' => 'required|min:3'
+            'acervo_tipo' => 'sometimes|required|in:cartografico,textual',
+            'descricao' => 'sometimes|required|min:3',
         ]
     ];
 
