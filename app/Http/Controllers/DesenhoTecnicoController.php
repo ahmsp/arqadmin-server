@@ -50,7 +50,7 @@ class DesenhoTecnicoController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->service->createWithUpload($request);
+        return $this->service->create($request->all());
     }
 
     /**
@@ -111,5 +111,10 @@ class DesenhoTecnicoController extends Controller
         }
 
         return response()->download($image['file_path'], $image['file_name']);
+    }
+
+    public function uploadImage(Request $request, $id)
+    {
+        return $this->service->upload($request, $id);
     }
 }

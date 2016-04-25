@@ -16,9 +16,9 @@ Route::group(['middleware' => 'cors'], function () {
     Route::post('authenticate', 'OAuthController@accessToken');
 
     /**
-     * Public images (restrict size). Template: p|m|g
+     * Get public images (restrict size). Template: p|m|g
      */
-    Route::get('imagem/cartografico/{id}/{maxSize?}', 'DesenhoTecnicoController@showPublicImage');
+    Route::get('imagem/documental/{id}/{maxSize?}', 'DesenhoTecnicoController@showPublicImage');
 //    Route::get('imagem/documento/{id}/{maxSize?}', 'DocumentoImagemController@showPublicImage');
 //    Route::get('imagem/sfm/{id}/{template}', 'RegistroSepultamentoController@showPublicImage');
 //    Route::get('imagem/fotografico/{id}/{template}', 'FotograficoController@showPublicImage');
@@ -27,13 +27,6 @@ Route::group(['middleware' => 'cors'], function () {
      * Group 'api'
      */
     Route::group(['prefix' => 'api', 'middleware' => ['oauth']], function () {
-
-        /**
-         * Check token
-         */
-        Route::get('checktoken', function () {
-            return true;
-        });
 
         /**
          * User
@@ -99,22 +92,25 @@ Route::group(['middleware' => 'cors'], function () {
 
 
         /**
-         * Download image (unlimited size). Size template: medium|standard|large|original
+         * Get download image url (unlimited size). Size template: medium|standard|large|original
          * Return new url to download
          */
-        Route::get('imagem/cartografico/{id}/{size}', 'DesenhoTecnicoController@getDownloadUrl')
+        Route::get('imagem/documental/{id}/{size}', 'DesenhoTecnicoController@getDownloadUrl')
             ->where('size', 'medium|standard|large|original');
 //    Route::get('imagem/textual/{id}/{maxSize?}', 'DocumentoImagemController@showPublicImage');
 //    Route::get('imagem/sfm/{id}/{template}', 'RegistroSepultamentoController@showPublicImage');
 //    Route::get('imagem/fotografico/{id}/{template}', 'FotograficoController@showPublicImage');
 
-
+        /**
+         * Upload image
+         */
+        Route::post('upload/imagem/documental/{id}', 'DesenhoTecnicoController@uploadImage');
     });
 
     /**
-     * Download an image requested by route "api/imagem/cartografico/{id}/{size}"
+     * Download an image requested by route "api/imagem/documental/{id}/{size}"
      */
-    Route::get('download/imagem/cartografico/{id}/{size}/{token}', 'DesenhoTecnicoController@downloadImage')
+    Route::get('download/imagem/documental/{id}/{size}/{token}', 'DesenhoTecnicoController@downloadImage')
         ->where('size', 'medium|standard|large|original');
 
 

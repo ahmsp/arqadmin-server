@@ -76,68 +76,68 @@ class DesenhoTecnicoService extends BaseService
         return $this->imagesService->getPublicImage($data->acervo_tipo, $originalName, $maxSize);
     }
 
-    public function createWithUpload(Request $request)
-    {
-        if (!$file = $request->hasFile('file')) {
-            abort(401, 'O campo Imagem não contém um arquivo válido');
-        }
-
-        $file = $request->file('file');
-        $data = $request->all();
-        $data['arquivo_original'] = $file->getClientOriginalName();
-        $data['arquivo_nome'] = pathinfo($data['arquivo_original'], PATHINFO_FILENAME) . '.jpg';
-
-        if (true !== $validate = $this->validate($data)) {
-            return $validate;
-        }
-
-        $this->imagesService->uploadImage($request);
-
-        return $this->repository->create($data);
-    }
-
     public function preUpdate($data, $id)
     {
         $oldData = $this->repository->find($id);
 
         $result = $this->update($data, $id);
 
-        if ($result['success'] === true) {
-            if ($oldData['acervo_tipo'] !== $data['acervo_tipo']) {
+        if ($result) {
+            if (isset($data['arquivo_original']) && $oldData['arquivo_original'] !== $data['arquivo_original']) {
+                abort(400, 'As imagens existentes não podem ser sobrescritas.');
+            }
+
+            if (isset($data['acervo_tipo']) && $oldData['acervo_tipo'] !== $data['acervo_tipo']) {
                 $this->imagesService->moveOriginalAndRelatedImages(
                     $oldData['acervo_tipo'], $data['acervo_tipo'], $oldData->arquivo_original);
             }
+
         }
-        
+
         return $result;
     }
 
-    public function updateWithUpload(Request $request, $id)
+    public function upload(Request $request, $id)
     {
-        $newData = $request->all();
-        $file = $request->file('file');
-        $newData['arquivo_original'] = $file->getClientOriginalName();
-        $newData['arquivo_nome'] = pathinfo($newData['arquivo_original'], PATHINFO_FILENAME) . '.jpg';
-
-        if (true !== $validate = $this->validate($newData)) {
-            return $validate;
+        if (!$request->hasFile('file')) {
+            abort(401, 'Dados de upload de imagem inválidos');
         }
 
-        $oldData = $this->repository->find($id);
-        $this->imagesService->removeOriginalAndRelatedImages($oldData->acervo_tipo, $oldData->arquivo_original);
+        $model = $this->repository->find($id);
+        $file = $request->file('file');
 
-        $this->imagesService->uploadImage($request);
+        $data['arquivo_original'] = $file->getClientOriginalName();
+        $data['arquivo_nome'] = pathinfo($data['arquivo_original'], PATHINFO_FILENAME) . '.jpg';
 
-        return $this->repository->update($newData, $id);
+        $filenameExists = $this->repository->findWhere([
+            'arquivo_original' => $data['arquivo_original'],
+            ['id', '<>', $id]
+        ]);
+
+        if (empty($filenameExists)) {
+            abort(401, 'O nome do arquivo já existe e não pode ser duplicado');
+        }
+
+        $this->imagesService->uploadImage($request, $model->acervo_tipo);
+
+        return $this->update($data, $model->id);
     }
 
     public function deleteAndRemoveImage($id)
     {
         $data = $this->repository->find($id);
 
-        $delete = $this->delete($id);
+        $removedImages = $this->imagesService->removeOriginalAndRelatedImages($data->acervo_tipo, $data->arquivo_original);
 
-        $this->imagesService->removeOriginalAndRelatedImages($data->acervo_tipo, $data->arquivo_original);
+        $this->update(
+            [
+                'arquivo_original' => $removedImages['originalDeletedFilename'],
+                'arquivo_nome' => $removedImages['publicDeletedFilename']
+            ],
+            $id
+        );
+
+        $delete = $this->delete($id);
 
         return $delete;
     }

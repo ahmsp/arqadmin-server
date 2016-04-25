@@ -2,10 +2,8 @@
 
 namespace ArqAdmin\Repositories;
 
-use Prettus\Repository\Eloquent\BaseRepository;
-use Prettus\Repository\Criteria\RequestCriteria;
-use ArqAdmin\Repositories\DesenhoTecnicoRepository;
 use ArqAdmin\Entities\DesenhoTecnico;
+use Prettus\Repository\Eloquent\BaseRepository;
 
 /**
  * Class DesenhoTecnicoRepositoryEloquent
@@ -23,9 +21,9 @@ class DesenhoTecnicoRepositoryEloquent extends BaseRepository implements Desenho
         return DesenhoTecnico::class;
     }
 
-    /**
-     * Boot up the repository, pushing criteria
-     */
+//    /**
+//     * Boot up the repository, pushing criteria
+//     */
 //    public function boot()
 //    {
 //        $this->pushCriteria(app(RequestCriteria::class));
@@ -34,9 +32,26 @@ class DesenhoTecnicoRepositoryEloquent extends BaseRepository implements Desenho
     public function findAllWhere(array $params = null)
     {
         $data = $this->model
-            ->with('dtTipo', 'dtSuporte', 'dtEscala', 'dtTecnica', 'dtConservacao', 'documento')
-            ->paginate(100);
+//            ->select('desenho_tecnico.*')
+            ->with('dtTipo', 'dtSuporte', 'dtEscala', 'dtTecnica', 'dtConservacao', 'documento');
 
-        return $data;
+        if (isset($params['filter'])) {
+            $filters = json_decode($params['filter'], true);
+
+            foreach ($filters as $filter) {
+                if (isset($filter['property']) && $filter['property'] === 'documento_id') {
+                    $data->where('documento_id', $filter['value']);
+                    break;
+                }
+            }
+
+        }
+
+        $result = $data->paginate(100);
+
+//dd($data->toSql());
+//dd($result);
+
+        return $result;
     }
 }

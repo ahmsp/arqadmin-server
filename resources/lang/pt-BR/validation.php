@@ -72,7 +72,7 @@ return [
     ],
     "string"           => "O campo :attribute deve ser uma string.",
     "timezone"         => "O campo :attribute deverá ter um fuso horário válido.",
-    "unique"           => "O valor indicado para o campo :attribute já foi utilizado.",
+    "unique"           => "O valor indicado para o campo :attribute já existe e não pode ser duplicado.",
     "url"              => "O formato do URL indicado para o campo :attribute é inválido.",
 
     /*

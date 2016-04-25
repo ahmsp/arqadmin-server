@@ -37,14 +37,18 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
         return Documento::class;
     }
 
-    /**
-     * Boot up the repository, pushing criteria
-     */
+//    /**
+//     * Boot up the repository, pushing criteria
+//     */
 //    public function boot()
 //    {
 //        $this->pushCriteria(app(RequestCriteria::class));
 //    }
 
+    /**
+     * @param array|null $params
+     * @return mixed
+     */
     public function findAllWhere(array $params = null)
     {
         $docs = $this->model

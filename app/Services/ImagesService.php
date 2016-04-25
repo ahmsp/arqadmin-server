@@ -150,10 +150,9 @@ class ImagesService
         return $image;
     }
 
-    public function uploadImage(Request $request)
+    public function uploadImage(Request $request, $acervo)
     {
         $storagePath = $this->getDiskPath();
-        $acervo = $request->input('acervo_tipo');
         $file = $request->file('file');
         $originalName = $file->getClientOriginalName();
         $acervoPathOriginal = $this->getAcervoPathOriginal($acervo);
@@ -205,22 +204,30 @@ class ImagesService
     /**
      * @param $acervo string
      * @param $originalFileName string File name of original image (e.g, filename.tif)
+     * @return array
      */
     public function removeOriginalAndRelatedImages($acervo, $originalFileName)
     {
+        $originalDeletedFilename = null;
+        $publicDeletedFilename = null;
+
         $acervoPathOriginal = $this->getAcervoPathOriginal($acervo);
         $originalFilePath = $acervoPathOriginal . $originalFileName;
-
         if ($this->imageExists($originalFilePath)) {
-            $this->softDelete($originalFilePath);
+            $originalDeletedFilename = $this->softDelete($originalFilePath);
         }
 
         $acervoPathPublic = $this->getAcervoPathPublic($acervo);
         $filePath = $acervoPathPublic . pathinfo($originalFileName, PATHINFO_FILENAME) . '.jpg';
 
         if ($this->imageExists($filePath)) {
-            $this->softDelete($filePath);
+            $publicDeletedFilename = $this->softDelete($filePath);
         }
+
+        return [
+            'originalDeletedFilename' => $originalDeletedFilename ?: null,
+            'publicDeletedFilename' => $publicDeletedFilename ?: null
+        ];
     }
 
     /**
@@ -242,10 +249,11 @@ class ImagesService
         // move public image
         $fromAcervoPathPublic = $this->getAcervoPathPublic($fromAcervo);
         $toAcervoPathPublic = $this->getAcervoPathPublic($toAcervo);
-        $publicFilePath = $fromAcervoPathPublic . $originalFileName;
+        $publicFileName = pathinfo($originalFileName, PATHINFO_FILENAME) . '.jpg';
+        $publicFilePath = $fromAcervoPathPublic . $publicFileName;
 
         if ($this->imageExists($publicFilePath)) {
-            $this->getDisk()->move($publicFilePath, $toAcervoPathPublic . $originalFileName);
+            $this->getDisk()->move($publicFilePath, $toAcervoPathPublic . $publicFileName);
         }
     }
 
@@ -255,16 +263,25 @@ class ImagesService
      */
     public function softDelete($imageFile)
     {
-        $now = Carbon::now()->format('Y-m-d_His');
+        if (!$imageFile) {
+            return false;
+        }
+
         $pathInfo = pathinfo($imageFile);
+
+        if (!isset($pathInfo['extension'])) {
+            return false;
+        }
+
+        $now = Carbon::now()->format('Y-m-d_His');
         $destinationPath = $pathInfo['dirname'] . '/removidos/';
         $destinationName = $pathInfo['filename'] . '_rm_' . $now . '.' . $pathInfo['extension'];
 
         if (!$this->getDisk()->move($imageFile, $destinationPath . $destinationName)) {
-            abort(401, 'This file already exists and could not be moved to another directory');
+            return false;
         }
 
-        return true;
+        return $destinationName;
     }
 
     public function getAcervoPathOriginal($acervo)

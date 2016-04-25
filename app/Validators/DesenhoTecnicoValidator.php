@@ -13,12 +13,13 @@ class DesenhoTecnicoValidator extends LaravelValidator
         ValidatorInterface::RULE_CREATE => [
             'acervo_tipo' => 'required|in:cartografico,textual',
             'descricao' => 'required|min:3',
-            'arquivo_original' => 'required|unique:desenho_tecnico,arquivo_original'
+            'arquivo_original' => 'unique:desenho_tecnico,arquivo_original'
         ],
 
         ValidatorInterface::RULE_UPDATE => [
             'acervo_tipo' => 'sometimes|required|in:cartografico,textual',
             'descricao' => 'sometimes|required|min:3',
+            'arquivo_original' => 'sometimes|unique:desenho_tecnico,arquivo_original'
         ]
     ];
 

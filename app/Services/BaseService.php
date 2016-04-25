@@ -101,11 +101,7 @@ abstract class BaseService
 
         } catch (ValidatorException $e) {
 
-            return [
-                'success' => false,
-                'error' => true,
-                'message' => $e->getMessageBag()
-            ];
+            abort('400', $e->getMessageBag());
         }
     }
 
@@ -118,11 +114,7 @@ abstract class BaseService
 
         } catch (ValidatorException $e) {
 
-            return [
-                'success' => false,
-                'error' => true,
-                'message' => $e->getMessageBag()
-            ];
+            abort('401', $e->getMessageBag());
         }
     }
 
@@ -139,21 +131,13 @@ abstract class BaseService
 
                 } catch (ValidatorException $e) {
 
-                    return [
-                        'success' => false,
-                        'error' => true,
-                        'message' => $e->getMessageBag()
-                    ];
+                    abort('401', $e->getMessageBag());
                 }
             }
 
         } catch (ModelNotFoundException $e) {
 
-            return [
-                'success' => false,
-                'error' => true,
-                'message' => 'Registro não encontrado'
-            ];
+            abort('404', 'Registro não encontrado');
         }
     }
 
@@ -175,21 +159,13 @@ abstract class BaseService
 
                 } catch (ValidatorException $e) {
 
-                    return [
-                        'success' => false,
-                        'error' => true,
-                        'message' => $e->getMessageBag()
-                    ];
+                    abort('401', $e->getMessageBag());
                 }
             }
 
         } catch (ModelNotFoundException $e) {
 
-            return [
-                'success' => false,
-                'error' => true,
-                'message' => 'Registro não encontrado'
-            ];
+            abort('401', 'Registro não encontrado');
         }
     }
 }
