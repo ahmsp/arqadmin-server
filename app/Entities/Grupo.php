@@ -19,11 +19,11 @@ class Grupo extends Model implements Transformable
 
     public function documentos()
     {
-        return $this->hasMany('ArqAdmin\Models\Documento');
+        return $this->hasMany('ArqAdmin\Entities\Documento');
     }
 
     public function registrosSepultamento()
     {
-        return $this->hasMany('ArqAdmin\Models\RegistroSepultamento');
+        return $this->hasMany('ArqAdmin\Entities\RegistroSepultamento');
     }
 }

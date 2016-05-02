@@ -32,9 +32,8 @@ class RegistroSepultamentoService extends BaseService
     public function findAll($params = []) {
 
         $result = $this->repository->findAllWhere($params);
-
+        
         return $result;
-
     }
 
 }

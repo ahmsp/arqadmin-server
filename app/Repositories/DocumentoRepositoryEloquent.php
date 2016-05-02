@@ -2,10 +2,8 @@
 
 namespace ArqAdmin\Repositories;
 
-use Prettus\Repository\Eloquent\BaseRepository;
-use Prettus\Repository\Criteria\RequestCriteria;
-use ArqAdmin\Repositories\DocumentoRepository;
 use ArqAdmin\Entities\Documento;
+use Prettus\Repository\Eloquent\BaseRepository;
 
 /**
  * Class DocumentoRepositoryEloquent
@@ -13,20 +11,6 @@ use ArqAdmin\Entities\Documento;
  */
 class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRepository
 {
-    /**
-     * @var array
-     */
-//    protected $fieldSearchable = [
-//        'instituicao' => 'like',
-//        'divisao' => 'like',
-//        'subdivisao' => 'like',
-//        'area' => 'like',
-//        'nome' => 'like',
-//        'email',
-//        'telefone' => 'like',
-//        'ramal' => 'like',
-//    ];
-
     /**
      * Specify Model class name
      *
@@ -61,17 +45,45 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
 
         $mapFields = $this->mapFields();
 
-        if (isset($params['filter'])) {
-            $filters = json_decode($params['filter'], true);
-            if ($filters) {
-                $filterParams = $this->parseFilter($filters);
+        if (isset($params['search_all'])) {
+            $searchFields = [
+                'notacao_preexistente',
+                'notacao',
+                'ano',
+                'data_doc',
+                'processo_num',
+                'interessado',
+                'assunto',
+                'notas',
+                'dt_endereco',
+                'dt_endereco_atual',
+                'dt_proprietario',
+                'dt_autor',
+                'dt_construtor',
+                'dt_notas',
+            ];
+
+            $params['filter'] = [];
+            foreach ($searchFields as $field) {
+                $params['filter'][] = [
+                    'property' => $field,
+                    'value' => $params['search_all'],
+                    'operator' => 'like',
+                    'logical_operator' => 'or'
+                ];
             }
         }
 
+        if (isset($params['filter'])) {
+            $filters = $params['filter'];
+            if (is_string($filters)) {
+                $filters = json_decode($filters, true);
+            }
+            $filterParams = $this->parseFilter($filters);
+        }
+
         if (isset($filterParams)) {
-
             foreach ($filterParams as $param) {
-
                 if ('Documento' === $param['model']) {
                     if ('in' === $param['operator']) {
                         $docs->whereIn($param['column'], $param['value']);

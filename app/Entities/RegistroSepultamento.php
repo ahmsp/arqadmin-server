@@ -3,16 +3,19 @@
 namespace ArqAdmin\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 class RegistroSepultamento extends Model implements Transformable
 {
     use TransformableTrait;
+    use SoftDeletes;
 
     protected $table = 'registro_sepultamento';
 
-    public $timestamps = true;
+    public $timestamps = false;
 
     protected $fillable = [
         'fundo_id',
@@ -50,6 +53,15 @@ class RegistroSepultamento extends Model implements Transformable
 
     protected $guarded = [];
 
+    // default values
+    protected $attributes = [
+        'fundo_id' => 3,
+        'subfundo_id' => 20,
+        'grupo_id' => 85,
+        'subgrupo_id' => 28,
+        'serie_id' => 248,
+        'especiedocumental_id' => 5
+    ];
 
     public function fundo()
     {
@@ -126,7 +138,7 @@ class RegistroSepultamento extends Model implements Transformable
         return $this->belongsTo('ArqAdmin\Entities\SfmCemiterio', 'sfm_cemiterio_id');
     }
 
-    public function smfNacionalidade()
+    public function sfmNacionalidade()
     {
         return $this->belongsTo('ArqAdmin\Entities\SfmNacionalidade', 'sfm_nacionalidade_id');
     }
@@ -136,12 +148,12 @@ class RegistroSepultamento extends Model implements Transformable
         return $this->belongsTo('ArqAdmin\Entities\SfmNaturalidade', 'sfm_naturalidade_id');
     }
 
-    public function sfmEstadoscivil()
+    public function sfmEstadocivil()
     {
         return $this->belongsTo('ArqAdmin\Entities\SfmEstadocivil', 'sfm_estadocivil_id');
     }
 
-    public function sfmCausasMortis()
+    public function sfmCausaMortis()
     {
         return $this->belongsTo('ArqAdmin\Entities\SfmCausaMortis', 'sfm_causamortis_id');
     }

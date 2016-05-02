@@ -19,6 +19,6 @@ class DtUso extends Model implements Transformable
 
     public function documentos()
     {
-        return $this->hasMany('ArqAdmin\Models\Documento');
+        return $this->hasMany('ArqAdmin\Entities\Documento');
     }
 }

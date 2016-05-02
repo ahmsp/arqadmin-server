@@ -105,6 +105,7 @@ Route::group(['middleware' => 'cors'], function () {
          * Upload image
          */
         Route::post('upload/imagem/documental/{id}', 'DesenhoTecnicoController@uploadImage');
+//        Route::post('upload/imagem/sepultamento/{id}', 'SepultamentoController@uploadImage');
     });
 
     /**
