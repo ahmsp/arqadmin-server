@@ -35,7 +35,7 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
      */
     public function findAllWhere(array $params = null)
     {
-        $docs = $this->model
+        $model = $this->model
             ->select('documento.*')
             ->with('fundo', 'subfundo', 'grupo', 'subgrupo', 'serie', 'subserie',
                 'dossie', 'especieDocumental', 'conservacao', 'lcSala', 'lcMovel',
@@ -47,20 +47,18 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
 
         if (isset($params['search_all'])) {
             $searchFields = [
-                'notacao_preexistente',
-                'notacao',
-                'ano',
-                'data_doc',
-                'processo_num',
                 'interessado',
                 'assunto',
                 'notas',
                 'dt_endereco',
+                'dt_end_complemento',
                 'dt_endereco_atual',
+                'dt_endatual_complemento',
                 'dt_proprietario',
                 'dt_autor',
                 'dt_construtor',
                 'dt_notas',
+                'desenho_tecnico_descricao'
             ];
 
             $params['filter'] = [];
@@ -82,46 +80,36 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
             $filterParams = $this->parseFilter($filters);
         }
 
-        if (isset($filterParams)) {
-            foreach ($filterParams as $param) {
-                if ('Documento' === $param['model']) {
-                    if ('in' === $param['operator']) {
-                        $docs->whereIn($param['column'], $param['value']);
-                    } else {
-                        $docs->where($param['column'], $param['operator'], $param['value']);
-                    }
-                } else {
-                    $docs->whereHas($param['model'], function ($query) use ($param) {
-                        if ('in' === $param['operator']) {
-                            $query->whereIn($param['column'], $param['value']);
-                        } else {
-                            $query->where($param['column'], $param['operator'], $param['value']);
-                        }
-                    });
-                }
+        if (isset($filterParams) && isset($filterParams['and'])) {
+            foreach ($filterParams['and'] as $param) {
+                $this->buildWhere($model, $param);
             }
         }
 
+        //group the WHERE clauses when logical operator is OR
+        if (isset($filterParams) && isset($filterParams['or'])) {
+            $model->where(function ($query) use ($filterParams) {
+                foreach ($filterParams['or'] as $param) {
+                    $this->buildWhere($query, $param);
+                }
+            });
+        }
+
         if (isset($filters)) {
-
             foreach ($filters as $filter) {
-
                 if (isset($filter['property']) && $filter['property'] == 'com_imagem') {
-                    $docs->whereHas('DesenhosTecnicos', function ($query) {
+                    $model->whereHas('DesenhosTecnicos', function ($query) {
                         $query->havingRaw('count(id) > 0');
                     });
                     break;
                 }
             }
-
         }
 
         if (isset($params['sort'])) {
-
             $sorters = json_decode($params['sort'], true); // Decode the filter
 
             foreach ($sorters as $sort) {
-
                 $sortProperty = $sort['property'];
 
                 if ($mapFields[$sortProperty]['entity'] !== 'Documento') {
@@ -132,25 +120,59 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                     $ent = new $sortEntityRoot;
                     $sortTableName = $ent->getTable();
 
-                    $docs->leftJoin($sortTableName, $sortTableName . '.id', '=', 'documento.' . $sortTableName . '_id')
+                    $model->leftJoin($sortTableName, $sortTableName . '.id', '=', 'documento.' . $sortTableName . '_id')
                         ->orderBy($sortTableName . '.' . $sortColumn, $sort['direction']);
 
                 } else {
-                    $docs->orderBy($mapFields[$sort['property']]['column'], $sort['direction']);
+                    $model->orderBy($mapFields[$sort['property']]['column'], $sort['direction']);
                 };
             }
         } else {
-            $docs->orderBy('id', 'DESC');
+            $model->orderBy('id', 'DESC');
         }
 
         $limit = (isset($params['limit'])) ? $params['limit'] : '50';
 
-        $result = $docs->paginate($limit);
+        $result = $model->paginate($limit);
 
-//dd($docs->toSql());
+//dd($model->toSql());
 //dd($result);
 
         return $result;
+    }
+
+    public function buildWhere($model, $param)
+    {
+        if ('Documento' === $param['model']) {
+            if ('in' === $param['operator']) {
+                return $model->whereIn($param['column'], $param['value'], $param['boolean'], $param['not']);
+            } else {
+                return $model->where($param['column'], $param['operator'], $param['value'], $param['boolean']);
+            }
+        } else {
+            if ($param['boolean'] === 'or') {
+                $model->orWhereHas($param['model'], function ($query) use ($param) {
+                    $param['boolean'] = 'and';
+                    $param['not'] = false;
+
+                    if ('in' === $param['operator']) {
+                        return $query->whereIn($param['column'], $param['value'], $param['boolean'], $param['not']);
+                    } else {
+                        return $query->where($param['column'], $param['operator'], $param['value'], $param['boolean']);
+                    }
+                });
+            } else {
+                $model->whereHas($param['model'], function ($query) use ($param) {
+                    if ('in' === $param['operator']) {
+                        return $query->whereIn($param['column'], $param['value'], $param['boolean'], $param['not']);
+                    } else {
+                        return $query->where($param['column'], $param['operator'], $param['value'], $param['boolean']);
+                    }
+                });
+            }
+        }
+
+        return false;
     }
 
     public function parseFilter(array $filters)
@@ -164,9 +186,28 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 continue;
             }
 
+            $boolean = 'and';
+            $not = false;
+
             $field = $mapFields[$filter['property']];
             $model = $field['entity'];
             $column = $field['column'];
+            $type = $field['type'];
+
+            if (isset($filter['operator'])) {
+                $filterOperator = $filter['operator'];
+            } else {
+                $filterOperator = ($type === 'number') ? 'eq' : 'like';
+            }
+
+            if (isset($filter['logical_operator'])) {
+                if ($filter['logical_operator'] === 'or') {
+                    $boolean = 'or';
+                } elseif ($filter['logical_operator'] === 'not') {
+                    $boolean = 'and';
+                    $not = true;
+                }
+            }
 
             $value = (isset($filter['value'])) ? $filter['value'] : '';
 
@@ -176,9 +217,12 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 $value = trim(preg_replace("/\s\s+/", ' ', $value));
             }
 
-            switch ($filter['operator']) {
+            switch ($filterOperator) {
                 case 'lt':
                     $operator = "<";
+                    break;
+                case 'neq':
+                    $operator = "<>";
                     break;
                 case 'lte':
                     $operator = "<=";
@@ -190,7 +234,7 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                     $operator = ">=";
                     break;
                 case 'eq':
-                    $operator = "=";
+                    $operator = (!$not) ? "=" : "<>";
                     break;
                 case 'in':
                     $operator = "in";
@@ -201,7 +245,8 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                     break;
                 case 'like':
                 default:
-                    $operator = "like";
+//                    $operator = "like";
+                    $operator = (!$not) ? "like" : "not like";
                     $value = '%' . $value . '%';
                     break;
             }
@@ -210,9 +255,26 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'model' => $model,
                 'column' => $column,
                 'operator' => $operator,
-                'value' => $value
+                'value' => $value,
+                'boolean' => $boolean,
+                'not' => $not
             ];
         }
+
+        $collection = collect($params);
+
+        $operatorsAnd = $collection->filter(function ($param) {
+            return $param['boolean'] === 'and';
+        })->all();
+
+        $operatorsOr = $collection->filter(function ($param) {
+            return $param['boolean'] === 'or';
+        })->all();
+
+        $params = [
+            'and' => $operatorsAnd,
+            'or' => $operatorsOr
+        ];
 
         return $params;
     }
@@ -479,6 +541,11 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'entity' => 'Documento',
                 'column' => 'dt_notas',
                 'type' => 'string'
+            ],
+            'desenho_tecnico_descricao' => [
+                'entity' => 'DesenhosTecnicos',
+                'column' => 'descricao',
+                'type' => 'string',
             ],
         ];
     }

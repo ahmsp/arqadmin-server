@@ -27,7 +27,7 @@ class RegistroSepultamentoRepositoryEloquent extends BaseRepository implements R
             ->select('registro_sepultamento.*')
             ->with('lcSala', 'lcMovel', 'lcCompartimento', 'lcAcondicionamento',
                 'conservacao', 'sfmCartorio', 'sfmCemiterio', 'sfmNacionalidade', 'sfmNaturalidade',
-                'sfmEstadocivil', 'sfmCausam`ortis');
+                'sfmEstadocivil', 'sfmCausamortis');
 
         $mapFields = $this->mapFields();
 
