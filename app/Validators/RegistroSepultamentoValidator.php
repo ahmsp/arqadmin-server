@@ -17,10 +17,9 @@ class RegistroSepultamentoValidator extends LaravelValidator
         ],
 
         ValidatorInterface::RULE_UPDATE => [
-            'sfm_nome' => 'required|min:3|max:145',
-            'lc_acondicionamento_num' => 'required|max:15',
-            'lc_pagina' => 'required|max:15'
+            'sfm_nome' => 'sometimes|required|min:3|max:145',
+            'lc_acondicionamento_num' => 'sometimes|required|max:15',
+            'lc_pagina' => 'sometimes|required|max:15'
         ]
     ];
-
 }
