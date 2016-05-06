@@ -3,17 +3,17 @@
 namespace ArqAdmin\Services;
 
 
-use ArqAdmin\Repositories\DesenhoTecnicoRepository;
-use ArqAdmin\Validators\DesenhoTecnicoValidator;
+use ArqAdmin\Repositories\FotografiaRepository;
+use ArqAdmin\Validators\FotografiaValidator;
 use Carbon\Carbon;
 use Illuminate\Container\Container as Application;
 use Illuminate\Http\Request;
 
 /**
- * Class DesenhoTecnicoService
+ * Class FotografiaService
  * @package ArqAdmin\Services
  */
-class DesenhoTecnicoService extends BaseService
+class FotografiaService extends BaseService
 {
     /**
      * @var DownloadService
@@ -26,7 +26,7 @@ class DesenhoTecnicoService extends BaseService
     private $imagesService;
 
     /**
-     * DesenhoTecnicoService constructor.
+     * FotografiaService constructor.
      * @param Application $app
      * @param DownloadService $downloadService
      * @param ImagesService $imagesService
@@ -46,7 +46,7 @@ class DesenhoTecnicoService extends BaseService
      */
     public function repository()
     {
-        return DesenhoTecnicoRepository::class;
+        return FotografiaRepository::class;
     }
 
     /**
@@ -56,7 +56,7 @@ class DesenhoTecnicoService extends BaseService
      */
     public function validator()
     {
-        return DesenhoTecnicoValidator::class;
+        return FotografiaValidator::class;
     }
 
     /**
@@ -67,13 +67,13 @@ class DesenhoTecnicoService extends BaseService
     public function showPublicImage($id, $maxSize = 300)
     {
         $data = $this->repository->find($id);
-        $originalName = $data->arquivo_original;
+        $originalName = $data->imagem_original;
 
         if (!$originalName || 0 === strlen($originalName)) {
             abort(404, 'Imagem não encontrada.');
         }
 
-        return $this->imagesService->getPublicImage($data->acervo_tipo, $originalName, $maxSize);
+        return $this->imagesService->getPublicImage('fotografico', $originalName, $maxSize);
     }
 
     public function preUpdate($data, $id)
@@ -83,15 +83,9 @@ class DesenhoTecnicoService extends BaseService
         $result = $this->update($data, $id);
 
         if ($result) {
-            if (isset($data['arquivo_original']) && $oldData['arquivo_original'] !== $data['arquivo_original']) {
+            if (isset($data['imagem_original']) && $oldData['imagem_original'] !== $data['imagem_original']) {
                 abort(400, 'As imagens existentes não podem ser sobrescritas.');
             }
-
-            if (isset($data['acervo_tipo']) && $oldData['acervo_tipo'] !== $data['acervo_tipo']) {
-                $this->imagesService->moveOriginalAndRelatedImages(
-                    $oldData['acervo_tipo'], $data['acervo_tipo'], $oldData->arquivo_original);
-            }
-
         }
 
         return $result;
@@ -106,11 +100,11 @@ class DesenhoTecnicoService extends BaseService
         $model = $this->repository->find($id);
         $file = $request->file('file');
 
-        $data['arquivo_original'] = $file->getClientOriginalName();
-        $data['arquivo_nome'] = pathinfo($data['arquivo_original'], PATHINFO_FILENAME) . '.jpg';
+        $data['imagem_original'] = $file->getClientOriginalName();
+        $data['imagem_publica'] = pathinfo($data['imagem_original'], PATHINFO_FILENAME) . '.jpg';
 
         $filenameExists = $this->repository->findWhere([
-            'arquivo_original' => $data['arquivo_original'],
+            'imagem_original' => $data['imagem_original'],
             ['id', '<>', $id]
         ]);
 
@@ -118,7 +112,7 @@ class DesenhoTecnicoService extends BaseService
             abort(401, 'O nome do arquivo já existe e não pode ser duplicado');
         }
 
-        $this->imagesService->uploadImage($request, $model->acervo_tipo);
+        $this->imagesService->uploadImage($request, 'fotografico');
 
         return $this->update($data, $model->id);
     }
@@ -127,12 +121,12 @@ class DesenhoTecnicoService extends BaseService
     {
         $data = $this->repository->find($id);
 
-        $removedImages = $this->imagesService->removeOriginalAndRelatedImages($data->acervo_tipo, $data->arquivo_original);
+        $removedImages = $this->imagesService->removeOriginalAndRelatedImages('fotografico', $data->imagem_original);
 
         $this->update(
             [
-                'arquivo_original' => $removedImages['originalDeletedFilename'],
-                'arquivo_nome' => $removedImages['publicDeletedFilename']
+                'imagem_original' => $removedImages['originalDeletedFilename'],
+                'imagem_publica' => $removedImages['publicDeletedFilename']
             ],
             $id
         );
@@ -150,8 +144,8 @@ class DesenhoTecnicoService extends BaseService
     public function getDownloadImageUrl($id, $size)
     {
         $data = $this->repository->find($id);
-        $originalName = $data->arquivo_original;
-        $acervo = $data->acervo_tipo;
+        $originalName = $data->imagem_original;
+        $acervo = 'fotografico';
 
         if (!$originalName || 0 === strlen($originalName)) {
             abort(404, 'Imagem não encontrada.');
@@ -159,7 +153,7 @@ class DesenhoTecnicoService extends BaseService
 
         $makeImage = $this->downloadService->makeImage($acervo, $originalName, $size);
         $validation = $this->downloadService->generateValidation($makeImage['file_name']);
-        $urlDownload = url("download/imagem/{$id}/{$size}/{$validation->token}");
+        $urlDownload = url("download/imagem/{$acervo}/{$id}/{$size}/{$validation->token}");
 
         return ['url_download' => $urlDownload];
     }
@@ -174,8 +168,8 @@ class DesenhoTecnicoService extends BaseService
     public function downloadImage($id, $size, $token)
     {
         $data = $this->repository->find($id);
-        $originalName = $data->arquivo_original;
-        $acervo = $data->acervo_tipo;
+        $originalName = $data->imagem_original;
+        $acervo = 'fotografico';
 
         $outOpts = $this->downloadService->outOptions();
         $outExtension = ('original' === $size) ?

@@ -173,5 +173,49 @@ class ArqAdminRepositoryProvider extends ServiceProvider
             \ArqAdmin\Repositories\DownloadRepositoryEloquent::class
         );
 
+        $this->app->bind(
+            \ArqAdmin\Repositories\FotografiaRepository::class,
+            \ArqAdmin\Repositories\FotografiaRepositoryEloquent::class
+        );
+        
+        $this->app->bind(
+            \ArqAdmin\Repositories\FtFundoRepository::class,
+            \ArqAdmin\Repositories\FtFundoRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\FtGrupoRepository::class,
+            \ArqAdmin\Repositories\FtGrupoRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\FtSerieRepository::class,
+            \ArqAdmin\Repositories\FtSerieRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\FtTipologiaRepository::class,
+            \ArqAdmin\Repositories\FtTipologiaRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\FtCromiaRepository::class,
+            \ArqAdmin\Repositories\FtCromiaRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\FtCategoriaRepository::class,
+            \ArqAdmin\Repositories\FtCategoriaRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\FtCampoRepository::class,
+            \ArqAdmin\Repositories\FtCampoRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\FtAmbienteRepository::class,
+            \ArqAdmin\Repositories\FtAmbienteRepositoryEloquent::class
+        );
     }
 }

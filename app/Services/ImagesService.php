@@ -52,6 +52,16 @@ class ImagesService
     private $pathTextualPublic = 'acervos/textual/';
 
     /**
+     * @var string
+     */
+    private $pathFotograficoOriginal = 'acervos/fotografico_orig/';
+
+    /**
+     * @var string
+     */
+    private $pathFotograficoPublic = 'acervos/fotografico/';
+
+    /**
      * @var bool
      */
     private $cache = false;
@@ -119,6 +129,22 @@ class ImagesService
     public function getPathTextualPublic()
     {
         return $this->pathTextualPublic;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPathFotograficoOriginal()
+    {
+        return $this->pathFotograficoOriginal;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPathFotograficoPublic()
+    {
+        return $this->pathFotograficoPublic;
     }
 
     public function getPublicImage($acervo, $originalName, $maxSize)
@@ -306,6 +332,10 @@ class ImagesService
             case 'textual';
                 $pathOriginal = $this->getPathTextualOriginal();
                 $pathPublic = $this->getPathTextualPublic();
+                break;
+            case 'fotografico';
+                $pathOriginal = $this->getPathFotograficoOriginal();
+                $pathPublic = $this->getPathFotograficoPublic();
                 break;
             default;
                 $pathOriginal = $pathPublic = null;

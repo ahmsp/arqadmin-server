@@ -52,6 +52,11 @@ Route::group(['middleware' => 'cors'], function () {
         Route::resource('registrosepultamento', 'RegistroSepultamentoController');
 
         /**
+         * Registro de Sepultamento
+         */
+        Route::resource('fotografia', 'FotografiaController');
+
+        /**
          * Static data (Auxiliar tables)
          */
         Route::resource('acervo', 'AcervoController');
@@ -85,6 +90,15 @@ Route::group(['middleware' => 'cors'], function () {
         Route::resource('sfmnacionalidade', 'SfmNacionalidadeController');
         Route::resource('sfmnaturalidade', 'SfmNaturalidadeController');
 
+        Route::resource('ftfundo', 'FtFundoController');
+        Route::resource('ftgrupo', 'FtGrupoController');
+        Route::resource('ftserie', 'FtSerieController');
+        Route::resource('fttipologia', 'FtTipologiaController');
+        Route::resource('ftcromia', 'FtCromiaController');
+        Route::resource('ftcategoria', 'FtCategoriaController');
+        Route::resource('ftcampo', 'FtCampoController');
+        Route::resource('ftambiente', 'FtAmbienteController');
+
         /**
          * Statistics
          */
@@ -97,9 +111,9 @@ Route::group(['middleware' => 'cors'], function () {
          */
         Route::get('imagem/documental/{id}/{size}', 'DesenhoTecnicoController@getDownloadUrl')
             ->where('size', 'medium|standard|large|original');
-//    Route::get('imagem/textual/{id}/{maxSize?}', 'DocumentoImagemController@showPublicImage');
+        Route::get('imagem/fotografia/{id}/{size}', 'FotografiaController@showPublicImage')
+            ->where('size', 'medium|standard|large|original');
 //    Route::get('imagem/sfm/{id}/{template}', 'RegistroSepultamentoController@showPublicImage');
-//    Route::get('imagem/fotografico/{id}/{template}', 'FotograficoController@showPublicImage');
 
         /**
          * Upload image
@@ -109,11 +123,13 @@ Route::group(['middleware' => 'cors'], function () {
     });
 
     /**
-     * Download an image requested by route "api/imagem/documental/{id}/{size}"
+     * Download an image requested by routes:
+     * "api/imagem/documental/{id}/{size}" or
+     * "api/imagem/fotografico/{id}/{size}" or
+     * "api/imagem/sepultamento/{id}/{size}"
      */
-    Route::get('download/imagem/documental/{id}/{size}/{token}', 'DesenhoTecnicoController@downloadImage')
+    Route::get('download/imagem/{id}/{size}/{token}', 'DesenhoTecnicoController@downloadImage')
         ->where('size', 'medium|standard|large|original');
-
 
 });
 
