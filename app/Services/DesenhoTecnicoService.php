@@ -159,7 +159,7 @@ class DesenhoTecnicoService extends BaseService
 
         $makeImage = $this->downloadService->makeImage($acervo, $originalName, $size);
         $validation = $this->downloadService->generateValidation($makeImage['file_name']);
-        $urlDownload = url("download/imagem/{$id}/{$size}/{$validation->token}");
+        $urlDownload = url("imagem/download/documental/{$id}/{$size}/{$validation->token}");
 
         return ['url_download' => $urlDownload];
     }

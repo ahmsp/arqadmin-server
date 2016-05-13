@@ -31,7 +31,12 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
             ->select('fotografia.*')
             ->with('ftFundo', 'ftGrupo', 'ftSerie', 'ftTipologia', 'ftCromia', 'ftCategoria', 'ftCampo', 'ftAmbiente');
 
-        $mapFields = $this->mapFields();
+        if (isset($params['filter'])) {
+            $filters = $params['filter'];
+            if (is_string($filters)) {
+                $filters = json_decode($filters, true);
+            }
+        }
 
         if (isset($params['search_all'])) {
             $searchFields = [
@@ -46,24 +51,18 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
                 'texto_inscricao'
             ];
 
-            $params['filter'] = [];
+            $filters = isset($filters) ? $filters : [];
             foreach ($searchFields as $field) {
-                $params['filter'][] = [
+                array_push($filters, [
                     'property' => $field,
                     'value' => $params['search_all'],
                     'operator' => 'like',
                     'logical_operator' => 'or'
-                ];
+                ]);
             }
         }
 
-        if (isset($params['filter'])) {
-            $filters = $params['filter'];
-            if (is_string($filters)) {
-                $filters = json_decode($filters, true);
-            }
-            $filterParams = $this->parseFilter($filters);
-        }
+        $filterParams = (isset($filters)) ? $this->parseFilter($filters) : null;
 
         if (isset($filterParams) && isset($filterParams['and'])) {
             foreach ($filterParams['and'] as $param) {
@@ -82,6 +81,7 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
 
         if (isset($params['sort'])) {
             $sorters = json_decode($params['sort'], true); // Decode the filter
+            $mapFields = $this->mapFields();
 
             foreach ($sorters as $sort) {
                 $sortProperty = $sort['property'];
@@ -256,14 +256,19 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
     public function mapFields()
     {
         return [
+            'id' => [
+                'entity' => 'Fotografia',
+                'column' => 'id',
+                'type' => 'number',
+            ],
             'ft_fundo_id' => [
                 'entity' => 'Fotografia',
                 'column' => 'ft_fundo_id',
                 'type' => 'number',
             ],
-            'ft_fundo_nome' => [
+            'fundo' => [
                 'entity' => 'FtFundo',
-                'column' => 'ft_fundo_nome',
+                'column' => 'fundo',
                 'type' => 'string',
             ],
             'ft_grupo_id' => [
@@ -271,9 +276,9 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
                 'column' => 'ft_grupo_id',
                 'type' => 'number',
             ],
-            'ft_grupo_nome' => [
+            'grupo' => [
                 'entity' => 'FtGrupo',
-                'column' => 'ft_grupo_nome',
+                'column' => 'grupo',
                 'type' => 'string',
             ],
             'ft_serie_id' => [
@@ -281,9 +286,9 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
                 'column' => 'ft_serie_id',
                 'type' => 'number',
             ],
-            'ft_serie_nome' => [
+            'serie' => [
                 'entity' => 'FtSerie',
-                'column' => 'ft_serie_nome',
+                'column' => 'serie',
                 'type' => 'string',
             ],
             'ft_tipologia_id' => [
@@ -291,9 +296,9 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
                 'column' => 'ft_tipologia_id',
                 'type' => 'number',
             ],
-            'ft_tipologia_nome' => [
+            'tipologia' => [
                 'entity' => 'FtTipologia',
-                'column' => 'ft_tipologia_nome',
+                'column' => 'tipologia',
                 'type' => 'string',
             ],
             'data_imagem' => [
@@ -356,9 +361,9 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
                 'column' => 'ft_cromia_id',
                 'type' => 'number',
             ],
-            'ft_cromia_nome' => [
+            'cromia' => [
                 'entity' => 'FtCromia',
-                'column' => 'ft_cromia_nome',
+                'column' => 'cromia',
                 'type' => 'string',
             ],
             'formato' => [
@@ -371,9 +376,9 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
                 'column' => 'ft_categoria_id',
                 'type' => 'number',
             ],
-            'ft_categoria_nome' => [
+            'categoria' => [
                 'entity' => 'FtCategoria',
-                'column' => 'ft_categoria_nome',
+                'column' => 'categoria',
                 'type' => 'string',
             ],
             'ft_campo_id' => [
@@ -381,24 +386,24 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
                 'column' => 'ft_campo_id',
                 'type' => 'number',
             ],
-            'ft_campo_nome' => [
+            'campo' => [
                 'entity' => 'FtCampo',
-                'column' => 'ft_campo_nome',
+                'column' => 'campo',
                 'type' => 'string',
             ],
             'tipo' => [
                 'entity' => 'Fotografia',
                 'column' => 'tipo',
-                'type' => 'stringr',
+                'type' => 'string',
             ],
             'ft_ambiente_id' => [
                 'entity' => 'Fotografia',
                 'column' => 'ft_ambiente_id',
                 'type' => 'number',
             ],
-            'ft_ambiente_nome' => [
+            'ambiente' => [
                 'entity' => 'FtAmbiente',
-                'column' => 'ft_ambiente_nome',
+                'column' => 'ambiente',
                 'type' => 'string',
             ],
             'enquadramento' => [

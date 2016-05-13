@@ -153,7 +153,7 @@ class FotografiaService extends BaseService
 
         $makeImage = $this->downloadService->makeImage($acervo, $originalName, $size);
         $validation = $this->downloadService->generateValidation($makeImage['file_name']);
-        $urlDownload = url("download/imagem/{$acervo}/{$id}/{$size}/{$validation->token}");
+        $urlDownload = url("imagem/download/fotografico/{$id}/{$size}/{$validation->token}");
 
         return ['url_download' => $urlDownload];
     }

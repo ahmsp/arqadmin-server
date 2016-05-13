@@ -19,9 +19,19 @@ Route::group(['middleware' => 'cors'], function () {
      * Get public images (restrict size). Template: p|m|g
      */
     Route::get('imagem/documental/{id}/{maxSize?}', 'DesenhoTecnicoController@showPublicImage');
-//    Route::get('imagem/documento/{id}/{maxSize?}', 'DocumentoImagemController@showPublicImage');
+    Route::get('imagem/fotografico/{id}/{maxSize?}', 'FotografiaController@showPublicImage');
 //    Route::get('imagem/sfm/{id}/{template}', 'RegistroSepultamentoController@showPublicImage');
-//    Route::get('imagem/fotografico/{id}/{template}', 'FotograficoController@showPublicImage');
+
+    /**
+     * Download an image requested by routes:
+     * "api/imagem/documental/{id}/{size}" or
+     * "api/imagem/fotografico/{id}/{size}" or
+     * "api/imagem/sfm/{id}/{size}"
+     */
+    Route::get('imagem/download/documental/{id}/{size}/{token}', 'DesenhoTecnicoController@downloadImage')
+        ->where('size', 'medium|standard|large|original');
+    Route::get('imagem/download/fotografico/{id}/{size}/{token}', 'FotografiaController@downloadImage')
+        ->where('size', 'medium|standard|large|original');
 
     /**
      * Group 'api'
@@ -34,14 +44,14 @@ Route::group(['middleware' => 'cors'], function () {
         Route::get('user', 'UserController@getResourceOwnerUser');
 
         /**
-         * Documentos
+         * Documento
          */
         // ver code.edu -> laravel c/ angular -> Relacionando Models -> Criando API ProjectNote
         // Route::get('documentos/{id}/imagens', 'DocumentosController@findAll');
         Route::resource('documento', 'DocumentoController');
 
         /**
-         * Desenho Tecnico
+         * DocumentoImagem
          */
         Route::resource('desenhotecnico', 'DesenhoTecnicoController');
 //        Route::get('desenhotecnico/{id}/imagem/{template}', 'DesenhoTecnicoController@showImage');
@@ -111,25 +121,18 @@ Route::group(['middleware' => 'cors'], function () {
          */
         Route::get('imagem/documental/{id}/{size}', 'DesenhoTecnicoController@getDownloadUrl')
             ->where('size', 'medium|standard|large|original');
-        Route::get('imagem/fotografia/{id}/{size}', 'FotografiaController@showPublicImage')
+        Route::get('imagem/fotografico/{id}/{size}', 'FotografiaController@getDownloadUrl')
             ->where('size', 'medium|standard|large|original');
-//    Route::get('imagem/sfm/{id}/{template}', 'RegistroSepultamentoController@showPublicImage');
+//        Route::get('imagem/sfm/{id}/{size}', 'RegistroSepultamentoController@showPublicImage')
+//            ->where('size', 'medium|standard|large|original');
 
         /**
          * Upload image
          */
-        Route::post('upload/imagem/documental/{id}', 'DesenhoTecnicoController@uploadImage');
-//        Route::post('upload/imagem/sepultamento/{id}', 'SepultamentoController@uploadImage');
+        Route::post('imagem/upload/documental/{id}', 'DesenhoTecnicoController@uploadImage');
+        Route::post('imagem/upload/fotografico/{id}', 'FotografiaController@uploadImage');
+//        Route::post('imagem/upload/sfm/{id}', 'RegistroSepultamentoController@uploadImage');
     });
-
-    /**
-     * Download an image requested by routes:
-     * "api/imagem/documental/{id}/{size}" or
-     * "api/imagem/fotografico/{id}/{size}" or
-     * "api/imagem/sepultamento/{id}/{size}"
-     */
-    Route::get('download/imagem/{id}/{size}/{token}', 'DesenhoTecnicoController@downloadImage')
-        ->where('size', 'medium|standard|large|original');
 
 });
 

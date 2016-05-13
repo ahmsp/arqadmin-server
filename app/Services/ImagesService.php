@@ -27,41 +27,6 @@ class ImagesService
     private $diskPath;
 
     /**
-     * @var string
-     */
-    private $downloadPath = 'acervos/downloads/';
-
-    /**
-     * @var string
-     */
-    private $pathCartograficoOriginal = 'acervos/cartografico_orig/';
-
-    /**
-     * @var string
-     */
-    private $pathCartograficoPublic = 'acervos/cartografico/';
-
-    /**
-     * @var string
-     */
-    private $pathTextualOriginal = 'acervos/textual_orig/';
-
-    /**
-     * @var string
-     */
-    private $pathTextualPublic = 'acervos/textual/';
-
-    /**
-     * @var string
-     */
-    private $pathFotograficoOriginal = 'acervos/fotografico_orig/';
-
-    /**
-     * @var string
-     */
-    private $pathFotograficoPublic = 'acervos/fotografico/';
-
-    /**
      * @var bool
      */
     private $cache = false;
@@ -96,7 +61,7 @@ class ImagesService
      */
     public function getDownloadPath()
     {
-        return $this->downloadPath;
+        return config('arqadmin.download_path');
     }
 
     /**
@@ -104,7 +69,7 @@ class ImagesService
      */
     public function getPathCartograficoOriginal()
     {
-        return $this->pathCartograficoOriginal;
+        return config('arqadmin.path_cartografico_original');
     }
 
     /**
@@ -112,7 +77,7 @@ class ImagesService
      */
     public function getPathCartograficoPublic()
     {
-        return $this->pathCartograficoPublic;
+        return config('arqadmin.path_cartografico_public');
     }
 
     /**
@@ -120,7 +85,7 @@ class ImagesService
      */
     public function getPathTextualOriginal()
     {
-        return $this->pathTextualOriginal;
+        return config('arqadmin.path_textual_original');
     }
 
     /**
@@ -128,7 +93,7 @@ class ImagesService
      */
     public function getPathTextualPublic()
     {
-        return $this->pathTextualPublic;
+        return config('arqadmin.path_textual_public');
     }
 
     /**
@@ -136,7 +101,7 @@ class ImagesService
      */
     public function getPathFotograficoOriginal()
     {
-        return $this->pathFotograficoOriginal;
+        return config('arqadmin.path_fotografico_original');
     }
 
     /**
@@ -144,7 +109,7 @@ class ImagesService
      */
     public function getPathFotograficoPublic()
     {
-        return $this->pathFotograficoPublic;
+        return config('arqadmin.path_fotografico_public');
     }
 
     public function getPublicImage($acervo, $originalName, $maxSize)

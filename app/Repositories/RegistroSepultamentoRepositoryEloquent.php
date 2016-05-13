@@ -29,7 +29,12 @@ class RegistroSepultamentoRepositoryEloquent extends BaseRepository implements R
                 'conservacao', 'sfmCartorio', 'sfmCemiterio', 'sfmNacionalidade', 'sfmNaturalidade',
                 'sfmEstadocivil', 'sfmCausamortis');
 
-        $mapFields = $this->mapFields();
+        if (isset($params['filter'])) {
+            $filters = $params['filter'];
+            if (is_string($filters)) {
+                $filters = json_decode($filters, true);
+            }
+        }
 
         if (isset($params['search_all'])) {
             $searchFields = [
@@ -45,24 +50,18 @@ class RegistroSepultamentoRepositoryEloquent extends BaseRepository implements R
                 'sfm_causamortis_causamortis',
             ];
 
-            $params['filter'] = [];
+            $filters = isset($filters) ? $filters : [];
             foreach ($searchFields as $field) {
-                $params['filter'][] = [
+                array_push($filters, [
                     'property' => $field,
                     'value' => $params['search_all'],
                     'operator' => 'like',
                     'logical_operator' => 'or'
-                ];
+                ]);
             }
         }
 
-        if (isset($params['filter'])) {
-            $filters = $params['filter'];
-            if (is_string($filters)) {
-                $filters = json_decode($filters, true);
-            }
-            $filterParams = $this->parseFilter($filters);
-        }
+        $filterParams = (isset($filters)) ? $this->parseFilter($filters) : null;
 
         if (isset($filterParams) && isset($filterParams['and'])) {
             foreach ($filterParams['and'] as $param) {
@@ -81,6 +80,7 @@ class RegistroSepultamentoRepositoryEloquent extends BaseRepository implements R
 
         if (isset($params['sort'])) {
             $sorters = json_decode($params['sort'], true); // Decode the filter
+            $mapFields = $this->mapFields();
 
             foreach ($sorters as $sort) {
                 $sortProperty = $sort['property'];
