@@ -1,42 +1,14 @@
 <?php
 
-namespace ArqAdmin\Models\Repositories;
+namespace ArqAdmin\Repositories;
 
+use Prettus\Repository\Contracts\RepositoryInterface;
 
-use ArqAdmin\Models\User;
-
-class UserRepository
+/**
+ * Interface UserRepository
+ * @package namespace ArqAdmin\Repositories;
+ */
+interface UserRepository extends RepositoryInterface
 {
-    private $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
-    public function find($id)
-    {
-        $this->user->find($id);
-    }
-
-    public function findAll()
-    {
-        // TODO: Implement findAll() method.
-    }
-
-    public function add()
-    {
-        // TODO: Implement add() method.
-    }
-
-    public function update($id)
-    {
-        // TODO: Implement update() method.
-    }
-
-    public function delete($id)
-    {
-        // TODO: Implement delete() method.
-    }
-
+    //
 }

@@ -3,7 +3,7 @@
 namespace ArqAdmin\Http\Controllers;
 
 
-use ArqAdmin\Models\User;
+use ArqAdmin\Entities\User;
 use Illuminate\Support\Facades\Auth;
 use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 use Stevebauman\Corp\Facades\Corp;

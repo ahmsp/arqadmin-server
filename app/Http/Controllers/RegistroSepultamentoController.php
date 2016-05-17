@@ -86,4 +86,9 @@ class RegistroSepultamentoController extends Controller
     {
         return $this->service->delete($id);
     }
+
+    public function getRevisionHistory($id)
+    {
+        return $this->service->getRevisionHistory($id);
+    }
 }

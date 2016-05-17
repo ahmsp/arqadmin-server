@@ -46,8 +46,6 @@ Route::group(['middleware' => 'cors'], function () {
         /**
          * Documento
          */
-        // ver code.edu -> laravel c/ angular -> Relacionando Models -> Criando API ProjectNote
-        // Route::get('documentos/{id}/imagens', 'DocumentosController@findAll');
         Route::resource('documento', 'DocumentoController');
 
         /**
@@ -62,7 +60,7 @@ Route::group(['middleware' => 'cors'], function () {
         Route::resource('registrosepultamento', 'RegistroSepultamentoController');
 
         /**
-         * Registro de Sepultamento
+         * Fotografia
          */
         Route::resource('fotografia', 'FotografiaController');
 
@@ -132,6 +130,16 @@ Route::group(['middleware' => 'cors'], function () {
         Route::post('imagem/upload/documental/{id}', 'DesenhoTecnicoController@uploadImage');
         Route::post('imagem/upload/fotografico/{id}', 'FotografiaController@uploadImage');
 //        Route::post('imagem/upload/sfm/{id}', 'RegistroSepultamentoController@uploadImage');
+
+
+        /**
+         * Revision
+         */
+        Route::get('documento/{id}/revisao', 'DocumentoController@getRevisionHistory');
+        Route::get('desenhotecnico/{id}/revisao', 'DesenhoTecnicoController@getRevisionHistory');
+        Route::get('fotografia/{id}/revisao', 'FotografiaController@getRevisionHistory');
+        Route::get('registrosepultamento/{id}/revisao', 'RegistroSepultamentoController@getRevisionHistory');
+
     });
 
 });

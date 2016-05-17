@@ -91,4 +91,9 @@ class DocumentoController extends Controller
     {
         return \ArqAdmin\Entities\Documento::statistic();
     }
+
+    public function getRevisionHistory($id)
+    {
+        return $this->service->getRevisionHistory($id);
+    }
 }

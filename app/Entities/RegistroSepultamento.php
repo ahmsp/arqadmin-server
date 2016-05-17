@@ -2,6 +2,7 @@
 
 namespace ArqAdmin\Entities;
 
+use ArqAdmin\Traits\OverrideRevisionableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,47 @@ class RegistroSepultamento extends Model implements Transformable
 {
     use TransformableTrait;
     use SoftDeletes;
+    use OverrideRevisionableTrait;
+
+    protected $revisionEnabled = true;
+    protected $revisionCreationsEnabled = true;
+    protected $revisionCleanup = true;
+    protected $historyLimit = 500;
+    protected $revisionNullString = 'nenhum';
+    protected $revisionUnknownString = 'desconhecido';
+    protected $revisionFormattedFieldNames = [
+        'fundo_id' => 'Fundo',
+        'subfundo_id' => 'Sub-fundo',
+        'grupo_id' => 'Grupo',
+        'subgrupo_id' => 'Sub-grupo',
+        'serie_id' => 'Série',
+        'subserie_id' => 'Sub-série',
+        'dossie_id' => 'Dossiê',
+        'especiedocumental_id' => 'Especie Documental',
+        'ano' => 'Ano',
+        'notas' => 'Notas',
+        'lc_sala_id' => 'Sala',
+        'lc_movel_id' => 'Móvel',
+        'lc_movel_num' => 'Móvel nº',
+        'lc_compartimento_id' => 'Compartimento',
+        'lc_compartimento_num' => 'Compartimento nº',
+        'lc_acondicionamento_id' => 'Acondicionamento',
+        'lc_acondicionamento_num' => 'Acondicionamento nº',
+        'lc_pagina' => 'Página',
+        'sfm_cartorio_id' => 'Cartório',
+        'sfm_cemiterio_id' => 'Cemitério',
+        'sfm_nome' => 'Nome',
+        'sfm_nacionalidade_id' => 'Nacionalidade',
+        'sfm_naturalidade_id' => 'Naturalidade',
+        'sfm_idade' => 'Idade',
+        'sfm_estadocivil_id' => 'Estado Civil',
+        'sfm_conjuge' => 'Cônjuge',
+        'sfm_pai' => 'Nome do Pai',
+        'sfm_mae' => 'Nome da Mae',
+        'sfm_data_morte' => 'Data Falecimento',
+        'sfm_causamortis_id' => 'Causa-Mortis',
+        'sfm_sepult_localizacao' => 'Sepultamento Localizacao',
+    ];
 
     protected $table = 'registro_sepultamento';
 

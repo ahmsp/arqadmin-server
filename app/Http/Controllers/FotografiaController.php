@@ -115,4 +115,9 @@ class FotografiaController extends Controller
     {
         return $this->service->upload($request, $id);
     }
+
+    public function getRevisionHistory($id)
+    {
+        return $this->service->getRevisionHistory($id);
+    }
 }

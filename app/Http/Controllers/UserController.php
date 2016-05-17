@@ -2,19 +2,31 @@
 
 namespace ArqAdmin\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use ArqAdmin\Http\Requests;
-use ArqAdmin\Http\Controllers\Controller;
-use ArqAdmin\Models\User;
+use ArqAdmin\Entities\User;
+use ArqAdmin\Repositories\UserRepository;
 use LucaDegasperi\OAuth2Server\Facades\Authorizer;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     /**
+     * @var UserRepository
+     */
+    protected $repository;
+
+    /**
+     * @param UserRepository $repository
+     */
+    public function __construct(UserRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
      * Create a new user instance.
      *
-     * @param  array $data
+     * @param Request $request
      * @return User
      */
     protected function create(Request $request)

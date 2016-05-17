@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "510596e9f15a77b99bb120491851c3fd",
-    "content-hash": "395f2bd0ab5b43d598c83837223e5ae7",
+    "hash": "16d1fdc15505ec58a1cf53763bd2220b",
+    "content-hash": "9eff4c2b16c9d77baeeefb0cf381ea88",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1355,7 +1355,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/andersao/l5-repository/zipball/efe486eecf883272c2a7edd53fa6e1aad77627e4",
+                "url": "https://api.github.com/repos/andersao/l5-repository/zipball/1f629b2ea89b85bfad1033f77223a2df3e19387c",
                 "reference": "1f629b2ea89b85bfad1033f77223a2df3e19387c",
                 "shasum": ""
             },
@@ -2493,6 +2493,54 @@
                 "dump"
             ],
             "time": "2015-09-22 14:41:01"
+        },
+        {
+            "name": "venturecraft/revisionable",
+            "version": "1.27.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/VentureCraft/revisionable.git",
+                "reference": "dcf9f15f9eacee0d6df730b2155f78e859d19335"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/VentureCraft/revisionable/zipball/dcf9f15f9eacee0d6df730b2155f78e859d19335",
+                "reference": "dcf9f15f9eacee0d6df730b2155f78e859d19335",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~4.0|~5.0|~5.1",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/migrations"
+                ],
+                "psr-0": {
+                    "Venturecraft\\Revisionable": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Duell",
+                    "email": "me@chrisduell.com"
+                }
+            ],
+            "description": "Keep a revision history for your models without thinking, created as a package for use with Laravel",
+            "homepage": "http://github.com/venturecraft/revisionable",
+            "keywords": [
+                "ardent",
+                "history",
+                "laravel",
+                "model",
+                "revision"
+            ],
+            "time": "2016-02-09 00:15:03"
         },
         {
             "name": "vlucas/phpdotenv",

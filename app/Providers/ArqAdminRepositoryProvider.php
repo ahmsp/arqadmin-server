@@ -24,6 +24,11 @@ class ArqAdminRepositoryProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
+            \ArqAdmin\Repositories\UserRepository::class,
+            \ArqAdmin\Repositories\UserRepositoryEloquent::class
+        );
+
+        $this->app->bind(
             \ArqAdmin\Repositories\DocumentoRepository::class,
             \ArqAdmin\Repositories\DocumentoRepositoryEloquent::class
         );

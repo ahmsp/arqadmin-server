@@ -3,12 +3,12 @@
 namespace ArqAdmin\Services;
 
 
+use Illuminate\Container\Container as Application;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Prettus\Repository\Contracts\RepositoryInterface;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
-use Illuminate\Container\Container as Application;
 
 abstract class BaseService
 {
@@ -74,10 +74,10 @@ abstract class BaseService
     {
         $validator = !is_null($validator) ? $validator : $this->validator();
 
-        if ( !is_null($validator) ) {
+        if (!is_null($validator)) {
             $this->validator = is_string($validator) ? $this->app->make($validator) : $validator;
 
-            if (!$this->validator instanceof ValidatorInterface ) {
+            if (!$this->validator instanceof ValidatorInterface) {
                 throw new RepositoryException("Class {$validator} must be an instance of Prettus\\Validator\\Contracts\\ValidatorInterface");
             }
 
@@ -93,7 +93,7 @@ abstract class BaseService
 //            if ($id) {
 //                $this->validator->with($data)->setId($id)->passesOrFail(ValidatorInterface::RULE_UPDATE);
 //            } else {
-                $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
+            $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
 //            }
 //            dd('$data');
 
@@ -167,5 +167,38 @@ abstract class BaseService
 
             abort('401', 'Registro não encontrado');
         }
+    }
+
+    public function getRevisionHistory($id)
+    {
+        $model = $this->repository->find($id);
+        $revisionHistory = $model->revisionHistory;
+        $history = [];
+
+        foreach ($revisionHistory as $row) {
+            $action = 'Atualizado';
+
+            if ($row->key == 'created_at' && !$row->old_value) {
+                $action = 'Adicionado';
+            } elseif ($row->key == 'updated_at' && !$row->old_value) {
+                $action = 'Removido';
+            }
+
+            array_push($history, [
+                'id' => $row->id,
+                'action' => $action,
+                'revisionable_type' => $row->revisionable_type,
+                'revisionable_id' => $row->revisionable_id,
+                'user_name' => $row->userResponsible()->name,
+                'key' => $row->fieldName(),
+                'old_value' => $row->oldValue(),
+                'new_value' => $new = $row->newValue(),
+                'action_date' => $row->created_at->format('Y-m-d H:i:s'),
+//                'action_date' => $row->created_at->format('d/m/Y H:i:s'),
+//                'updated_at' => $row->updated_at->format('d/m/Y H:i:s'),
+            ]);
+        }
+
+        return $history;
     }
 }

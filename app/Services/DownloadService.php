@@ -3,7 +3,7 @@
 namespace ArqAdmin\Services;
 
 
-use ArqAdmin\Models\User;
+use ArqAdmin\Entities\User;
 use ArqAdmin\Repositories\DownloadRepository;
 use ArqAdmin\Validators\DownloadValidator;
 use Carbon\Carbon;

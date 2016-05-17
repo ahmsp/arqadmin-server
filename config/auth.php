@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'model' => ArqAdmin\Models\User::class,
+    'model' => ArqAdmin\Entities\User::class,
 
     /*
     |--------------------------------------------------------------------------

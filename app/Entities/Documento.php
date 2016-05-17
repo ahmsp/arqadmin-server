@@ -2,6 +2,7 @@
 
 namespace ArqAdmin\Entities;
 
+use ArqAdmin\Traits\OverrideRevisionableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,51 @@ class Documento extends Model implements Transformable
 {
     use TransformableTrait;
     use SoftDeletes;
+    use OverrideRevisionableTrait;
+
+    protected $revisionEnabled = true;
+    protected $revisionCreationsEnabled = true;
+    protected $revisionCleanup = true;
+    protected $historyLimit = 500;
+    protected $revisionNullString = 'nenhum';
+    protected $revisionUnknownString = 'desconhecido';
+    protected $revisionFormattedFieldNames = [
+        'fundo_id' => 'Fundo',
+        'subfundo_id' => 'Sub-fundo',
+        'grupo_id' => 'Grupo',
+        'subgrupo_id' => 'Sub-grupo',
+        'serie_id' => 'Série',
+        'subserie_id' => 'Sub-série',
+        'dossie_id' => 'Dossiê',
+        'especiedocumental_id' => 'Especie Documental',
+        'notacao_preexistente' => 'Notacao Pré-existente',
+        'notacao' => 'Notação',
+        'ano' => 'Ano',
+        'data_doc' => 'Data',
+        'processo_num' => 'Processo nº',
+        'quantidade_doc' => 'Quantidade',
+        'conservacao_id' => 'Conservação',
+        'interessado' => 'Interessado',
+        'assunto' => 'Assunto',
+        'notas' => 'Notas',
+        'lc_sala_id' => 'Sala',
+        'lc_movel_id' => 'Móvel',
+        'lc_movel_num' => 'Móvel nº',
+        'lc_compartimento_id' => 'Compartimento',
+        'lc_compartimento_num' => 'Compartimento nº',
+        'lc_acondicionamento_id' => 'Acondicionamento',
+        'lc_acondicionamento_num' => 'Acondicionamento nº',
+        'lc_pagina' => 'Página',
+        'dt_uso_id' => 'Uso',
+        'dt_endereco' => 'Endereço',
+        'dt_end_complemento' => 'Endereço - Complemento',
+        'dt_endereco_atual' => 'Endereco Atual',
+        'dt_endatual_complemento' => 'Endereço Atual - Complemento',
+        'dt_proprietario' => 'Proprietário',
+        'dt_autor' => 'Autor',
+        'dt_construtor' => 'Construtor',
+        'dt_notas' => 'Notas',
+    ];
 
     protected $table = 'documento';
 
