@@ -6,6 +6,7 @@ use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
 use ArqAdmin\Repositories\UserRepository;
 use ArqAdmin\Entities\User;
+use Prettus\Validator\Contracts\ValidatorInterface;
 
 /**
  * Class UserRepositoryEloquent
@@ -13,6 +14,11 @@ use ArqAdmin\Entities\User;
  */
 class UserRepositoryEloquent extends BaseRepository implements UserRepository
 {
+    /**
+     * @var ValidatorInterface
+     */
+    protected $validator;
+
     /**
      * Specify Model class name
      *

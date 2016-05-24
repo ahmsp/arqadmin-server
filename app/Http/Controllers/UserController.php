@@ -5,6 +5,7 @@ namespace ArqAdmin\Http\Controllers;
 use ArqAdmin\Http\Requests;
 use ArqAdmin\Entities\User;
 use ArqAdmin\Repositories\UserRepository;
+use ArqAdmin\Services\UserService;
 use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 use Illuminate\Http\Request;
 
@@ -16,11 +17,18 @@ class UserController extends Controller
     protected $repository;
 
     /**
-     * @param UserRepository $repository
+     * @var UserService
      */
-    public function __construct(UserRepository $repository)
+    protected $service;
+
+    /**
+     * @param UserRepository $repository
+     * @param UserService $service
+     */
+    public function __construct(UserRepository $repository, UserService $service)
     {
         $this->repository = $repository;
+        $this->service = $service;
     }
 
     /**
@@ -36,7 +44,78 @@ class UserController extends Controller
             'username' => $request->input('username'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
+            'roles' => $request->input('roles'),
         ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return array
+     */
+    public function index()
+    {
+        $data = $this->repository->paginate(500);
+        return $data;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  Request  $request
+     * @return array
+     */
+    public function store(Request $request)
+    {
+        $data = $request->all();
+        $roles = json_decode($data['roles']);
+
+        if (is_array($roles)) {
+            $data['roles'] = implode(',', $roles);
+        }
+
+        return $this->service->create($data);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return array
+     */
+    public function show($id)
+    {
+        return $this->repository->find($id);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return array
+     */
+    public function update(Request $request, $id)
+    {
+        $data = $request->all();
+        $roles = json_decode($data['roles']);
+
+        if (is_array($roles)) {
+            $data['roles'] = implode(',', $roles);
+        }
+
+        return $this->service->update($request->all(), $id);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return array
+     */
+    public function destroy($id)
+    {
+        return $this->service->delete($id);
     }
 
     /**
@@ -62,6 +141,10 @@ class UserController extends Controller
         $userId = Authorizer::getResourceOwnerId();
         $user = User::find($userId);
 
-        return $user;
+        return [
+            'name' => $user->name,
+            'username' => $user->username,
+            'roles' => explode(',', $user->roles),
+        ];
     }
 }
