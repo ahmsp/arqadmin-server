@@ -48,6 +48,8 @@ class FtSerieController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('role-fotografico');
+
         return $this->service->create($request->all());
     }
 
@@ -71,6 +73,8 @@ class FtSerieController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('role-fotografico');
+
         return $this->service->update($request->all(), $id);
     }
 
@@ -82,6 +86,8 @@ class FtSerieController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('role-fotografico');
+
         return $this->service->delete($id);
     }
 }

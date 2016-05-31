@@ -2,6 +2,7 @@
 
 namespace ArqAdmin\Http\Controllers;
 
+use ArqAdmin\Entities\LcCompartimento;
 use ArqAdmin\Http\Requests;
 use ArqAdmin\Repositories\LcCompartimentoRepository;
 use ArqAdmin\Services\LcCompartimentoService;
@@ -48,6 +49,8 @@ class LcCompartimentoController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('edit', LcCompartimento::class);
+
         return $this->service->create($request->all());
     }
 
@@ -71,6 +74,8 @@ class LcCompartimentoController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('edit', LcCompartimento::class);
+
         return $this->service->update($request->all(), $id);
     }
 
@@ -82,6 +87,8 @@ class LcCompartimentoController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('edit', LcCompartimento::class);
+
         return $this->service->delete($id);
     }
 }

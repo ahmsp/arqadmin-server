@@ -2,17 +2,20 @@
 
 namespace ArqAdmin\Entities;
 
-use ArqAdmin\Traits\OverrideRevisionableTrait;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use ArqAdmin\Traits\OverrideRevisionableTrait;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
-class User extends Model implements Transformable, AuthenticatableContract
+class User extends Model implements AuthenticatableContract, AuthorizableContract, Transformable
 {
-    use TransformableTrait, Authenticatable;
-    use OverrideRevisionableTrait;
+    use Authenticatable, Authorizable, TransformableTrait, OverrideRevisionableTrait, SoftDeletes;
+
 
     protected $revisionEnabled = true;
     protected $revisionCreationsEnabled = true;
@@ -42,7 +45,7 @@ class User extends Model implements Transformable, AuthenticatableContract
      *
      * @var array
      */
-    protected $fillable = ['name', 'username', 'email', 'password', 'remember', 'roles'];
+    protected $fillable = ['name', 'username', 'email', 'password', 'roles'];
 
     /**
      * The attributes excluded from the model's JSON form.

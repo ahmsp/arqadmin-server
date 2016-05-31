@@ -53,6 +53,8 @@ class GrupoController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('role-documental');
+
         return $this->service->create($request->all());
     }
 
@@ -76,6 +78,8 @@ class GrupoController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('role-documental');
+
         return $this->service->update($request->all(), $id);
     }
 
@@ -87,6 +91,8 @@ class GrupoController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('role-documental');
+
         return $this->service->delete($id);
     }
 }

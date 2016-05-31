@@ -50,6 +50,8 @@ class FotografiaController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('role-fotografico');
+
         return $this->service->create($request->all());
     }
 
@@ -73,6 +75,8 @@ class FotografiaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('role-fotografico');
+
         return $this->service->preUpdate($request->all(), $id);
     }
 
@@ -84,6 +88,8 @@ class FotografiaController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('role-fotografico');
+
         return $this->service->deleteAndRemoveImage($id);
     }
 
@@ -96,6 +102,8 @@ class FotografiaController extends Controller
     // Size template: medium|standard|large|original
     public function getDownloadUrl($id, $size)
     {
+        $this->authorize('role-fotografico');
+
         $image = $this->service->getDownloadImageUrl($id, $size);
 
         return ['url_download' => $image['url_download']];
@@ -113,11 +121,15 @@ class FotografiaController extends Controller
 
     public function uploadImage(Request $request, $id)
     {
+        $this->authorize('role-fotografico');
+
         return $this->service->upload($request, $id);
     }
 
     public function getRevisionHistory($id)
     {
+        $this->authorize('role-fotografico');
+
         return $this->service->getRevisionHistory($id);
     }
 }

@@ -50,6 +50,8 @@ class DesenhoTecnicoController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('role-documental');
+
         return $this->service->create($request->all());
     }
 
@@ -75,6 +77,8 @@ class DesenhoTecnicoController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('role-documental');
+
         return $this->service->preUpdate($request->all(), $id);
     }
 
@@ -86,6 +90,8 @@ class DesenhoTecnicoController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('role-documental');
+
         return $this->service->deleteAndRemoveImage($id);
     }
 
@@ -98,6 +104,8 @@ class DesenhoTecnicoController extends Controller
     // Size template: medium|standard|large|original
     public function getDownloadUrl($id, $size)
     {
+        $this->authorize('role-documental');
+
         $image = $this->service->getDownloadImageUrl($id, $size);
 
         return ['url_download' => $image['url_download']];
@@ -115,11 +123,15 @@ class DesenhoTecnicoController extends Controller
 
     public function uploadImage(Request $request, $id)
     {
+        $this->authorize('role-documental');
+
         return $this->service->upload($request, $id);
     }
 
     public function getRevisionHistory($id)
     {
+        $this->authorize('role-documental');
+
         return $this->service->getRevisionHistory($id);
     }
 }

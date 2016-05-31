@@ -2,14 +2,9 @@
 
 Route::pattern('id', '[0-9]+');
 
-Route::get('/app', function () {
+//Route::get('/app', function () {
 //    return redirect('app/');
-});
-
-//Route::get('{angular?}', function() {
-//    return File::get(public_path().'/angular.html');
-//    return View::make('angular');
-//})->where('angular', '.*');
+//});
 
 Route::group(['middleware' => 'cors'], function () {
 
@@ -46,66 +41,65 @@ Route::group(['middleware' => 'cors'], function () {
         /**
          * Documento
          */
-        Route::resource('documento', 'DocumentoController');
+        Route::resource('documento', 'DocumentoController', ['except' => ['create', 'edit']]);
 
         /**
          * DocumentoImagem
          */
-        Route::resource('desenhotecnico', 'DesenhoTecnicoController');
-//        Route::get('desenhotecnico/{id}/imagem/{template}', 'DesenhoTecnicoController@showImage');
+        Route::resource('desenhotecnico', 'DesenhoTecnicoController', ['except' => ['create', 'edit']]);
 
         /**
          * Registro de Sepultamento
          */
-        Route::resource('registrosepultamento', 'RegistroSepultamentoController');
+        Route::resource('registrosepultamento', 'RegistroSepultamentoController', ['except' => ['create', 'edit']]);
 
         /**
          * Fotografia
          */
-        Route::resource('fotografia', 'FotografiaController');
+        Route::resource('fotografia', 'FotografiaController', ['except' => ['create', 'edit']]);
 
         /**
          * Static data (Auxiliar tables)
          */
-        Route::resource('acervo', 'AcervoController');
-        Route::resource('fundo', 'FundoController');
-        Route::resource('subfundo', 'SubfundoController');
-        Route::resource('grupo', 'GrupoController');
-        Route::resource('subgrupo', 'SubgrupoController');
-        Route::resource('serie', 'SerieController');
-        Route::resource('subserie', 'SubserieController');
-        Route::resource('dossie', 'DossieController');
-        Route::resource('especiedocumental', 'EspeciedocumentalController');
+        Route::resource('acervo', 'AcervoController', ['except' => ['create', 'edit']]);
+        Route::resource('fundo', 'FundoController', ['except' => ['create', 'edit']]);
+        Route::resource('subfundo', 'SubfundoController', ['except' => ['create', 'edit']]);
+        Route::resource('grupo', 'GrupoController', ['except' => ['create', 'edit']]);
+        Route::resource('subgrupo', 'SubgrupoController', ['except' => ['create', 'edit']]);
+        Route::resource('serie', 'SerieController', ['except' => ['create', 'edit']]);
+        Route::resource('subserie', 'SubserieController', ['except' => ['create', 'edit']]);
+        Route::resource('dossie', 'DossieController', ['except' => ['create', 'edit']]);
+        Route::resource('especiedocumental', 'EspeciedocumentalController', ['except' => ['create', 'edit']]);
 
-        Route::resource('conservacao', 'ConservacaoController');
+        Route::resource('conservacao', 'ConservacaoController', ['except' => ['create', 'edit']]);
 
-        Route::resource('lcacondicionamento', 'LcAcondicionamentoController');
-        Route::resource('lccompartimento', 'LcCompartimentoController');
-        Route::resource('lcmovel', 'LcMovelController');
-        Route::resource('lcsala', 'LcSalaController');
-        Route::resource('dtuso', 'DtUsoController');
+        Route::resource('lcacondicionamento', 'LcAcondicionamentoController', ['except' => ['create', 'edit']]);
+        Route::resource('lccompartimento', 'LcCompartimentoController', ['except' => ['create', 'edit']]);
+        Route::resource('lcmovel', 'LcMovelController', ['except' => ['create', 'edit']]);
+        Route::resource('lcsala', 'LcSalaController', ['except' => ['create', 'edit']]);
+        Route::resource('dtuso', 'DtUsoController', ['except' => ['create', 'edit']]);
 
-        Route::resource('dtconservacao', 'DtConservacaoController');
-        Route::resource('dtescala', 'DtEscalaController');
-        Route::resource('dtsuporte', 'DtSuporteController');
-        Route::resource('dttecnica', 'DtTecnicaController');
-        Route::resource('dttipo', 'DtTipoController');
+        Route::resource('dtconservacao', 'DtConservacaoController', ['except' => ['create', 'edit']]);
+        Route::resource('dtescala', 'DtEscalaController', ['except' => ['create', 'edit']]);
+        Route::resource('dtsuporte', 'DtSuporteController', ['except' => ['create', 'edit']]);
+        Route::resource('dttecnica', 'DtTecnicaController', ['except' => ['create', 'edit']]);
+        Route::resource('dttipo', 'DtTipoController', ['except' => ['create', 'edit']]);
 
-        Route::resource('sfmcartorio', 'SfmCartorioController');
-        Route::resource('sfmcausamortis', 'SfmCausamortisController');
-        Route::resource('sfmcemiterio', 'SfmCemiterioController');
-        Route::resource('sfmestadocivil', 'SfmEstadocivilController');
-        Route::resource('sfmnacionalidade', 'SfmNacionalidadeController');
-        Route::resource('sfmnaturalidade', 'SfmNaturalidadeController');
+        Route::resource('sfmcartorio', 'SfmCartorioController', ['except' => ['create', 'edit']]);
+        Route::resource('sfmcausamortis', 'SfmCausamortisController', ['except' => ['create', 'edit']]);
+        Route::resource('sfmcemiterio', 'SfmCemiterioController', ['except' => ['create', 'edit']]);
+        Route::resource('sfmestadocivil', 'SfmEstadocivilController', ['except' => ['create', 'edit']]);
+        Route::resource('sfmnacionalidade', 'SfmNacionalidadeController', ['except' => ['create', 'edit']]);
+        Route::resource('sfmnaturalidade', 'SfmNaturalidadeController', ['except' => ['create', 'edit']]);
 
-        Route::resource('ftfundo', 'FtFundoController');
-        Route::resource('ftgrupo', 'FtGrupoController');
-        Route::resource('ftserie', 'FtSerieController');
-        Route::resource('fttipologia', 'FtTipologiaController');
-        Route::resource('ftcromia', 'FtCromiaController');
-        Route::resource('ftcategoria', 'FtCategoriaController');
-        Route::resource('ftcampo', 'FtCampoController');
-        Route::resource('ftambiente', 'FtAmbienteController');
+        Route::resource('ftfundo', 'FtFundoController', ['except' => ['create', 'edit']]);
+        Route::resource('ftgrupo', 'FtGrupoController', ['except' => ['create', 'edit']]);
+        Route::resource('ftserie', 'FtSerieController', ['except' => ['create', 'edit']]);
+        Route::resource('fttipologia', 'FtTipologiaController', ['except' => ['create', 'edit']]);
+        Route::resource('ftcromia', 'FtCromiaController', ['except' => ['create', 'edit']]);
+        Route::resource('ftcategoria', 'FtCategoriaController', ['except' => ['create', 'edit']]);
+        Route::resource('ftcampo', 'FtCampoController', ['except' => ['create', 'edit']]);
+        Route::resource('ftambiente', 'FtAmbienteController', ['except' => ['create', 'edit']]);
 
         /**
          * Statistics

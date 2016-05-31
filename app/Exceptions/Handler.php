@@ -52,9 +52,15 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof HttpException) {
             $message = 'Não foi possível completar a operação. Consulte um administrador';
+            $errorType = '';
+
+            if ($e->getStatusCode() === 403) {
+                $message = 'Ação não autorizada.';
+                $errorType = 'forbidden';
+            }
 
             $error = [
-                'error_type' => '', //$e->errorType (property does not exists in HttpException),
+                'error_type' => $errorType, //$e->errorType (property does not exists in HttpException),
                 'error_description' => $e->getMessage(),
                 'user_message' => $message
             ];

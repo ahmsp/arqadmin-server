@@ -8,6 +8,7 @@ use ArqAdmin\Repositories\UserRepository;
 use ArqAdmin\Services\UserService;
 use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 use Illuminate\Http\Request;
+use Stevebauman\Corp\Facades\Corp;
 
 class UserController extends Controller
 {
@@ -37,16 +38,16 @@ class UserController extends Controller
      * @param Request $request
      * @return User
      */
-    protected function create(Request $request)
-    {
-        return User::create([
-            'name' => $request->input('name'),
-            'username' => $request->input('username'),
-            'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
-            'roles' => $request->input('roles'),
-        ]);
-    }
+//    protected function create(Request $request)
+//    {
+//        return User::create([
+//            'name' => $request->input('name'),
+//            'username' => $request->input('username'),
+//            'email' => $request->input('email'),
+//            'password' => bcrypt($request->input('password')),
+//            'roles' => $request->input('roles'),
+//        ]);
+//    }
 
     /**
      * Display a listing of the resource.
@@ -144,7 +145,8 @@ class UserController extends Controller
         return [
             'name' => $user->name,
             'username' => $user->username,
-            'roles' => explode(',', $user->roles),
+            'roles' => array_filter(explode(',', $user->roles)),
         ];
     }
+
 }

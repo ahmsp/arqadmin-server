@@ -19,8 +19,8 @@ trait OverrideRevisionableTrait
      * Override getUserId method
      * @return mixed User ID
      */
-    public function getUserId()
-    {
-        return Authorizer::getResourceOwnerId();
-    }
+//    public function getUserId()
+//    {
+//        return Authorizer::getResourceOwnerId();
+//    }
 }

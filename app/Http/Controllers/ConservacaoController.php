@@ -43,18 +43,20 @@ class ConservacaoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
+     * @param  Request $request
      * @return array
      */
     public function store(Request $request)
     {
+        $this->authorize('role-documental');
+
         return $this->service->create($request->all());
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return array
      */
     public function show($id)
@@ -65,23 +67,27 @@ class ConservacaoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
-     * @param  int  $id
+     * @param  Request $request
+     * @param  int $id
      * @return array
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('role-documental');
+
         return $this->service->update($request->all(), $id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return array
      */
     public function destroy($id)
     {
+        $this->authorize('role-documental');
+
         return $this->service->delete($id);
     }
 }

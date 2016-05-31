@@ -50,6 +50,8 @@ class RegistroSepultamentoController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('role-sepultamento');
+
         return $this->service->create($request->all());
     }
 
@@ -73,6 +75,8 @@ class RegistroSepultamentoController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('role-sepultamento');
+
         return $this->service->update($request->all(), $id);
     }
 
@@ -84,6 +88,8 @@ class RegistroSepultamentoController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('role-sepultamento');
+
         return $this->service->delete($id);
     }
 

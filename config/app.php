@@ -144,6 +144,7 @@ return [
         ArqAdmin\Providers\EventServiceProvider::class,
         ArqAdmin\Providers\RouteServiceProvider::class,
         ArqAdmin\Providers\ArqAdminRepositoryProvider::class,
+        ArqAdmin\Providers\AuthServiceProvider::class,
 
         /*
          * Helpers Service Providers...
@@ -205,6 +206,7 @@ return [
         'URL'       => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
+        'Gate'      => Illuminate\Support\Facades\Gate::class,
 
         'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
         'Corp'      => Stevebauman\Corp\Facades\Corp::class,

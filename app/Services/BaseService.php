@@ -189,7 +189,7 @@ abstract class BaseService
                 'action' => $action,
                 'revisionable_type' => $row->revisionable_type,
                 'revisionable_id' => $row->revisionable_id,
-                'user_name' => $row->userResponsible()->name,
+                'user_name' => $row->userResponsible() ? $row->userResponsible()->name : null,
                 'key' => $action === 'Adicionado' ? 'Registro novo' : $row->fieldName(),
                 'old_value' => $row->oldValue(),
                 'new_value' => $row->newValue(),

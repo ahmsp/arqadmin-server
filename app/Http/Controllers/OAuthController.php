@@ -23,6 +23,25 @@ class OAuthController extends Controller
         ];
 
         if (null === $user = User::where('username', $credentials['username'])->first()) {
+
+            if ($adldapUser = $this->adldapAuth($credentials['username'], $credentials['password'])) {
+
+                $user = new User();
+                $user->name = $adldapUser['name'];
+                $user->username = $adldapUser['username'];
+                $user->email = $adldapUser['email'];
+                $user->adldap_group = $adldapUser['group'];
+                $user->adldap_type = $adldapUser['type'];
+                $user->password = bcrypt($credentials['password']);
+                $user->roles = null;
+
+                $user->save();
+
+                if (Auth::once($credentials)) {
+                    return Auth::user()->id;
+                }
+            }
+
             return false;
         }
 
@@ -30,8 +49,7 @@ class OAuthController extends Controller
             return Auth::user()->id;
         }
 
-        // adldap auth
-        if (Corp::auth($credentials['username'], $credentials['password'])) {
+        if ($this->adldapAuth($credentials['username'], $credentials['password'])) {
 
             $user->password = bcrypt($credentials['password']);
             $user->save();
@@ -39,6 +57,24 @@ class OAuthController extends Controller
             if (Auth::once($credentials)) {
                 return Auth::user()->id;
             }
+        }
+
+        return false;
+    }
+
+    private function adldapAuth($username, $password)
+    {
+        if (Corp::auth($username, $password)) {
+
+            $userInfo = Corp::user($username);
+
+            return [
+                'username' => $userInfo->username,
+                'name' => $userInfo->name,
+                'email' => $userInfo->email,
+                'group' => $userInfo->group,
+                'type' => $userInfo->type,
+            ];
         }
 
         return false;
