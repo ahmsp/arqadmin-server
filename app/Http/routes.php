@@ -105,6 +105,7 @@ Route::group(['middleware' => 'cors'], function () {
          * Statistics
          */
         Route::get('/estatisticas', 'DocumentoController@statistic');
+        Route::get('/estatisticas/totais', 'Statistics@getTotalItems');
 
 
         /**
@@ -133,6 +134,8 @@ Route::group(['middleware' => 'cors'], function () {
         Route::get('desenhotecnico/{id}/revisao', 'DesenhoTecnicoController@getRevisionHistory');
         Route::get('fotografia/{id}/revisao', 'FotografiaController@getRevisionHistory');
         Route::get('registrosepultamento/{id}/revisao', 'RegistroSepultamentoController@getRevisionHistory');
+
+
 
     });
 
