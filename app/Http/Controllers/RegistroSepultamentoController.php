@@ -5,6 +5,7 @@ namespace ArqAdmin\Http\Controllers;
 use ArqAdmin\Http\Requests;
 use ArqAdmin\Repositories\RegistroSepultamentoRepository;
 use ArqAdmin\Services\RegistroSepultamentoService;
+use ArqAdmin\Services\ResearchesService;
 use Illuminate\Http\Request;
 
 class RegistroSepultamentoController extends Controller
@@ -18,15 +19,22 @@ class RegistroSepultamentoController extends Controller
      * @var RegistroSepultamentoService
      */
     protected $service;
+    /**
+     * @var ResearchesService
+     */
+    private $researchesService;
 
     /**
      * @param RegistroSepultamentoRepository $repository
      * @param RegistroSepultamentoService $service
+     * @param ResearchesService $researchesService
      */
-    public function __construct(RegistroSepultamentoRepository $repository, RegistroSepultamentoService $service)
+    public function __construct(RegistroSepultamentoRepository $repository, RegistroSepultamentoService $service,
+                                ResearchesService $researchesService)
     {
         $this->repository = $repository;
         $this->service = $service;
+        $this->researchesService = $researchesService;
     }
 
     /**
@@ -38,6 +46,8 @@ class RegistroSepultamentoController extends Controller
     {
         $params = $request->all();
         $data = $this->service->findAll($params);
+
+        $this->researchesService->saveResearch($request, 'sepultamento');
 
         return $data;
     }

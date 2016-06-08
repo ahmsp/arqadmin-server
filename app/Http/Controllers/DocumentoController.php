@@ -5,6 +5,7 @@ namespace ArqAdmin\Http\Controllers;
 use ArqAdmin\Http\Requests;
 use ArqAdmin\Repositories\DocumentoRepository;
 use ArqAdmin\Services\DocumentoService;
+use ArqAdmin\Services\ResearchesService;
 use Illuminate\Http\Request;
 
 
@@ -19,26 +20,36 @@ class DocumentoController extends Controller
      * @var DocumentoService
      */
     protected $service;
+    /**
+     * @var ResearchesService
+     */
+    private $researchesService;
 
     /**
      * @param DocumentoRepository $repository
      * @param DocumentoService $service
+     * @param ResearchesService $researchesService
      */
-    public function __construct(DocumentoRepository $repository, DocumentoService $service)
+    public function __construct(DocumentoRepository $repository, DocumentoService $service,
+                                ResearchesService $researchesService)
     {
         $this->repository = $repository;
         $this->service = $service;
+        $this->researchesService = $researchesService;
     }
 
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return array
      */
     public function index(Request $request)
     {
         $params = $request->all();
         $data = $this->service->findAll($params);
+
+        $this->researchesService->saveResearch($request, 'documental');
 
         return $data;
     }

@@ -5,6 +5,7 @@ namespace ArqAdmin\Http\Controllers;
 use ArqAdmin\Http\Requests;
 use ArqAdmin\Repositories\FotografiaRepository;
 use ArqAdmin\Services\FotografiaService;
+use ArqAdmin\Services\ResearchesService;
 use Illuminate\Http\Request;
 
 class FotografiaController extends Controller
@@ -18,15 +19,22 @@ class FotografiaController extends Controller
      * @var FotografiaService
      */
     protected $service;
+    /**
+     * @var ResearchesService
+     */
+    private $researchesService;
 
     /**
      * @param FotografiaRepository $repository
      * @param FotografiaService $service
+     * @param ResearchesService $researchesService
      */
-    public function __construct(FotografiaRepository $repository, FotografiaService $service)
+    public function __construct(FotografiaRepository $repository, FotografiaService $service,
+                                ResearchesService $researchesService)
     {
         $this->repository = $repository;
         $this->service = $service;
+        $this->researchesService = $researchesService;
     }
 
     /**
@@ -38,6 +46,8 @@ class FotografiaController extends Controller
     {
         $params = $request->all();
         $data = $this->repository->findAllWhere($params);
+
+        $this->researchesService->saveResearch($request, 'fotografico');
 
         return $data;
     }

@@ -222,5 +222,15 @@ class ArqAdminRepositoryProvider extends ServiceProvider
             \ArqAdmin\Repositories\FtAmbienteRepository::class,
             \ArqAdmin\Repositories\FtAmbienteRepositoryEloquent::class
         );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\ResearchesRepository::class,
+            \ArqAdmin\Repositories\ResearchesRepositoryEloquent::class
+        );
+
+        $this->app->bind(
+            \ArqAdmin\Repositories\ParametersRepository::class,
+            \ArqAdmin\Repositories\ParametersRepositoryEloquent::class
+        );
     }
 }
