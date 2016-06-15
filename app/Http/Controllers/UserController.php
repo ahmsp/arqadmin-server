@@ -33,31 +33,22 @@ class UserController extends Controller
     }
 
     /**
-     * Create a new user instance.
-     *
-     * @param Request $request
-     * @return User
-     */
-//    protected function create(Request $request)
-//    {
-//        return User::create([
-//            'name' => $request->input('name'),
-//            'username' => $request->input('username'),
-//            'email' => $request->input('email'),
-//            'password' => bcrypt($request->input('password')),
-//            'roles' => $request->input('roles'),
-//        ]);
-//    }
-
-    /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return array
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = $this->repository->paginate(500);
-        return $data;
+        if ($request->input('userType') === 'users') {
+            if (auth()->user()->can('editUser', User::class)) {
+                return $this->repository->findAllUsers();
+            }
+        }
+
+        $this->authorize('editGuest', User::class);
+
+        return $this->repository->findAllGuests();
     }
 
     /**
@@ -68,14 +59,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        $roles = json_decode($data['roles']);
+        $this->authorize('editGuest', User::class);
 
-        if (is_array($roles)) {
-            $data['roles'] = implode(',', $roles);
-        }
-
-        return $this->service->create($data);
+        return $this->service->createGuest($request);
     }
 
     /**
@@ -86,6 +72,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
+        $this->authorize('editUser', User::class);
+        
         return $this->repository->find($id);
     }
 
@@ -98,14 +86,20 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = $request->all();
-        $roles = json_decode($data['roles']);
-
-        if (is_array($roles)) {
-            $data['roles'] = implode(',', $roles);
+        if (auth()->user()->can('editUser', User::class)) {
+            return $this->service->update($request->all(), $id);
         }
+        
+        $this->authorize('editGuest', User::class);
 
-        return $this->service->update($request->all(), $id);
+        return $this->service->update(array_filter($request->only('name', 'email')), $id);
+    }
+
+    public function refreshGuestAccessCode($id)
+    {
+        $this->authorize('editGuest', User::class);
+
+        return $this->service->refreshGuestAccessCode($id);
     }
 
     /**
@@ -116,25 +110,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('editUser', User::class);
+
         return $this->service->delete($id);
-    }
-
-    /**
-     * Update the password for the user.
-     *
-     * @param  Request  $request
-     * @param  int  $id
-     * @return Response
-     */
-    public function updatePassword(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-
-        // Validate the new password length...
-
-        $user->fill([
-            'password' => Hash::make($request->newPassword)
-        ])->save();
     }
 
     public function getResourceOwnerUser()
@@ -145,8 +123,21 @@ class UserController extends Controller
         return [
             'name' => $user->name,
             'username' => $user->username,
-            'roles' => array_filter(explode(',', $user->roles)),
+            'roles' => $user->roles,
         ];
     }
 
+    public function getRevisionHistory($id)
+    {
+        $this->authorize('role-admin');
+
+        return $this->service->getRevisionHistory($id);
+    }
+
+    public function getAllRevisionHistory()
+    {
+        $this->authorize('role-admin');
+
+        return $this->service->getAllRevisionHistory();
+    }
 }

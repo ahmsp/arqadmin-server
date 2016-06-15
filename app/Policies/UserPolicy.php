@@ -6,16 +6,26 @@ use ArqAdmin\Entities\User;
 
 class UserPolicy
 {
-    public function edit(User $user)
+    public function editGuest(User $user)
     {
         $allowedRoles = [
+            'ROLE_ADMIN',
             'ROLE_DOCUMENTAL',
-            'ROLE_SEPULTAMENTO'
+            'ROLE_FOTOGRAFICO',
+            'ROLE_SEPULTAMENTO',
+            'ROLE_ATENDIMENTO',
         ];
 
-        $userRoles = explode(',', $user->roles);
+        return count(array_intersect($user->roles, $allowedRoles)) > 0 ? true : false;
+    }
 
-        return count(array_intersect($userRoles, $allowedRoles)) > 0 ? true : false;
+    public function editUser(User $user)
+    {
+        $allowedRoles = [
+            'ROLE_ADMIN',
+        ];
+
+        return count(array_intersect($user->roles, $allowedRoles)) > 0 ? true : false;
     }
 
     public function getResourceOwnerUser($user)

@@ -32,8 +32,8 @@ class OAuthController extends Controller
                 $user->email = $adldapUser['email'];
                 $user->adldap_group = $adldapUser['group'];
                 $user->adldap_type = $adldapUser['type'];
-                $user->password = bcrypt($credentials['password']);
-                $user->roles = null;
+                $user->password = $credentials['password'];
+                $user->roles = [];
 
                 $user->save();
 
@@ -51,7 +51,7 @@ class OAuthController extends Controller
 
         if ($this->adldapAuth($credentials['username'], $credentials['password'])) {
 
-            $user->password = bcrypt($credentials['password']);
+            $user->password = $credentials['password'];
             $user->save();
 
             if (Auth::once($credentials)) {

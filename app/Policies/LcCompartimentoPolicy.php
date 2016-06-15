@@ -12,9 +12,7 @@ class LcCompartimentoPolicy
             'ROLE_DOCUMENTAL',
             'ROLE_SEPULTAMENTO'
         ];
-
-        $userRoles = explode(',', $user->roles);
-
-        return count(array_intersect($userRoles, $allowedRoles)) > 0 ? true : false;
+        
+        return count(array_intersect($user->roles, $allowedRoles)) > 0 ? true : false;
     }
 }

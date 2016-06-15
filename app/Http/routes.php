@@ -36,7 +36,11 @@ Route::group(['middleware' => 'cors'], function () {
         /**
          * User
          */
-        Route::match(['get', 'post'], 'user/profile', 'UserController@getResourceOwnerUser');
+        Route::match(['get', 'post'], 'user/owner-profile', 'UserController@getResourceOwnerUser');
+        Route::get('user/{id}/revision', 'UserController@getRevisionHistory');
+        Route::get('users/revision', 'UserController@getAllRevisionHistory');
+        Route::get('guest/{id}/refresh-access-code', 'UserController@refreshGuestAccessCode');
+        Route::resource('users', 'UserController', ['except' => ['create', 'edit']]);
 
         /**
          * Documento
@@ -130,10 +134,10 @@ Route::group(['middleware' => 'cors'], function () {
         /**
          * Revision
          */
-        Route::get('documento/{id}/revisao', 'DocumentoController@getRevisionHistory');
-        Route::get('desenhotecnico/{id}/revisao', 'DesenhoTecnicoController@getRevisionHistory');
-        Route::get('fotografia/{id}/revisao', 'FotografiaController@getRevisionHistory');
-        Route::get('registrosepultamento/{id}/revisao', 'RegistroSepultamentoController@getRevisionHistory');
+        Route::get('documento/{id}/revision', 'DocumentoController@getRevisionHistory');
+        Route::get('desenhotecnico/{id}/revision', 'DesenhoTecnicoController@getRevisionHistory');
+        Route::get('fotografia/{id}/revision', 'FotografiaController@getRevisionHistory');
+        Route::get('registrosepultamento/{id}/revision', 'RegistroSepultamentoController@getRevisionHistory');
 
 
 

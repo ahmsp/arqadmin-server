@@ -173,8 +173,22 @@ abstract class BaseService
     {
         $model = $this->repository->find($id);
         $revisionHistory = $model->revisionHistory;
-        $history = [];
 
+        return $this->formatRevisions($revisionHistory);
+    }
+
+    public function getAllRevisionHistory($limit = 100, $order = 'desc')
+    {
+        $model = $this->repository->model();
+        $revisionHistory = $model::classRevisionHistory($limit = 100, $order = 'desc');
+        
+        return $this->formatRevisions($revisionHistory);
+    }
+
+    public function formatRevisions($revisionHistory)
+    {
+        $history = [];
+//dd($revisionHistory);
         foreach ($revisionHistory as $row) {
             $action = 'Atualizado';
 

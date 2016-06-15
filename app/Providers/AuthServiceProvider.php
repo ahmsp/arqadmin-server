@@ -43,6 +43,10 @@ class AuthServiceProvider extends ServiceProvider
             return $this->hasRole($user, 'ROLE_SEPULTAMENTO');
         });
 
+        $gate->define('role-atendimento', function ($user) {
+            return $this->hasRole($user, 'ROLE_ATENDIMENTO');
+        });
+
         $gate->before(function ($user, $ability) {
             if ($this->hasRole($user, 'ROLE_ADMIN')) {
                 return true;
@@ -52,7 +56,6 @@ class AuthServiceProvider extends ServiceProvider
 
     public function hasRole($user, $role)
     {
-        $userRoles = explode(',', $user->roles);
-        return in_array($role, $userRoles);
+        return in_array($role, $user->roles);
     }
 }

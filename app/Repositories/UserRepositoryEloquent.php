@@ -2,10 +2,10 @@
 
 namespace ArqAdmin\Repositories;
 
-use Prettus\Repository\Eloquent\BaseRepository;
-use Prettus\Repository\Criteria\RequestCriteria;
-use ArqAdmin\Repositories\UserRepository;
 use ArqAdmin\Entities\User;
+use Illuminate\Http\Request;
+use Prettus\Repository\Criteria\RequestCriteria;
+use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Validator\Contracts\ValidatorInterface;
 
 /**
@@ -35,5 +35,23 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
     public function boot()
     {
         $this->pushCriteria(app(RequestCriteria::class));
+    }
+
+    public function findAllUsers()
+    {
+        return $this->paginate(500);
+    }
+
+    public function findAllGuests()
+    {
+        $model = $this->model
+            ->where('username', 'like', 'c%')
+            ->where(function ($query) {
+                $query->where('roles', '=', '')
+                    ->orWhereNull('roles');
+            })
+            ->paginate(500);
+
+        return $model;
     }
 }
