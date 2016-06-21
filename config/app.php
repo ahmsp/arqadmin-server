@@ -154,10 +154,10 @@ return [
         Prettus\Repository\Providers\RepositoryServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-
         LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class,
         LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class,
-
+        Conner\Likeable\LikeableServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
 
@@ -211,6 +211,7 @@ return [
         'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
         'Corp'      => Stevebauman\Corp\Facades\Corp::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
     ],
 

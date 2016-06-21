@@ -3,6 +3,7 @@
 namespace ArqAdmin\Entities;
 
 use ArqAdmin\Traits\OverrideRevisionableTrait;
+use Conner\Likeable\LikeableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,7 @@ class Documento extends Model implements Transformable
     use TransformableTrait;
     use SoftDeletes;
     use OverrideRevisionableTrait;
+    use LikeableTrait;
 
     protected $revisionEnabled = true;
     protected $revisionCreationsEnabled = true;
@@ -179,6 +181,14 @@ class Documento extends Model implements Transformable
     public function desenhosTecnicos()
     {
         return $this->hasMany('ArqAdmin\Entities\DesenhoTecnico');
+    }
+
+    /**
+     * Get all of the tags for the model.
+     */
+    public function likable()
+    {
+        return $this->morphMany('Conner\Likeable\Like', 'likable');
     }
 
     public function getTableColumns() {

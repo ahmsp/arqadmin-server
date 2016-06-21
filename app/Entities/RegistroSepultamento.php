@@ -3,6 +3,7 @@
 namespace ArqAdmin\Entities;
 
 use ArqAdmin\Traits\OverrideRevisionableTrait;
+use Conner\Likeable\LikeableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,7 @@ class RegistroSepultamento extends Model implements Transformable
     use TransformableTrait;
     use SoftDeletes;
     use OverrideRevisionableTrait;
+    use LikeableTrait;
 
     protected $revisionEnabled = true;
     protected $revisionCreationsEnabled = true;
@@ -198,5 +200,13 @@ class RegistroSepultamento extends Model implements Transformable
     public function sfmCausaMortis()
     {
         return $this->belongsTo('ArqAdmin\Entities\SfmCausaMortis', 'sfm_causamortis_id');
+    }
+
+    /**
+     * Get all of the tags for the model.
+     */
+    public function likable()
+    {
+        return $this->morphMany('Conner\Likeable\Like', 'likable');
     }
 }

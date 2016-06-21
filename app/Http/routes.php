@@ -45,6 +45,8 @@ Route::group(['middleware' => 'cors'], function () {
         /**
          * Documento
          */
+        Route::get('documento/{id}/like', 'DocumentoController@like');
+        Route::get('documento/unlike-all', 'DocumentoController@removeUserLikes');
         Route::resource('documento', 'DocumentoController', ['except' => ['create', 'edit']]);
 
         /**
@@ -55,11 +57,15 @@ Route::group(['middleware' => 'cors'], function () {
         /**
          * Registro de Sepultamento
          */
+        Route::get('registrosepultamento/{id}/like', 'RegistroSepultamentoController@like');
+        Route::get('registrosepultamento/unlike-all', 'RegistroSepultamentoController@removeUserLikes');
         Route::resource('registrosepultamento', 'RegistroSepultamentoController', ['except' => ['create', 'edit']]);
 
         /**
          * Fotografia
          */
+        Route::get('fotografia/{id}/like', 'FotografiaController@like');
+        Route::get('fotografia/unlike-all', 'FotografiaController@removeUserLikes');
         Route::resource('fotografia', 'FotografiaController', ['except' => ['create', 'edit']]);
 
         /**

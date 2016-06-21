@@ -16,7 +16,9 @@
         "intervention/image": "^2.3@dev",
         "intervention/imagecache": "dev-master",
         "nesbot/carbon": "^1.21",
-        "venturecraft/revisionable": "^1.27"
+        "venturecraft/revisionable": "^1.27",
+        "rtconner/laravel-likeable": "~1.2",
+        "maatwebsite/excel": "~2.1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

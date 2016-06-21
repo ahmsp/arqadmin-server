@@ -3,6 +3,7 @@
 namespace ArqAdmin\Repositories;
 
 use ArqAdmin\Entities\RegistroSepultamento;
+use Conner\Likeable\Like;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 /**
@@ -29,14 +30,24 @@ class RegistroSepultamentoRepositoryEloquent extends BaseRepository implements R
                 'conservacao', 'sfmCartorio', 'sfmCemiterio', 'sfmNacionalidade', 'sfmNaturalidade',
                 'sfmEstadocivil', 'sfmCausamortis');
 
-        if (isset($params['filter'])) {
+        $model->with(['likable' => function($q){
+            $q->where('user_id', auth()->user()->id);
+        }]);
+
+
+        if (isset($params['likes'])) {
+            $model->whereLiked(auth()->user()->getAuthIdentifier())
+                ->with('likeCounter'); // highly suggested to allow eager load
+        }
+
+        if (isset($params['filter']) && !isset($params['likes'])) {
             $filters = $params['filter'];
             if (is_string($filters)) {
                 $filters = json_decode($filters, true);
             }
         }
 
-        if (isset($params['search_all'])) {
+        if (isset($params['search_all']) && !isset($params['likes'])) {
             $searchFields = [
                 'notas',
                 'sfm_cartorio_cartorio',
@@ -251,6 +262,29 @@ class RegistroSepultamentoRepositoryEloquent extends BaseRepository implements R
         ];
 
         return $params;
+    }
+
+    public function like($id)
+    {
+        $model = $this->find($id);
+
+        if ($model->liked()) {
+            $model->unlike();
+            $model->action = 'unlike';
+        } else {
+            $model->like();
+            $model->action = 'like';
+        }
+
+        return $model;
+    }
+
+    /**
+     * Delete likes related to the current record
+     */
+    public function removeUserLikes()
+    {
+        Like::where('likable_type', $this->model->getMorphClass())->where('user_id', auth()->id())->delete();
     }
 
     public function mapFields()

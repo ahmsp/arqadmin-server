@@ -3,6 +3,9 @@
 namespace ArqAdmin\Repositories;
 
 use ArqAdmin\Entities\Documento;
+use Conner\Likeable\Like;
+use Conner\Likeable\LikeCounter;
+use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 /**
@@ -43,14 +46,24 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'desenhosTecnicos.dtTipo', 'desenhosTecnicos.dtSuporte', 'desenhosTecnicos.dtEscala',
                 'desenhosTecnicos.dtTecnica', 'desenhosTecnicos.dtConservacao');
 
-        if (isset($params['filter'])) {
+        $model->with(['likable' => function($q){
+            $q->where('user_id', auth()->user()->id);
+        }]);
+
+
+        if (isset($params['likes'])) {
+            $model->whereLiked(auth()->user()->getAuthIdentifier())
+                ->with('likeCounter'); // highly suggested to allow eager load
+        }
+
+        if (isset($params['filter']) && !isset($params['likes'])) {
             $filters = $params['filter'];
             if (is_string($filters)) {
                 $filters = json_decode($filters, true);
             }
         }
-        
-        if (isset($params['search_all'])) {
+
+        if (isset($params['search_all']) && !isset($params['likes'])) {
             $searchFields = [
                 'interessado',
                 'assunto',
@@ -277,6 +290,29 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
         ];
 
         return $params;
+    }
+
+    public function like($id)
+    {
+        $model = $this->find($id);
+
+        if ($model->liked()) {
+            $model->unlike();
+            $model->action = 'unlike';
+        } else {
+            $model->like();
+            $model->action = 'like';
+        }
+
+        return $model;
+    }
+
+    /**
+     * Delete likes related to the current record
+     */
+    public function removeUserLikes()
+    {
+        Like::where('likable_type', $this->model->getMorphClass())->where('user_id', auth()->id())->delete();
     }
 
     public function mapFields()

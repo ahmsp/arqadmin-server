@@ -2,7 +2,11 @@
 
 namespace ArqAdmin\Providers;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
+use ArqAdmin\Entities\Documento;
+use ArqAdmin\Entities\Fotografia;
+use ArqAdmin\Entities\RegistroSepultamento;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        Relation::morphMap([
+            'documental' => Documento::class,
+            'fotografico' => Fotografia::class,
+            'sepultamento' => RegistroSepultamento::class,
+        ]);
     }
 }

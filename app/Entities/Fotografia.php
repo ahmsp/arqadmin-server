@@ -3,6 +3,7 @@
 namespace ArqAdmin\Entities;
 
 use ArqAdmin\Traits\OverrideRevisionableTrait;
+use Conner\Likeable\LikeableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Prettus\Repository\Contracts\Transformable;
@@ -13,6 +14,7 @@ class Fotografia extends Model implements Transformable
     use TransformableTrait;
     use SoftDeletes;
     use OverrideRevisionableTrait;
+    use LikeableTrait;
 
     protected $table = 'fotografia';
 
@@ -134,5 +136,13 @@ class Fotografia extends Model implements Transformable
     public function ftAmbiente()
     {
         return $this->belongsTo('ArqAdmin\Entities\FtAmbiente', 'ft_ambiente_id');
+    }
+
+    /**
+     * Get all of the tags for the model.
+     */
+    public function likable()
+    {
+        return $this->morphMany('Conner\Likeable\Like', 'likable');
     }
 }

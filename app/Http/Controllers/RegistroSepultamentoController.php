@@ -107,4 +107,14 @@ class RegistroSepultamentoController extends Controller
     {
         return $this->service->getRevisionHistory($id);
     }
+
+    public function like($id)
+    {
+        return $this->repository->like($id);
+    }
+
+    public function removeUserLikes()
+    {
+        return $this->repository->removeUserLikes();
+    }
 }
