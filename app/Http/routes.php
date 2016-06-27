@@ -8,6 +8,11 @@ Route::pattern('id', '[0-9]+');
 
 Route::group(['middleware' => 'cors'], function () {
 
+
+    Route::match(['get', 'post'], 'api/documento/favorites/download/{type}', 'DocumentoController@downloadFavorites')
+        ->where('type', 'xls|csv|pdf');
+
+
     Route::post('authenticate', 'OAuthController@accessToken');
 
     /**
@@ -29,6 +34,20 @@ Route::group(['middleware' => 'cors'], function () {
         ->where('size', 'medium|standard|large|original');
 
     /**
+     * Download an datasheet requested by routes:
+     * "api/documento/favorites/download/{type}" or
+     * "api/fotografia/favorites/download/{type}" or
+     * "api/registrosepultamento/favorites/download/{type}"
+     */
+    Route::get('datasheet/download/documental/{type}/{token}', 'DocumentoController@downloadFavorites')
+        ->where('type', 'xls|csv|pdf');
+    Route::get('datasheet/download/fotografico/{type}/{token}', 'FotografiaController@downloadFavorites')
+        ->where('type', 'xls|csv|pdf');
+    Route::get('datasheet/download/sepultamento/{type}/{token}', 'RegistroSepultamentoController@downloadFavorites')
+        ->where('type', 'xls|csv|pdf');
+
+    
+    /**
      * Group 'api'
      */
     Route::group(['prefix' => 'api', 'middleware' => ['oauth']], function () {
@@ -47,6 +66,8 @@ Route::group(['middleware' => 'cors'], function () {
          */
         Route::get('documento/{id}/like', 'DocumentoController@like');
         Route::get('documento/unlike-all', 'DocumentoController@removeUserLikes');
+        Route::get('documento/favorites/download/{type}', 'DocumentoController@getDatasheetDownloadUrl')
+            ->where('type', 'xls|csv|pdf');
         Route::resource('documento', 'DocumentoController', ['except' => ['create', 'edit']]);
 
         /**
@@ -59,6 +80,8 @@ Route::group(['middleware' => 'cors'], function () {
          */
         Route::get('registrosepultamento/{id}/like', 'RegistroSepultamentoController@like');
         Route::get('registrosepultamento/unlike-all', 'RegistroSepultamentoController@removeUserLikes');
+        Route::get('registrosepultamento/favorites/download/{type}', 'RegistroSepultamentoController@getDatasheetDownloadUrl')
+            ->where('type', 'xls|csv|pdf');
         Route::resource('registrosepultamento', 'RegistroSepultamentoController', ['except' => ['create', 'edit']]);
 
         /**
@@ -66,6 +89,8 @@ Route::group(['middleware' => 'cors'], function () {
          */
         Route::get('fotografia/{id}/like', 'FotografiaController@like');
         Route::get('fotografia/unlike-all', 'FotografiaController@removeUserLikes');
+        Route::get('fotografia/favorites/download/{type}', 'FotografiaController@getDatasheetDownloadUrl')
+            ->where('type', 'xls|csv|pdf');
         Route::resource('fotografia', 'FotografiaController', ['except' => ['create', 'edit']]);
 
         /**

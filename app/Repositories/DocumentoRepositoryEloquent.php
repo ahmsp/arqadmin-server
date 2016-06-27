@@ -52,8 +52,8 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
 
 
         if (isset($params['likes'])) {
-            $model->whereLiked(auth()->user()->getAuthIdentifier())
-                ->with('likeCounter'); // highly suggested to allow eager load
+            $model->whereLiked(auth()->id());
+//                ->with('likeCounter'); // highly suggested to allow eager load
         }
 
         if (isset($params['filter']) && !isset($params['likes'])) {
@@ -152,6 +152,33 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
 //dd($result);
 
         return $result;
+    }
+
+    public function countUserLikes()
+    {
+        return $this->model->whereLiked(auth()->id())->count();
+    }
+
+    /**
+     * @param null $userId
+     * @return mixed
+     */
+    public function findAllUserLikes($userId = null)
+    {
+        $id = $userId ?: auth()->id();
+
+        $model = $this->model
+            ->select('documento.*')
+            ->with('fundo', 'subfundo', 'grupo', 'subgrupo', 'serie', 'subserie',
+                'dossie', 'especieDocumental', 'conservacao', 'lcSala', 'lcMovel',
+                'lcCompartimento', 'lcAcondicionamento', 'dtUso', 'desenhosTecnicos',
+                'desenhosTecnicos.dtTipo', 'desenhosTecnicos.dtSuporte', 'desenhosTecnicos.dtEscala',
+                'desenhosTecnicos.dtTecnica', 'desenhosTecnicos.dtConservacao');
+
+        $model->whereLiked($id);
+        $model->orderBy('id', 'DESC');
+
+        return $model->get();
     }
 
     public function buildWhere($model, $param)

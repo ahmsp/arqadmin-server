@@ -147,21 +147,24 @@ class DownloadService extends BaseService
     /**
      * Generate a download validation
      *
+     * @param $acervo
      * @param $downloadFileName
      * @return mixed
      */
-    public function generateValidation($downloadFileName)
+    public function generateValidation($acervo, $downloadFileName)
     {
         do {
             $token = $this->makeRandomToken();
         } while ($res = null === $this->repository->findByField('token', $token));
 
-        $userId = Authorizer::getResourceOwnerId();
-        $username = User::find($userId)->username;
+//        $userId = Authorizer::getResourceOwnerId();
+//        $username = User::find($userId)->username;
+        $username = User::find(auth()->id())->username;
 
         $validator = $this->repository->create([
             'token' => $token,
             'file_name' => $downloadFileName,
+            'collection_type' => $acervo,
             'expiration_time' => Carbon::now()->addDay(),
             'username' => $username
         ]);
@@ -201,6 +204,29 @@ class DownloadService extends BaseService
             if ($downloadRow
                 && $downloadRow->file_name
                 && $downloadRow->file_name === $downloadFileName
+                && !$downloadRow->download_date
+                && Carbon::now() <= $downloadRow->expiration_time
+            ) {
+                return $downloadRow;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Validate a URL input
+     *
+     * @param string $token (string, 12 chars)
+     * @return mixed
+     */
+    function validateDatasheetDownload($token)
+    {
+        if (preg_match('/^[0-9A-Z]{12}$/i', $token)) {
+            $downloadRow = $this->repository->findByField('token', $token)->first();
+
+            if ($downloadRow
+                && $downloadRow->file_name
                 && !$downloadRow->download_date
                 && Carbon::now() <= $downloadRow->expiration_time
             ) {

@@ -125,6 +125,29 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
         return $result;
     }
 
+    public function countUserLikes()
+    {
+        return $this->model->whereLiked(auth()->id())->count();
+    }
+
+    /**
+     * @param null $userId
+     * @return mixed
+     */
+    public function findAllUserLikes($userId = null)
+    {
+        $id = $userId ?: auth()->id();
+
+        $model = $this->model
+            ->select('fotografia.*')
+            ->with('ftFundo', 'ftGrupo', 'ftSerie', 'ftTipologia', 'ftCromia', 'ftCategoria', 'ftCampo', 'ftAmbiente');
+
+        $model->whereLiked($id);
+        $model->orderBy('id', 'DESC');
+
+        return $model->get();
+    }
+
     public function buildWhere($model, $param)
     {
         if ('Fotografia' === $param['model']) {

@@ -126,6 +126,31 @@ class RegistroSepultamentoRepositoryEloquent extends BaseRepository implements R
         return $result;
     }
 
+    public function countUserLikes()
+    {
+        return $this->model->whereLiked(auth()->id())->count();
+    }
+
+    /**
+     * @param null $userId
+     * @return mixed
+     */
+    public function findAllUserLikes($userId = null)
+    {
+        $id = $userId ?: auth()->id();
+
+        $model = $this->model
+            ->select('registro_sepultamento.*')
+            ->with('lcSala', 'lcMovel', 'lcCompartimento', 'lcAcondicionamento',
+                'conservacao', 'sfmCartorio', 'sfmCemiterio', 'sfmNacionalidade', 'sfmNaturalidade',
+                'sfmEstadocivil', 'sfmCausamortis');
+        
+        $model->whereLiked($id);
+        $model->orderBy('id', 'DESC');
+
+        return $model->get();
+    }
+
     public function buildWhere($model, $param)
     {
         if ('RegistroSepultamento' === $param['model']) {

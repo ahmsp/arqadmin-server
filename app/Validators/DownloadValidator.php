@@ -13,6 +13,7 @@ class DownloadValidator extends LaravelValidator
         ValidatorInterface::RULE_CREATE => [
             'token' => 'required|min:12|max:12|unique:token,download_validation',
             'file_name' => 'required|max:245',
+            'collection_type' => 'required|max:145',
             'expiration_time' => 'required|date',
             'username' => 'required',
             'download_date' => 'date'
@@ -21,6 +22,7 @@ class DownloadValidator extends LaravelValidator
         ValidatorInterface::RULE_UPDATE => [
             'token' => 'required|min:12|max:12|unique:token,download_validation',
             'file_name' => 'required|max:245',
+            'collection_type' => 'required|max:145',
             'expiration_time' => 'required|date',
             'username' => 'required',
             'download_date' => 'date'

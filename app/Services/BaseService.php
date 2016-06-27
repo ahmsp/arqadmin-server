@@ -90,12 +90,7 @@ abstract class BaseService
     public function validate($data, $id = null)
     {
         try {
-//            if ($id) {
-//                $this->validator->with($data)->setId($id)->passesOrFail(ValidatorInterface::RULE_UPDATE);
-//            } else {
             $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
-//            }
-//            dd('$data');
 
             return true;
 

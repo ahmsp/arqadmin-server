@@ -158,7 +158,7 @@ return [
         LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class,
         Conner\Likeable\LikeableServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -212,7 +212,7 @@ return [
         'Corp'      => Stevebauman\Corp\Facades\Corp::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

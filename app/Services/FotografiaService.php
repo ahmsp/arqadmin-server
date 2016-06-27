@@ -3,11 +3,13 @@
 namespace ArqAdmin\Services;
 
 
+use ArqAdmin\Entities\User;
 use ArqAdmin\Repositories\FotografiaRepository;
 use ArqAdmin\Validators\FotografiaValidator;
 use Carbon\Carbon;
 use Illuminate\Container\Container as Application;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Class FotografiaService
@@ -152,7 +154,7 @@ class FotografiaService extends BaseService
         }
 
         $makeImage = $this->downloadService->makeImage($acervo, $originalName, $size);
-        $validation = $this->downloadService->generateValidation($makeImage['file_name']);
+        $validation = $this->downloadService->generateValidation($acervo, $makeImage['file_name']);
         $urlDownload = url("imagem/download/fotografico/{$id}/{$size}/{$validation->token}");
 
         return ['url_download' => $urlDownload];
@@ -187,5 +189,129 @@ class FotografiaService extends BaseService
         $this->downloadService->repository->update(['download_date' => Carbon::now()], $downloadRow->id);
 
         return $downloadImage;
+    }
+
+    /**
+     * @param string $type Type template parameters: xls|csv|pdf
+     * @return array
+     */
+    public function getDatasheetDownloadUrl($type)
+    {
+        if ($this->repository->countUserLikes() === 0) {
+            abort('404', 'Nenhum dado encontrado');
+        }
+
+        $fileName = 'AHSP_Acervo_Fotografico_Selecionados_' . Carbon::now()->format('Y-m-d_His') . '.' . $type;
+
+        $validation = $this->downloadService->generateValidation('fotografico', $fileName);
+        $urlDownload = url("datasheet/download/fotografico/{$type}/{$validation->token}");
+
+        return ['url_download' => $urlDownload];
+    }
+
+    /**
+     * @param string $token
+     * @return array
+     */
+    public function downloadPDF($token)
+    {
+        if (!$downloadRow = $this->downloadService->validateDatasheetDownload($token)) {
+            abort('401', 'Link não encontrado ou expirado!');
+        }
+
+        $user = User::where('username', $downloadRow->username)->first();
+        $data = $this->repository->findAllUserLikes($user->id);
+        $date = Carbon::now();
+
+        $this->downloadService->repository->update(['download_date' => $date], $downloadRow->id);
+
+        return [
+            'filename' => $downloadRow->file_name,
+            'data' => $data,
+            'date' => $date,
+            'userName' => $user->name,
+        ];
+    }
+
+    /**
+     * @param string $type Type template parameters: xls|csv|pdf
+     * @param string $token
+     * @return array
+     *
+     */
+    public function downloadDatasheet($type, $token)
+    {
+        if (!$downloadRow = $this->downloadService->validateDatasheetDownload($token)) {
+            abort('401', 'Link não encontrado ou expirado!');
+        }
+
+        $userId = User::where('username', $downloadRow->username)->first()->id;
+        $fileName = pathinfo($downloadRow->file_name, PATHINFO_FILENAME);
+
+        $this->downloadService->repository->update(['download_date' => Carbon::now()], $downloadRow->id);
+
+        $data = $this->formatSheet($this->repository->findAllUserLikes($userId));
+        $this->exportExcel($fileName, $type, $data);
+    }
+
+    public function exportExcel($filename, $type, $data)
+    {
+        return Excel::create($filename, function ($excel) use ($data, $type) {
+
+            $excel->setTitle('Acervo Fotográfico - AHSP');
+            $excel->setCreator('ArqAdmin')->setCompany('Arquivo Histórico de São Paulo');
+            $excel->setDescription('Seleção de itens do acervo fotográfico do AHSP');
+
+            $excel->sheet('Fotografia', function ($sheet) use ($data, $type) {
+                if ($type == 'pdf') {
+                    $sheet->setPaperSize(64); //A2
+                }
+                $sheet->fromArray($data['images']);
+            });
+
+        })->download($type);
+    }
+
+    public function formatSheet($data)
+    {
+        $images = [];
+        foreach ($data as $item) {
+            array_push($images, [
+                'Imagem ID' => $item->id,
+                'Fundo' => $item->ftFundo ? $item->ftFundo->fundo : '',
+                'Grupo' => $item->ftGrupo ? $item->ftGrupo->grupo : '',
+                'Série' => $item->ftSerie ? $item->ftSerie->serie : '',
+                'Tipologia' => $item->ftTipologia ? $item->ftTipologia->tipologia : '',
+                'Data da Imagem' => $item->data_imagem,
+                'Autoria' => $item->autoria,
+                'Identificacao da imagem' => $item->imagem_identificacao,
+                'Bairro' => $item->bairro,
+                'Assunto Geral' => $item->assunto_geral,
+                'Título' => $item->titulo,
+                'Identificação' => $item->identificacao,
+                'Assunto 1' => $item->assunto_1,
+                'Assunto 2' => $item->assunto_2,
+                'Assunto 3' => $item->assunto_3,
+                'Registro' => $item->registro,
+                'Cromia' => $item->ftCromia ? $item->ftCromia->cromia : '',
+                'Formato' => $item->formato,
+                'Categoria' => $item->ftCategoria ? $item->ftCategoria->categoria : '',
+                'Campo' => $item->ftCampo ? $item->ftCampo->campo : '',
+                'Tipo' => $item->tipo,
+                'Ambiente' => $item->ftAmbiente ? $item->ftAmbiente->ambiente : '',
+                'Enquadramento' => $item->enquadramento,
+                'Inscrição' => $item->inscricao,
+                'Texto da Inscrição' => $item->texto_inscricao,
+                'Localização' => $item->localizacao,
+                'Conservação' => $item->conservacao,
+                'Procedência' => $item->procedencia,
+                'Origem' => $item->origem,
+                'Imagem_original' => $item->imagem_original ? $item->imagem_original : '',
+            ]);
+        }
+
+        return [
+            'images' => $images
+        ];
     }
 }

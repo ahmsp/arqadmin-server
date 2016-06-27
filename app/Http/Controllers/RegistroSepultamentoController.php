@@ -6,6 +6,7 @@ use ArqAdmin\Http\Requests;
 use ArqAdmin\Repositories\RegistroSepultamentoRepository;
 use ArqAdmin\Services\RegistroSepultamentoService;
 use ArqAdmin\Services\ResearchesService;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 
 class RegistroSepultamentoController extends Controller
@@ -116,5 +117,41 @@ class RegistroSepultamentoController extends Controller
     public function removeUserLikes()
     {
         return $this->repository->removeUserLikes();
+    }
+
+    // Type template: xls|csv|pdf
+    public function getDatasheetDownloadUrl($type)
+    {
+        $datasheet = $this->service->getDatasheetDownloadUrl($type);
+
+        return ['url_download' => $datasheet['url_download']];
+    }
+
+    // Size template: xls|csv|pdf
+    public function downloadFavorites($type, $token)
+    {
+        if ($type == 'pdf') {
+            $data = $this->service->downloadPDF($token);
+
+//            return view('pdf.sepultamento', [
+//                'data' => $data['data'],
+//                'userName' => $data['userName'],
+//                'date' => $data['date']
+//            ]);
+
+            $pdf = PDF::loadView('pdf.sepultamento', [
+                'data' => $data['data'],
+                'userName' => $data['userName'],
+                'date' => $data['date']
+            ]);
+
+            return $pdf->download($data['filename']);
+//            return $pdf->stream($data['filename']);
+
+        } else {
+            if (!$datasheet = $this->service->downloadDatasheet($type, $token)) {
+                abort(404, 'Link não encontrado ou expirado!');
+            }
+        }
     }
 }

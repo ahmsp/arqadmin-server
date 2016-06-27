@@ -14,5 +14,5 @@ class Download extends Model implements Transformable
 
     public $timestamps = false;
 
-    protected $fillable = ['token', 'file_name', 'expiration_time', 'username', 'download_date'];
+    protected $fillable = ['token', 'file_name', 'collection_type', 'expiration_time', 'username', 'download_date'];
 }
