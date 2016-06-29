@@ -20,7 +20,7 @@ Route::group(['middleware' => 'cors'], function () {
      */
     Route::get('imagem/documental/{id}/{maxSize?}', 'DesenhoTecnicoController@showPublicImage');
     Route::get('imagem/fotografico/{id}/{maxSize?}', 'FotografiaController@showPublicImage');
-//    Route::get('imagem/sfm/{id}/{template}', 'RegistroSepultamentoController@showPublicImage');
+//    Route::get('imagem/sepultamento/{id}/{template}', 'RegistroSepultamentoController@showPublicImage');
 
     /**
      * Download an image requested by routes:
