@@ -1,0 +1,23 @@
+{
+  "name": "ArqAdmin",
+  "version": "0.1.0",
+  "description": "Documentação da API do ArqAdmin",
+  "title": "ArqAdmin API",
+  "url" : "http://arqadmin.dev/api",
+  "header": {
+    "title": "My own header title",
+    "filename": "header.md"
+  },
+  "footer": {
+    "title": "My own footer title",
+    "filename": "footer.md"
+  },
+  "order": [
+    "GetUser",
+    "PostUser"
+  ],
+  "template": {
+    "withCompare": true,
+    "withGenerator": true
+  }
+}
