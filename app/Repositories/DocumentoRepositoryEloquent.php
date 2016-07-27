@@ -4,8 +4,6 @@ namespace ArqAdmin\Repositories;
 
 use ArqAdmin\Entities\Documento;
 use Conner\Likeable\Like;
-use Conner\Likeable\LikeCounter;
-use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 /**
@@ -46,7 +44,7 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'desenhosTecnicos.dtTipo', 'desenhosTecnicos.dtSuporte', 'desenhosTecnicos.dtEscala',
                 'desenhosTecnicos.dtTecnica', 'desenhosTecnicos.dtConservacao');
 
-        $model->with(['likable' => function($q){
+        $model->with(['likable' => function ($q) {
             $q->where('user_id', auth()->user()->id);
         }]);
 
@@ -92,20 +90,38 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
 
         $filterParams = (isset($filters)) ? $this->parseFilter($filters) : null;
 
-        if (isset($filterParams) && isset($filterParams['and'])) {
-            foreach ($filterParams['and'] as $param) {
-                $this->buildWhere($model, $param);
+        if (isset($filterParams)) {
+
+            if (isset($filterParams['and']) && count($filterParams['and']) > 0) {
+
+                foreach ($filterParams['and'] as $param) {
+                    $this->buildWhere($model, $param);
+                }
+
+            } elseif (isset($filterParams['or'])) {
+                //group the WHERE clauses when logical operator is OR
+                $model->where(function ($query) use ($filterParams) {
+                    foreach ($filterParams['or'] as $param) {
+                        $this->buildWhere($query, $param);
+                    }
+                });
             }
         }
 
-        //group the WHERE clauses when logical operator is OR
-        if (isset($filterParams) && isset($filterParams['or'])) {
-            $model->where(function ($query) use ($filterParams) {
-                foreach ($filterParams['or'] as $param) {
-                    $this->buildWhere($query, $param);
-                }
-            });
-        }
+//        if (isset($filterParams) && isset($filterParams['and'])) {
+//            foreach ($filterParams['and'] as $param) {
+//                $this->buildWhere($model, $param);
+//            }
+//        }
+//
+//        //group the WHERE clauses when logical operator is OR
+//        if (count($filterParams['and']) === 0 && isset($filterParams) && isset($filterParams['or'])) {
+//            $model->where(function ($query) use ($filterParams) {
+//                foreach ($filterParams['or'] as $param) {
+//                    $this->buildWhere($query, $param);
+//                }
+//            });
+//        }
 
         if (isset($filters)) {
             foreach ($filters as $filter) {
@@ -148,8 +164,8 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
 
         $result = $model->paginate($limit);
 
-//dd($model->toSql());
-//dd($result);
+//        dd($model->toSql());
+//        dd($result);
 
         return $result;
     }

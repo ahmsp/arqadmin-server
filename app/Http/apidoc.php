@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @api {get} /api/documento/:id Request Documento information
- * @apiVersion 1.0.0
+ * @api {get} /documento/:id Request Documento information
+ * @apiVersion 0.1.0
  * @apiName GetDocumento
- * @apiGroup Documental
+ * @apiGroup Textual_e_Cartografico
  * @apiPermission user
  *
  * @apiParam {Number} id Documento unique ID.
@@ -19,8 +19,8 @@
  * @apiSuccess {Number} dossie_id  ID do Dossie.
  * @apiSuccess {Number} especiedocumental_id  Especie documental.
  * @apiSuccess {String} notacao_preexistente Notacao Pré-existente.
- * @apiSuccess {String} notacao Notação
- * @apiSuccess {String} ano Ano
+ * @apiSuccess {String} notacao Notação.
+ * @apiSuccess {String} ano Ano.
  * @apiSuccess {String} data_doc Data do documento.
  * @apiSuccess {String} processo_num Número do Processo.
  * @apiSuccess {Number} quantidade_doc Quantidade de Documentos.
@@ -69,10 +69,10 @@ Route::resource('documento', 'DocumentoController', ['except' => ['create', 'edi
 
 
 /**
- * @api {get} /api/documento Filter Documents
- * @apiVersion 1.0.0
- * @apiName GetDocumento
- * @apiGroup Documental
+ * @api {get} /documento Filter Documents
+ * @apiVersion 0.1.0
+ * @apiName GetDocumentos
+ * @apiGroup Textual_e_Cartografico
  * @apiPermission user
  *
  * @apiParam {Number} id Documento unique ID.
@@ -118,17 +118,15 @@ Route::resource('documento', 'DocumentoController', ['except' => ['create', 'edi
 Route::resource('documento', 'DocumentoController', ['except' => ['create', 'edit']]);
 
 
-
-
-
-
-
-
 /**
- * @api {post} /bitbucket/saveRepository Save a new repository
- * @apiVersion 1.0.0
- * @apiName SaveRepository
- * @apiGroup Bitbucket
+ *
+ * @api {get} /fotografia/:id Request Fotografia information
+ * @apiVersion 0.1.0
+ * @apiName GetFotografia
+ * @apiGroup Fotografico
+ * @apiPermission user
+ *
+ * @apiParam {Number} id Fotografia unique ID.
  *
  * @apiParam (parameters) {String} projectId Project's ID
  * @apiParam (parameters) {String} repository[uuid] Repository's Id
@@ -143,3 +141,28 @@ Route::resource('documento', 'DocumentoController', ['except' => ['create', 'edi
  * @apiSuccess (201) {String} data  Ok
  * @apiSuccess (201) {Number} statusCode  Status Code
  */
+
+/**
+ *
+ * @api {get} /sepultamento/:id Request Termo de Sepultamento information
+ * @apiVersion 0.1.0
+ * @apiName GetSepultamento
+ * @apiGroup Sepultamento
+ * @apiPermission user
+ *
+ * @apiParam {Number} id Sepultamento unique ID.
+ *
+ * @apiParam (parameters) {String} projectId Project's ID
+ * @apiParam (parameters) {String} repository[uuid] Repository's Id
+ * @apiParam (parameters) {String} repository[owner] Repository's Owner
+ * @apiParam (parameters) {String} repository[slug] Repository's Slug
+ *
+ * @apiError (406) InvalidParameters Invalid parameters
+ * @apiError (404) ProjectNotFound Project not found
+ * @apiError (406) RepositoryAlreadyUsed Repository already used
+ *
+ * @apiSuccess (201) {String} status Status
+ * @apiSuccess (201) {String} data  Ok
+ * @apiSuccess (201) {Number} statusCode  Status Code
+ */
+
