@@ -27,10 +27,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Relation::morphMap([
-            'documental' => Documento::class,
-            'fotografico' => Fotografia::class,
-            'sepultamento' => RegistroSepultamento::class,
-        ]);
+//        Relation::morphMap([
+//            'documental' => Documento::class,
+//            'fotografico' => Fotografia::class,
+//            'sepultamento' => RegistroSepultamento::class,
+//        ]);
     }
 }
