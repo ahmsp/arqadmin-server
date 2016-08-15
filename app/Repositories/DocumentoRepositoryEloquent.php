@@ -123,15 +123,10 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
 //            });
 //        }
 
-        if (isset($filters)) {
-            foreach ($filters as $filter) {
-                if (isset($filter['property']) && $filter['property'] == 'com_imagem') {
-                    $model->whereHas('DesenhosTecnicos', function ($query) {
-                        $query->havingRaw('count(id) > 0');
-                    });
-                    break;
-                }
-            }
+        if (isset($params['com_imagem']) && $params['com_imagem'] == 'true') {
+            $model->whereHas('DesenhosTecnicos', function ($query) {
+                $query->havingRaw('count(id) > 0');
+            });
         }
 
         if (isset($params['sort'])) {

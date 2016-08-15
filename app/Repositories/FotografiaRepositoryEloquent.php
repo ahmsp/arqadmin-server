@@ -89,6 +89,10 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
             });
         }
 
+        if (isset($params['com_imagem']) && $params['com_imagem'] == 'true') {
+            $model->whereNotNull('imagem_original');
+        }
+
         if (isset($params['sort'])) {
             $sorters = json_decode($params['sort'], true); // Decode the filter
             $mapFields = $this->mapFields();
