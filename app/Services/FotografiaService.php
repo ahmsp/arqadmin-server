@@ -102,7 +102,7 @@ class FotografiaService extends BaseService
         $model = $this->repository->find($id);
         $file = $request->file('file');
 
-        $data['imagem_original'] = $file->getClientOriginalName();
+        $data['imagem_original'] = $request->input('imagem_original', $file->getClientOriginalName());
         $data['imagem_publica'] = pathinfo($data['imagem_original'], PATHINFO_FILENAME) . '.jpg';
 
         $filenameExists = $this->repository->findWhere([
