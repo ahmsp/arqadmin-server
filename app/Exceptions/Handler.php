@@ -62,7 +62,7 @@ class Handler extends ExceptionHandler
             $error = [
                 'error_type' => $errorType, //$e->errorType (property does not exists in HttpException),
                 'error_description' => $e->getMessage(),
-                'user_message' => $message
+                'user_message' => $e->getMessage() ?: $message
             ];
 
             return response($error, $e->getStatusCode());

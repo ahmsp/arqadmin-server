@@ -80,15 +80,8 @@ class FotografiaService extends BaseService
 
     public function preUpdate($data, $id)
     {
-        $oldData = $this->repository->find($id);
-
+        unset($data['imagem_original']);
         $result = $this->update($data, $id);
-
-        if ($result) {
-            if (isset($data['imagem_original']) && $oldData['imagem_original'] !== $data['imagem_original']) {
-                abort(400, 'As imagens existentes não podem ser sobrescritas.');
-            }
-        }
 
         return $result;
     }
@@ -102,7 +95,7 @@ class FotografiaService extends BaseService
         $model = $this->repository->find($id);
         $file = $request->file('file');
 
-        $data['imagem_original'] = $request->input('imagem_original', $file->getClientOriginalName());
+        $data['imagem_original'] = $request->input('filename', $file->getClientOriginalName());
         $data['imagem_publica'] = pathinfo($data['imagem_original'], PATHINFO_FILENAME) . '.jpg';
 
         $filenameExists = $this->repository->findWhere([
@@ -136,6 +129,23 @@ class FotografiaService extends BaseService
         $delete = $this->delete($id);
 
         return $delete;
+    }
+
+    public function removeImage($id)
+    {
+        $data = $this->repository->find($id);
+
+        $removedImages = $this->imagesService->removeOriginalAndRelatedImages('fotografico', $data->imagem_original);
+
+        $update = $this->update(
+            [
+                'imagem_original' => $removedImages['originalDeletedFilename'],
+                'imagem_publica' => $removedImages['publicDeletedFilename']
+            ],
+            $id
+        );
+
+        return $update;
     }
 
     /**
