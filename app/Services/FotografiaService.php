@@ -135,12 +135,12 @@ class FotografiaService extends BaseService
     {
         $data = $this->repository->find($id);
 
-        $removedImages = $this->imagesService->removeOriginalAndRelatedImages('fotografico', $data->imagem_original);
+        $this->imagesService->removeOriginalAndRelatedImages('fotografico', $data->imagem_original);
 
         $update = $this->update(
             [
-                'imagem_original' => $removedImages['originalDeletedFilename'],
-                'imagem_publica' => $removedImages['publicDeletedFilename']
+                'imagem_original' => null,
+                'imagem_publica' => null
             ],
             $id
         );

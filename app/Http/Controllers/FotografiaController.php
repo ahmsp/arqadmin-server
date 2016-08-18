@@ -2,7 +2,6 @@
 
 namespace ArqAdmin\Http\Controllers;
 
-use ArqAdmin\Http\Requests;
 use ArqAdmin\Repositories\FotografiaRepository;
 use ArqAdmin\Services\FotografiaService;
 use ArqAdmin\Services\ResearchesService;
@@ -135,6 +134,13 @@ class FotografiaController extends Controller
         $this->authorize('role-fotografico');
 
         return $this->service->upload($request, $id);
+    }
+
+    public function removeImage($id)
+    {
+        $this->authorize('role-fotografico');
+
+        return $this->service->removeImage($id);
     }
 
     public function getRevisionHistory($id)
