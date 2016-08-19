@@ -27,11 +27,6 @@ class ImagesService
     private $diskPath;
 
     /**
-     * @var bool
-     */
-    private $cache = false;
-
-    /**
      * ImagesService constructor.
      */
     public function __construct()
@@ -129,10 +124,10 @@ class ImagesService
         $imageFile = $this->getDisk()->get($acervoPath . $fileName);
         $filter = new Small($maxSize);
 
-        if ($this->cache) {
+        if (app()->environment() == 'production') {
             $cacheImage = Image::cache(function ($img) use ($imageFile, $filter) {
                 $img->make($imageFile)->filter($filter);
-            }, 10, true);
+            }, 15, true);
             $image = Image::make($cacheImage);
         } else {
             $image = Image::make($imageFile)->filter($filter);
