@@ -3,6 +3,7 @@
 namespace ArqAdmin\Repositories;
 
 use ArqAdmin\Entities\Fotografia;
+use Conner\Likeable\Like;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 /**
