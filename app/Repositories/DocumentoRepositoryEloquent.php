@@ -621,6 +621,11 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 'column' => 'descricao',
                 'type' => 'string',
             ],
+            'desenho_tecnico_arquivo_original' => [
+                'entity' => 'DesenhosTecnicos',
+                'column' => 'arquivo_original',
+                'type' => 'string',
+            ],
         ];
     }
 }
