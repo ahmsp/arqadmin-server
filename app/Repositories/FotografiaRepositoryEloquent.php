@@ -32,11 +32,11 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
             ->select('fotografia.*')
             ->with('ftFundo', 'ftGrupo', 'ftSerie', 'ftTipologia', 'ftCromia', 'ftCategoria', 'ftCampo', 'ftAmbiente');
 
-        $model->with(['likable' => function($q){
+        $model->with(['likable' => function ($q) {
             $q->where('user_id', auth()->user()->id);
         }]);
 
-        
+
         if (isset($params['likes'])) {
             $model->whereLiked(auth()->user()->getAuthIdentifier())
                 ->with('likeCounter'); // highly suggested to allow eager load
@@ -91,7 +91,7 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
         }
 
         if (isset($params['com_imagem']) && $params['com_imagem'] == 'true') {
-            $model->whereNotNull('imagem_original');
+            $model->whereNotNull('imagem_original')->where('imagem_original', '<>', '');
         }
 
         if (isset($params['sort'])) {
