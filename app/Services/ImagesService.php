@@ -115,7 +115,8 @@ class ImagesService
 
         if (!$this->imageExists($acervoPath . $fileName)) {
             if (!$this->imageExists($acervoPathOriginal . $originalName)) {
-                abort(404, 'Imagem não encontrada.');
+                return $this->getNotFoundImage();
+//                abort(404, 'Imagem não encontrada.');
             }
             $this->makeImage(
                 $acervoPathOriginal . $originalName, 72, 1024, 'jpg', $acervoPath . $fileName);
@@ -134,6 +135,17 @@ class ImagesService
         }
 
         return $image;
+    }
+
+    public function getNotFoundImage()
+    {
+        $imageFile = public_path() . "/ico/no-image-75.png";
+        $cacheImage = Image::cache(function ($img) use ($imageFile) {
+            $img->make($imageFile);
+        }, 1440);
+
+        return Image::make($cacheImage);
+//        return Image::make(public_path() . '/ico/no-image-75.png');
     }
 
     public function uploadImage(Request $request, $acervo)

@@ -106,7 +106,8 @@ class FotografiaController extends Controller
     public function showPublicImage($id, $maxSize = 300)
     {
         $image = $this->service->showPublicImage($id, $maxSize);
-        return $image->response('jpg', 100);
+        return $image->response();
+//        return $image->response('jpg', 100);
     }
 
     // Size template: medium|standard|large|original
