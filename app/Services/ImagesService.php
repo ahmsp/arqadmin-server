@@ -139,13 +139,16 @@ class ImagesService
 
     public function getNotFoundImage()
     {
-        $imageFile = public_path() . "/ico/no-image-75.png";
-        $cacheImage = Image::cache(function ($img) use ($imageFile) {
-            $img->make($imageFile);
-        }, 1440);
+//        $imageFile = public_path() . "/ico/no-image-75.png";
+//        $cacheImage = Image::cache(function ($img) use ($imageFile) {
+//            $img->make($imageFile);
+//        }, 1440);
+//
+//        return Image::make($cacheImage);
 
-        return Image::make($cacheImage);
 //        return Image::make(public_path() . '/ico/no-image-75.png');
+
+        abort(404, 'Imagem não encontrada.');
     }
 
     public function uploadImage(Request $request, $acervo)
