@@ -64,13 +64,14 @@ class DesenhoTecnicoService extends BaseService
      * @param int $maxSize Maximum size in pixels
      * @return mixed
      */
-    public function showPublicImage($id, $maxSize = 300)
+    public function showPublicImage($id, $maxSize = null)
     {
         $data = $this->repository->find($id);
         $originalName = $data->arquivo_original;
 
         if (!$originalName || 0 === strlen($originalName)) {
-            abort(404, 'Imagem não encontrada.');
+            return $this->imagesService->getNotFoundImage();
+//            abort(404, 'Imagem não encontrada.');
         }
 
         return $this->imagesService->getPublicImage($data->acervo_tipo, $originalName, $maxSize);

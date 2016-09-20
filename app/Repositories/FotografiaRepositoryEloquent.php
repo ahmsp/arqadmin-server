@@ -59,7 +59,8 @@ class FotografiaRepositoryEloquent extends BaseRepository implements FotografiaR
                 'assunto_1',
                 'assunto_2',
                 'assunto_3',
-                'texto_inscricao'
+                'texto_inscricao',
+                'imagem_identificacao'
             ];
 
             $filters = isset($filters) ? $filters : [];

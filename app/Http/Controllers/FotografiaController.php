@@ -103,11 +103,11 @@ class FotografiaController extends Controller
         return $this->service->deleteAndRemoveImage($id);
     }
 
-    public function showPublicImage($id, $maxSize = 300)
+    public function showPublicImage($id, $maxSize = null)
     {
         $image = $this->service->showPublicImage($id, $maxSize);
+
         return $image->response();
-//        return $image->response('jpg', 100);
     }
 
     // Size template: medium|standard|large|original

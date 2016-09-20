@@ -66,18 +66,23 @@ class FotografiaService extends BaseService
      * @param int $maxSize Maximum size in pixels
      * @return mixed
      */
-    public function showPublicImage($id, $maxSize = 300)
+    public function showPublicImage($id, $maxSize = null)
     {
         $data = $this->repository->find($id);
         $originalName = $data->imagem_original;
 
         if (!$originalName || 0 === strlen($originalName)) {
             return $this->imagesService->getNotFoundImage();
-//            abort(404, 'Imagem não encontrada.');
         }
 
         return $this->imagesService->getPublicImage('fotografico', $originalName, $maxSize);
     }
+
+    public function addWatermark(\Intervention\Image\Image $image)
+    {
+        return $this->imagesService->addWatermark($image);
+    }
+
 
     public function preUpdate($data, $id)
     {
@@ -122,7 +127,8 @@ class FotografiaService extends BaseService
         $this->update(
             [
                 'imagem_original' => $removedImages['originalDeletedFilename'],
-                'imagem_publica' => $removedImages['publicDeletedFilename']
+                'imagem_publica' => $removedImages['publicDeletedFilename'],
+                'imagem_identificacao' => null
             ],
             $id
         );
@@ -141,7 +147,8 @@ class FotografiaService extends BaseService
         $update = $this->update(
             [
                 'imagem_original' => null,
-                'imagem_publica' => null
+                'imagem_publica' => null,
+                'imagem_identificacao' => null
             ],
             $id
         );

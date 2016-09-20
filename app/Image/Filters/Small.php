@@ -18,8 +18,7 @@ class Small implements FilterInterface
 
     public function applyFilter(Image $image)
     {
-        $maxSize = $this->maxSize;
-        $image->resize($maxSize, $maxSize, function ($constraint) {
+        $image->resize($this->maxSize, $this->maxSize, function ($constraint) {
             $constraint->aspectRatio();
             $constraint->upsize();
         });

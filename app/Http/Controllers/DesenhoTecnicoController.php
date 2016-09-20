@@ -6,6 +6,7 @@ use ArqAdmin\Http\Requests;
 use ArqAdmin\Repositories\DesenhoTecnicoRepository;
 use ArqAdmin\Services\DesenhoTecnicoService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class DesenhoTecnicoController extends Controller
 {
@@ -95,10 +96,11 @@ class DesenhoTecnicoController extends Controller
         return $this->service->deleteAndRemoveImage($id);
     }
 
-    public function showPublicImage($id, $maxSize = 300)
+    public function showPublicImage($id, $maxSize = null)
     {
         $image = $this->service->showPublicImage($id, $maxSize);
-        return $image->response('jpg', 100);
+
+        return $image->response();
     }
 
     // Size template: medium|standard|large|original

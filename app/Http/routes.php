@@ -16,7 +16,7 @@ Route::group(['middleware' => 'cors'], function () {
     Route::post('authenticate', 'OAuthController@accessToken');
 
     /**
-     * Get public images (restrict size). Template: p|m|g
+     * Get public images
      */
     Route::get('imagem/documental/{id}/{maxSize?}', 'DesenhoTecnicoController@showPublicImage');
     Route::get('imagem/fotografico/{id}/{maxSize?}', 'FotografiaController@showPublicImage');
@@ -161,7 +161,7 @@ Route::group(['middleware' => 'cors'], function () {
         Route::post('imagem/upload/fotografico/{id}', 'FotografiaController@uploadImage');
 //        Route::post('imagem/upload/sfm/{id}', 'RegistroSepultamentoController@uploadImage');
 
-        /*
+        /**
          * Remove image
          */
         Route::post('imagem/remove/fotografico/{id}', 'FotografiaController@removeImage');

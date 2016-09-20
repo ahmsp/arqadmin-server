@@ -3,7 +3,7 @@
 namespace ArqAdmin\Services;
 
 
-use ArqAdmin\Image\Filters\Small;
+use ArqAdmin\Image\Filters\PublicImage;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Imagick;
@@ -70,6 +70,14 @@ class ImagesService
     /**
      * @return string
      */
+    public function getPathCartograficoTratado()
+    {
+        return config('arqadmin.path_cartografico_tratado');
+    }
+
+    /**
+     * @return string
+     */
     public function getPathCartograficoPublic()
     {
         return config('arqadmin.path_cartografico_public');
@@ -81,6 +89,14 @@ class ImagesService
     public function getPathTextualOriginal()
     {
         return config('arqadmin.path_textual_original');
+    }
+
+    /**
+     * @return string
+     */
+    public function getPathTextualTratado()
+    {
+        return config('arqadmin.path_textual_tratado');
     }
 
     /**
@@ -102,6 +118,14 @@ class ImagesService
     /**
      * @return string
      */
+    public function getPathFotograficoTratado()
+    {
+        return config('arqadmin.path_fotografico_tratado');
+    }
+
+    /**
+     * @return string
+     */
     public function getPathFotograficoPublic()
     {
         return config('arqadmin.path_fotografico_public');
@@ -110,20 +134,28 @@ class ImagesService
     public function getPublicImage($acervo, $originalName, $maxSize)
     {
         $acervoPathOriginal = $this->getAcervoPathOriginal($acervo);
-        $acervoPath = $this->getAcervoPathPublic($acervo);
+        $acervoPathTratado = $this->getAcervoPathTratado($acervo);
+        $acervoPathPublic = $this->getAcervoPathPublic($acervo);
         $fileName = pathinfo($originalName, PATHINFO_FILENAME) . '.jpg';
 
-        if (!$this->imageExists($acervoPath . $fileName)) {
-            if (!$this->imageExists($acervoPathOriginal . $originalName)) {
-                return $this->getNotFoundImage();
-//                abort(404, 'Imagem não encontrada.');
+        if (!$this->imageExists($acervoPathPublic . $fileName)) {
+
+            if ($this->imageExists($acervoPathTratado . $fileName)) {
+                // make large (public) image
+//                $this->makeImage($acervoPathTratado . $originalName, 72, null, 'jpg', $acervoPathTratado . $fileName, 60);
+            } else {
+
+                if (!$this->imageExists($acervoPathOriginal . $originalName)) {
+                    return $this->getNotFoundImage();
+                }
+
+                // make large (public) image
+//                $this->makeImage($acervoPathOriginal . $originalName, 72, null, 'jpg', $acervoPathPublic . $fileName, 60);
             }
-            $this->makeImage(
-                $acervoPathOriginal . $originalName, 72, 1024, 'jpg', $acervoPath . $fileName);
         }
 
-        $imageFile = $this->getDisk()->get($acervoPath . $fileName);
-        $filter = new Small($maxSize);
+        $imageFile = $this->getDisk()->get($acervoPathPublic . $fileName);
+        $filter = new PublicImage($maxSize);
 
         if (app()->environment() == 'production') {
             $cacheImage = Image::cache(function ($img) use ($imageFile, $filter) {
@@ -132,6 +164,10 @@ class ImagesService
             $image = Image::make($cacheImage);
         } else {
             $image = Image::make($imageFile)->filter($filter);
+        }
+
+        if (!$maxSize || $maxSize > 320) {
+            $image = $this->addWatermark($image);
         }
 
         return $image;
@@ -171,8 +207,7 @@ class ImagesService
         $acervoPathPublic = $this->getAcervoPathPublic($acervo);
         $fileName = pathinfo($originalName, PATHINFO_FILENAME) . '.jpg';
         if (!$this->imageExists($acervoPathPublic . $originalName)) {
-            $this->makeImage(
-                $imagePath, 72, 1024, 'jpg', $acervoPathPublic . $fileName);
+            $this->makeImage($imagePath, 72, null, 'jpg', $acervoPathPublic . $fileName, 60);
         }
 
         return true;
@@ -184,15 +219,26 @@ class ImagesService
      * @param $maxSize
      * @param $extension
      * @param $saveFile string Image path into local storage. (e.g., 'images/filename.jpg')
+     * @param null $quality Integer
      */
-    public function makeImage($imageFile, $resolution, $maxSize, $extension, $saveFile)
+    public function makeImage($imageFile, $resolution, $maxSize, $extension, $saveFile, $quality = null)
     {
         $image = $this->getDisk()->get($imageFile);
         $im = new Imagick;
         $im->readImageBlob($image);
         $im->setImageResolution($resolution, $resolution);
-        $im->resizeImage($maxSize, $maxSize, Imagick::FILTER_CATROM, 1, TRUE);
+
+        if ($maxSize) {
+            $im->resizeImage($maxSize, $maxSize, Imagick::FILTER_CATROM, 1, TRUE);
+        }
+
+        $im->setImageFormat($extension);
         $im->setFormat($extension);
+
+        if ($quality) {
+            $im->setImageCompression(Imagick::COMPRESSION_JPEG);
+            $im->setImageCompressionQuality($quality);
+        }
 
         if ($this->imageExists($saveFile)) {
             $this->softDelete($saveFile);
@@ -214,15 +260,16 @@ class ImagesService
 
         $acervoPathOriginal = $this->getAcervoPathOriginal($acervo);
         $originalFilePath = $acervoPathOriginal . $originalFileName;
+
         if ($this->imageExists($originalFilePath)) {
             $originalDeletedFilename = $this->softDelete($originalFilePath);
         }
 
         $acervoPathPublic = $this->getAcervoPathPublic($acervo);
-        $filePath = $acervoPathPublic . pathinfo($originalFileName, PATHINFO_FILENAME) . '.jpg';
+        $publicFilePath = $acervoPathPublic . pathinfo($originalFileName, PATHINFO_FILENAME) . '.jpg';
 
-        if ($this->imageExists($filePath)) {
-            $publicDeletedFilename = $this->softDelete($filePath);
+        if ($this->imageExists($publicFilePath)) {
+            $publicDeletedFilename = $this->softDelete($publicFilePath);
         }
 
         return [
@@ -291,6 +338,12 @@ class ImagesService
         return $paths['path_original'];
     }
 
+    public function getAcervoPathTratado($acervo)
+    {
+        $paths = $this->getAcervoPath($acervo);
+        return $paths['path_tratado'];
+    }
+
     public function getAcervoPathPublic($acervo)
     {
         $paths = $this->getAcervoPath($acervo);
@@ -302,18 +355,23 @@ class ImagesService
         switch ($acervo) {
             case 'cartografico';
                 $pathOriginal = $this->getPathCartograficoOriginal();
+                $pathTratado = $this->getPathCartograficoTratado();
                 $pathPublic = $this->getPathCartograficoPublic();
                 break;
             case 'textual';
                 $pathOriginal = $this->getPathTextualOriginal();
+                $pathTratado = $this->getPathTextualTratado();
                 $pathPublic = $this->getPathTextualPublic();
                 break;
             case 'fotografico';
                 $pathOriginal = $this->getPathFotograficoOriginal();
+                $pathTratado = $this->getPathFotograficoTratado();
                 $pathPublic = $this->getPathFotograficoPublic();
                 break;
             default;
-                $pathOriginal = $pathPublic = null;
+                $pathOriginal = null;
+                $pathTratado = null;
+                $pathPublic = null;
                 break;
         }
 
@@ -323,6 +381,7 @@ class ImagesService
 
         return [
             'path_public' => $pathPublic,
+            'path_tratado' => $pathTratado,
             'path_original' => $pathOriginal
         ];
     }
@@ -339,6 +398,15 @@ class ImagesService
         }
 
         return false;
+    }
+
+    public function addWatermark(\Intervention\Image\Image $image)
+    {
+        $watermark = Image::make($this->getDiskPath() . 'acervos/watermark2.png');
+        $watermark->fit($image->width(), $image->height());
+        $image->insert($watermark, 'center');
+
+        return $image;
     }
 
 }
