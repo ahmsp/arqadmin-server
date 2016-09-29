@@ -125,7 +125,7 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
 
         if (isset($params['com_imagem']) && $params['com_imagem'] == 'true') {
             $model->whereHas('DesenhosTecnicos', function ($query) {
-                $query->havingRaw('count(id) > 0');
+                $query->whereNotNull('arquivo_original')->where('arquivo_original', '<>', '');
             });
         }
 
