@@ -72,7 +72,7 @@ class FotografiaService extends BaseService
         $originalName = $data->imagem_original;
 
         if (!$originalName || 0 === strlen($originalName)) {
-            return $this->imagesService->getNotFoundImage();
+            abort(404, 'Imagem não encontrada.');
         }
 
         return $this->imagesService->getPublicImage('fotografico', $originalName, $maxSize);

@@ -109,29 +109,20 @@ class ImagesService
 
     public function getPublicImage($acervo, $originalName, $maxSize)
     {
-        $acervoPathOriginal = $this->getAcervoPathOriginal($acervo);
-        $acervoPathPublic = $this->getAcervoPathPublic($acervo);
-        $fileName = pathinfo($originalName, PATHINFO_FILENAME) . '.jpg';
+        $publicName = pathinfo($originalName, PATHINFO_FILENAME) . '.jpg';
+        $pathOriginal = $this->getAcervoPathOriginal($acervo) . $originalName;
+        $pathPublic = $this->getAcervoPathPublic($acervo) . $publicName;
 
-        $count = 0;
-        $retries = 3;
-        while (true) {
-            try {
-                $imageFile = $this->getDisk()->get($acervoPathPublic . $fileName);
-                break;
-            } catch (\Exception $e) {
-                if ($count++ < $retries) {
-                    sleep(0.1);
-                } else {
-//                    if ($this->getDisk()->has($acervoPathOriginal . $originalName)) {
-//                        // make large (public) image
-//                        $this->createImage($acervoPathOriginal . $originalName, 72, null, 'jpg', $acervoPathPublic . $fileName, 60);
-//                    } else {
-//                        return $this->getNotFoundImage();
-//                    }
-//                    break;
-                    throw $e;
-                }
+        if (!$imageFile = $this->getImageFromDisk($pathPublic)) {
+
+            if (!$this->getDisk()->has($pathOriginal)) {
+                abort(404, 'Imagem não encontrada.');
+            }
+
+            // make large (public) image
+            If (!$imageFile = $this->createImage($pathOriginal, 72, null, 'jpg', $pathPublic, 60)) {
+//                abort(500, 'File exception');
+                abort(404, 'Imagem não encontrada.');
             }
         }
 
@@ -153,18 +144,26 @@ class ImagesService
         return $image;
     }
 
-    public function getNotFoundImage()
+    public function getImageFromDisk($internalPath)
     {
-//        $imageFile = public_path() . "/ico/no-image-75.png";
-//        $cacheImage = Image::cache(function ($img) use ($imageFile) {
-//            $img->make($imageFile);
-//        }, 1440);
-//
-//        return Image::make($cacheImage);
+        $imageFile = false;
+        $count = 0;
+        $retries = 3;
 
-//        return Image::make(public_path() . '/ico/no-image-75.png');
+        while (true) {
+            try {
+                $imageFile = $this->getDisk()->get($internalPath);
+                break;
+            } catch (\Exception $e) {
+                if ($count++ < $retries) {
+                    sleep(0.2);
+                } else {
+                    break;
+                }
+            }
+        }
 
-        abort(404, 'Imagem não encontrada.');
+        return $imageFile;
     }
 
     public function uploadImage(Request $request, $acervo)
@@ -224,7 +223,12 @@ class ImagesService
             $this->softDelete($saveFile);
         }
 
-        return $im->writeImage($this->getDiskPath() . $saveFile);
+        if ($im->writeImage($this->getDiskPath() . $saveFile)) {
+            return $im;
+        }
+
+        return false;
+//        return $im->writeImage($this->getDiskPath() . $saveFile);
     }
 
     /**

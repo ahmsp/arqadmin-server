@@ -70,8 +70,7 @@ class DesenhoTecnicoService extends BaseService
         $originalName = $data->arquivo_original;
 
         if (!$originalName || 0 === strlen($originalName)) {
-            return $this->imagesService->getNotFoundImage();
-//            abort(404, 'Imagem não encontrada.');
+            abort(404, 'Imagem não encontrada.');
         }
 
         return $this->imagesService->getPublicImage($data->acervo_tipo, $originalName, $maxSize);
