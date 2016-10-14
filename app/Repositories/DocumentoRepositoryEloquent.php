@@ -93,12 +93,12 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
         if (isset($filterParams)) {
 
             if (isset($filterParams['and']) && count($filterParams['and']) > 0) {
-
                 foreach ($filterParams['and'] as $param) {
                     $this->buildWhere($model, $param);
                 }
+            }
 
-            } elseif (isset($filterParams['or'])) {
+            if (isset($filterParams['or'])) {
                 //group the WHERE clauses when logical operator is OR
                 $model->where(function ($query) use ($filterParams) {
                     foreach ($filterParams['or'] as $param) {
@@ -107,21 +107,6 @@ class DocumentoRepositoryEloquent extends BaseRepository implements DocumentoRep
                 });
             }
         }
-
-//        if (isset($filterParams) && isset($filterParams['and'])) {
-//            foreach ($filterParams['and'] as $param) {
-//                $this->buildWhere($model, $param);
-//            }
-//        }
-//
-//        //group the WHERE clauses when logical operator is OR
-//        if (count($filterParams['and']) === 0 && isset($filterParams) && isset($filterParams['or'])) {
-//            $model->where(function ($query) use ($filterParams) {
-//                foreach ($filterParams['or'] as $param) {
-//                    $this->buildWhere($query, $param);
-//                }
-//            });
-//        }
 
         if (isset($params['com_imagem']) && $params['com_imagem'] == 'true') {
             $model->whereHas('DesenhosTecnicos', function ($query) {

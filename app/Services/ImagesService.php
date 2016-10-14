@@ -119,11 +119,10 @@ class ImagesService
                 abort(404, 'Imagem não encontrada.');
             }
 
-            // make large (public) image
-            If (!$imageFile = $this->createImage($pathOriginal, 72, null, 'jpg', $pathPublic, 60)) {
+//            // make large (public) image
+//            If (!$imageFile = $this->createImage($pathOriginal, 72, null, 'jpg', $pathPublic, 60)) {
 //                abort(500, 'File exception');
-                abort(404, 'Imagem não encontrada.');
-            }
+//            }
         }
 
         $filter = new PublicImage($maxSize);
