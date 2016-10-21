@@ -96,7 +96,7 @@ class DownloadService extends BaseService
         $imageFile = $originalImagePath . $originalName;
         $savePath = $downloadPath . $downloadFileName;
 
-        $this->imagesService->makeImage($imageFile, $resolution, $maxSize, $extension, $savePath);
+        $this->imagesService->createImage($imageFile, $resolution, $maxSize, $extension, $savePath);
 
         return [
             'file_path' => $savePath . $downloadFileName,
