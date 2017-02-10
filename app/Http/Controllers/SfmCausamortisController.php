@@ -36,7 +36,7 @@ class SfmCausamortisController extends Controller
      */
     public function index()
     {
-        $data = $this->repository->paginate(500);
+        $data = $this->repository->paginate(5000);
         return $data;
     }
 
