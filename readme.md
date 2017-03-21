@@ -1,27 +1,20 @@
-## Laravel PHP Framework
+# ArqAdmin Server API
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+O ArqAdmin é o sistema de pesquisa e gestão dos acervos do [Arquivo Histórico Municipal](http://arquivohistorico.sp.gov.br) de São Paulo, de uso interno, em ambiente de intranet, com acesso dentro da rede da Prefeitura.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+> Encontra-se em desenvolvimento também o módulo web (o ArqWeb), para pesquisa pública nos acervos através da Internet.
 
-Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+Este é o repositório da aplicação Server Side do ArqAdmin, que fornece a API para gerenciamento do acervo. O acesso pelos usuários é feito a partir da interface web da aplicação cliente [ArqAdmin Client](https://github.com/cyrlx/arqadmin-client).
 
-## Official Documentation
+Esta aplicação foi desenvolvida com o framework PHP Laravel. A documentação pode ser encontrada em [https://laravel.com/docs/5.1](https://laravel.com/docs/5.1).
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+## Créditos
 
-## Contributing
+[Alexandre Cyro](https://github.com/cyrlx) - [@alexandrecyro](https://twitter.com/alexandrecyro)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
 
-## Security Vulnerabilities
+## Licença
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+Open Source GPL 3.0 license.
 
-### License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+http://www.gnu.org/licenses/gpl.html
