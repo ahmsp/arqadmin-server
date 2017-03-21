@@ -1,0 +1,45 @@
+###############################################################################
+#                          Generated on phpdocker.io                          #
+###############################################################################
+
+arqadmin-redis:
+  image: phpdockerio/redis:latest
+  container_name: arqadmin-redis
+
+arqadmin-mysql:
+  image: mysql:5.7
+  container_name: arqadmin-mysql
+  volumes:
+      - ../data/mysql:/var/lib/mysql
+  ports:
+   - "3307:3306"
+  environment:
+    - MYSQL_ROOT_PASSWORD=rootpass
+    - MYSQL_DATABASE=ahsp_acervo
+    - MYSQL_USER=ahsp_acervo_user
+    - MYSQL_PASSWORD=userpass
+
+arqadmin-webserver:
+  image: phpdockerio/nginx:latest
+  container_name: arqadmin-webserver
+  volumes:
+      - ..:/var/www/arqadmin
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+  ports:
+   - "8990:80"
+  links:
+   - arqadmin-php-fpm
+
+arqadmin-php-fpm:
+  build: .
+  dockerfile: php-fpm/Dockerfile
+  container_name: arqadmin-php-fpm
+  volumes:
+    - ..:/var/www/arqadmin
+    - ~/Projects/proj.ahsp/Imagens-Acervos/imagens-acervos/dt_imagens/:/var/www/arqadmin/storage/app/acervos/cartografico
+    - ~/Projects/proj.ahsp/Imagens-Acervos/imagens-acervos/IMAGES_SERVER/:/var/www/arqadmin/storage/app/acervos/cartografico_orig
+    - ~/Projects/proj.ahsp/Imagens-Acervos/imagens-acervos/fotografico/:/var/www/arqadmin/storage/app/acervos/fotografico
+    - ./php-fpm/php-ini-overrides.ini:/etc/php/7.0/fpm/conf.d/99-overrides.ini
+  links:
+    - arqadmin-mysql
+    - arqadmin-redis
