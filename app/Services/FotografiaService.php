@@ -148,7 +148,6 @@ class FotografiaService extends BaseService
             [
                 'imagem_original' => null,
                 'imagem_publica' => null,
-                'imagem_identificacao' => null
             ],
             $id
         );
